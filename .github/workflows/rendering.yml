@@ -1,0 +1,29 @@
+name: Rendering checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendering:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install browser test tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock playwright@1.63.0
+          node "$RUNNER_TEMP/viewer-tests/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Check source and rendering
+        env:
+          NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
+        run: |
+          node --check log.js
+          node --test tests/rendering.cjs

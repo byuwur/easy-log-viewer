@@ -1,5 +1,7 @@
 # byuwur/easy-log-viewer
 
+![easy-log-viewer preview](prev.jpg)
+
 **Logs, follow the story.**
 
 Browse plain-text or structured logs with severity colors, search, timestamps, and expandable details. Append new entries as they arrive.
@@ -185,7 +187,7 @@ node --check log.js
 node --test tests/rendering.cjs
 ```
 
-`BROWSER_CHANNEL=chrome` uses installed Chrome; `CHROMIUM_EXECUTABLE_PATH` selects a Chromium executable. Otherwise, install Playwright Chromium.
+`BROWSER_CHANNEL=chrome` uses installed Chrome; `CHROMIUM_EXECUTABLE_PATH` selects a Chromium executable. Otherwise, install Playwright Chromium. [GitHub Actions](.github/workflows/rendering.yml) runs the same suite.
 
 ## The easy viewers
 
