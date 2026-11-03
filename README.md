@@ -8,6 +8,10 @@ Use it for debug output, activity feeds, and log files where finding the relevan
 
 One JavaScript file. One scoped stylesheet. No build step. Plain JavaScript, with no runtime dependencies.
 
+[Open the playground](https://byuwur.github.io/easy-log-viewer/)
+
+Open `index.html` for the local playground; its page assets require internet access.
+
 ## Installation and usage
 
 **Recommended: CDN.** No downloads or package manager.
@@ -32,6 +36,8 @@ The CDN example tracks `@main` and requires internet access. Use a published tag
 <link href="log.css" rel="stylesheet" />
 <script src="log.js" defer></script>
 ```
+
+Exported HTML starters use default settings, independently of playground changes.
 
 ## Input, parsing, and API
 
@@ -130,6 +136,8 @@ High Contrast text colors target at least [7:1 contrast](https://www.w3.org/WAI/
 
 ### Make it yours
 
+**Custom theme CSS** starts with the selected palette's complete Light/Dark defaults, including controls and format-specific colors. Switching presets keeps your custom draft until Reset. On your page, use `data-theme="custom"` with `class="light"` or `class="dark"`.
+
 Define a named palette after the viewer stylesheet. Unspecified colors inherit Monokai:
 
 ```css
@@ -154,6 +162,10 @@ Define a named palette after the viewer stylesheet. Unspecified colors inherit M
 
 Named palettes need no JavaScript registration or extra theme files.
 
+In the playground configuration, `theme` is the mode, `palette` is its name, and `customThemeCSS` holds custom rules. Null appearance values inherit defaults. Pass only documented API options to the renderer.
+
+**Copy CSS** exports typography and individual color overrides. Inline colors override palette variables; clear them or Reset to restore palette defaults.
+
 Text-size controls change only this viewer, in `0.125rem` steps from `0.5rem` to `3rem`, independently of button size. **A** restores its initial size; re-rendering preserves the selected size.
 
 ### Legacy theme links
@@ -163,6 +175,8 @@ Legacy integrations can use `#byVIEWtheme` or a detected `log.light.css` / `log.
 ## Checks
 
 Theme tests cover both modes, container isolation, legacy links, custom CSS, and High Contrast. Clipboard tests use stubs; they do not verify real permissions.
+
+Landing tests fetch the pinned Bootstrap stylesheet unless `BOOTSTRAP_CSS_PATH` points to a cached copy.
 
 Install Playwright outside the repository and set `NODE_PATH` to its `node_modules` directory:
 
