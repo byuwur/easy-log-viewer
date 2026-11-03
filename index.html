@@ -460,7 +460,7 @@
           <p class="text-body-secondary">Copy or download this Logs starter with default settings.</p>
           <p class="text-body-secondary small">CDN starters require internet access. Local starters need the viewer files beside the HTML.</p>
           <p class="text-body-secondary small">Playground powered by <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/spa.js" target="_blank" rel="noopener">SPA.js</a>.</p>
-          <p id="install-note" class="text-body-secondary small mb-2">CDN follows main and requires the updated files to be published there.</p>
+          <p id="install-note" class="text-body-secondary small mb-2">CDN follows the latest release; updates may take time to reach caches.</p>
           <a class="small link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer#readme" target="_blank" rel="noopener">Read the full API <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
         </div>
         <div class="col-lg-9">
@@ -982,7 +982,7 @@
         const integrationCode = document.getElementById("integration-code");
         const installButtons = [...document.querySelectorAll("[data-install]")];
         const updateIntegration = (mode = "cdn") => {
-          const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@main/" : "";
+          const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/" : "";
           integrationCode.value = `<!doctype html>
 <html lang="en">
 <head>
@@ -1002,7 +1002,7 @@
 </body>
 </html>`;
           document.getElementById("install-note").textContent = mode === "cdn"
-            ? "CDN follows main and requires the updated files to be published there."
+            ? "CDN follows the latest release; updates may take time to reach caches."
             : "Place the HTML beside log.js and log.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
           document.getElementById("export-status").textContent = "";

@@ -267,10 +267,10 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await preview.waitForFunction(() => document.querySelector(".byLOGentries").dataset.layout === "inline");
     const release = await page.frameLocator("#preview-frame").locator(".byVIEWtoolbar").evaluate(() => byLOGviewer.VERSION);
     assert.ok((await page.frameLocator("#preview-frame").locator(".byVIEWinfo").textContent()).includes(` v${release} `), "Credits must match the runtime release");
-    const cdnBase = "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@main/";
+    const cdnBase = "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/";
     const readme = require("node:fs").readFileSync(path.join(__dirname, "../README.md"), "utf8");
     for (const extension of ["css", "js"]) assert.ok(readme.includes(`${cdnBase}log.${extension}`), "README assets must match the CDN starter");
-    assert.equal(await page.locator("#install-note").textContent(), "CDN follows main and requires the updated files to be published there.");
+    assert.equal(await page.locator("#install-note").textContent(), "CDN follows the latest release; updates may take time to reach caches.");
     assert.ok((await page.locator("#integration-code").inputValue()).includes(`href="${cdnBase}log.css"`));
     assert.equal(await page.locator('[data-install="cdn"]').getAttribute("aria-pressed"), "true");
     await page.locator('[data-install="local"]').click();
