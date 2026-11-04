@@ -950,3 +950,52 @@ test("viewer defaults, optional tools, and copy feedback", async () => {
     await browser.close();
   }
 });
+
+test("document and content backgrounds stay independent through theme and toolbar changes", async () => {
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined, channel: process.env.BROWSER_CHANNEL || "chrome" });
+  try {
+    const page = await browser.newPage();
+    await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
+    await page.setContent('<div id="viewer" data-theme="light"></div><div id="neighbor" data-theme="light"></div>');
+    await page.addStyleTag({ path: path.join(__dirname, "../log.css") });
+    await page.addScriptTag({ path: path.join(__dirname, "../log.js") });
+    await page.evaluate(async () => {
+      for (const id of ["viewer", "neighbor"]) {
+        const result = byLOGviewer(document.getElementById(id), "INFO Ready");
+        await result?.ready;
+      }
+    });
+    const root = page.locator("#viewer");
+    const neighbor = await page.locator("#neighbor").evaluate((element) => getComputedStyle(element).backgroundColor);
+    await root.evaluate((element) => {
+      element.style.setProperty("--by-view-document-bg", "transparent");
+      element.style.setProperty("--by-view-container-bg", "#123456");
+    });
+    await page.waitForFunction(() => getComputedStyle(document.querySelector("#viewer .byVIEWcopy")).backgroundColor === "rgb(18, 52, 86)");
+    for (const changeMode of [false, true]) {
+      if (changeMode) await root.locator(".byVIEWthemeToggle").click();
+      assert.equal(await root.evaluate((element) => getComputedStyle(element).backgroundColor), "rgba(0, 0, 0, 0)");
+      assert.equal(await root.locator(".byVIEWpanel").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(18, 52, 86)");
+      assert.equal(
+        await root
+          .locator(".byVIEWcopy")
+          .first()
+          .evaluate((element) => getComputedStyle(element).backgroundColor),
+        "rgb(18, 52, 86)"
+      );
+      assert.equal(await root.locator(".byVIEWtoolbar").evaluate((element) => getComputedStyle(element).backgroundColor), "rgba(0, 0, 0, 0)");
+    }
+    assert.equal(await page.locator("#neighbor").evaluate((element) => getComputedStyle(element).backgroundColor), neighbor);
+    await root.evaluate((element) => element.style.removeProperty("--by-view-container-bg"));
+    await page.waitForFunction(() => getComputedStyle(document.querySelector("#viewer .byVIEWcopy")).backgroundColor === "rgb(39, 40, 34)");
+    assert.notEqual(
+      await root
+        .locator(".byVIEWcopy")
+        .first()
+        .evaluate((element) => getComputedStyle(element).backgroundColor),
+      "rgba(0, 0, 0, 0)"
+    );
+  } finally {
+    await browser.close();
+  }
+});

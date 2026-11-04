@@ -165,7 +165,7 @@
   padding: 0 1rem 1.5rem;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.75rem);
-  background: var(--by-view-bg);
+  background: var(--by-view-document-bg, var(--by-view-bg));
   color: var(--by-view-text);
   font:
     1rem/1.4 system-ui,
@@ -193,7 +193,7 @@
   padding: 0.25em 0.5em;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.65em);
-  background: var(--by-view-bg);
+  background: var(--by-view-container-bg, var(--by-view-bg));
   color: inherit;
   font: inherit;
 }
@@ -305,12 +305,13 @@
   overflow: hidden;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.65em);
+  background: var(--by-view-container-bg, var(--by-view-bg));
 }
 .byLOGdocument .byVIEWpanel > .byVIEWstatus {
   margin: 0;
   padding: 0.375em 0.625em;
   border-bottom: 0.0625rem solid var(--by-view-border);
-  background: var(--by-view-alt);
+  background: var(--by-view-container-bg, var(--by-view-alt));
 }
 .byLOGdocument .byVIEWpanel > :focus-visible {
   outline-offset: -0.125rem;
@@ -328,7 +329,7 @@
   gap: 0.25em;
   margin: 0;
   padding: 0.5rem 0;
-  background: var(--by-view-bg);
+  background: transparent;
   font: 0.875rem/1.25 var(--by-view-controls-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
   white-space: normal;
 }
@@ -357,6 +358,7 @@
   flex-wrap: wrap-reverse;
 }
 .byLOGdocument > .byVIEWtoolbar .byVIEWinfo {
+  background: transparent;
   max-width: 100%;
   color: var(--by-view-muted);
   opacity: 0.25;
@@ -398,7 +400,7 @@
   padding: 0.25em 0.5em;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.65em);
-  background: transparent;
+  background: var(--by-view-container-bg, var(--by-view-bg));
   color: inherit;
   font: inherit;
   line-height: 1;
@@ -491,10 +493,10 @@
   transition: background-color 0.15s, box-shadow 0.15s;
 }
 .byLOGdocument button:not(:disabled):hover {
-  background: color-mix(in srgb, currentColor 7%, var(--by-view-bg));
+  background: color-mix(in srgb, currentColor 7%, var(--by-view-container-bg, var(--by-view-bg)));
 }
 .byLOGdocument button:not(:disabled):active {
-  background: color-mix(in srgb, currentColor 13%, var(--by-view-bg));
+  background: color-mix(in srgb, currentColor 13%, var(--by-view-container-bg, var(--by-view-bg)));
 }
 .byLOGdocument button:focus-visible {
   outline: 0.125rem solid var(--by-view-accent);

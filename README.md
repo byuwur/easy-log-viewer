@@ -121,6 +121,14 @@ Controls use monospace by default; override `--by-view-controls-font` to change 
 
 ## Themes
 
+The outer document and inner surfaces have independent CSS backgrounds. Both follow the selected theme unless overridden. Set `--by-view-document-bg: transparent` to reveal the host page while keeping content panels and individual controls readable. `--by-view-container-bg` sets the shared background of those panels and controls; it also accepts alpha colors or `transparent`. The toolbar and credits have no background. These overrides survive theme changes.
+
+```css
+.byLOGdocument {
+  --by-view-document-bg: transparent;
+}
+```
+
 `log.css` includes all palettes in Light and Dark. Monokai is the default.
 
 | Palette           | `data-theme`    | What it looks like                                                |
