@@ -41,9 +41,7 @@
     <a class="visually-hidden-focusable position-absolute top-0 start-0 p-3 z-3 bg-body-tertiary link-body-emphasis" href="#playground">Skip to playground</a>
     <header class="border-bottom">
       <nav class="navbar navbar-expand-md site-width container-fluid" aria-label="Main navigation">
-        <a class="navbar-brand fs-6 fw-semibold" href="#"
-          ><span class="brand-mark d-inline-flex align-items-center justify-content-center me-2 font-monospace fs-6 fw-bold" aria-hidden="true">log</span>easy-log-viewer</a
-        >
+        <a class="navbar-brand fs-6 fw-semibold" href="#"><span class="brand-mark d-inline-flex align-items-center justify-content-center me-2 font-monospace fs-6 fw-bold" aria-hidden="true">log</span>easy-log-viewer</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#site-menu" aria-controls="site-menu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,9 +51,7 @@
             <a class="nav-link" href="#get-started">Get started</a>
             <a class="nav-link" href="https://github.com/byuwur/easy-log-viewer#readme">Docs <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
             <a class="btn px-3 btn-outline-secondary fw-semibold" href="https://github.com/byuwur/easy-log-viewer"><i class="fa-brands fa-github me-1" aria-hidden="true"></i> GitHub</a>
-            <button id="site-theme" class="btn px-3 btn-outline-secondary fw-semibold" type="button" aria-label="Switch website to light theme">
-              <i class="fa-solid fa-sun me-1" aria-hidden="true"></i> <span>Light</span>
-            </button>
+            <button id="site-theme" class="btn px-3 btn-outline-secondary fw-semibold" type="button" aria-label="Switch website to light theme"><i class="fa-solid fa-sun me-1" aria-hidden="true"></i> <span>Light</span></button>
           </div>
         </div>
       </nav>
@@ -73,16 +69,14 @@
             <div class="source-picker">
               <span id="source-actions-label" class="small font-monospace text-body-secondary d-block mb-1">Sample</span>
               <div class="d-flex gap-2" role="group" aria-labelledby="source-actions-label">
-              <button id="reset" class="btn btn-outline-secondary fw-semibold flex-fill" type="button"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i> Reset sample</button
-              ><button id="open-file" class="btn btn-outline-secondary fw-semibold flex-fill" type="button"><i class="fa-solid fa-folder-open me-1" aria-hidden="true"></i> Open file</button
-              ><input id="local-file" type="file" hidden="" />
-            </div>
+                <button id="reset" class="btn btn-outline-secondary fw-semibold flex-fill" type="button"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i> Reset sample</button
+                ><button id="open-file" class="btn btn-outline-secondary fw-semibold flex-fill" type="button"><i class="fa-solid fa-folder-open me-1" aria-hidden="true"></i> Open file</button><input id="local-file" type="file" hidden="" />
+              </div>
             </div>
           </div>
           <div id="source-error" class="alert alert-danger small m-0" role="alert" hidden=""></div>
           <div class="discovery border-bottom px-3 py-2 d-flex flex-wrap align-items-center gap-1" aria-label="LOG examples">
-            <span class="small font-monospace text-body-secondary me-2">Try it!</span
-            ><button type="button" class="feature-chip btn btn-sm font-monospace" data-example="levels" aria-pressed="false">Severity levels</button
+            <span class="small font-monospace text-body-secondary me-2">Try it!</span><button type="button" class="feature-chip btn btn-sm font-monospace" data-example="levels" aria-pressed="false">Severity levels</button
             ><button type="button" class="feature-chip btn btn-sm font-monospace" data-example="structured" aria-pressed="false">Structured logs</button
             ><button type="button" class="feature-chip btn btn-sm font-monospace" data-example="plain" aria-pressed="false">Plain text</button>
           </div>
@@ -107,9 +101,7 @@
                     <button class="btn btn-sm btn-outline-secondary fw-semibold" type="button" data-options-view="json" aria-controls="options-json-panel" aria-pressed="false">JSON</button>
                   </div>
                   <div class="d-flex flex-wrap justify-content-end gap-2 ms-auto">
-                    <button class="btn btn-sm copy-button btn-outline-secondary fw-semibold" id="copy-options" type="button" hidden="">
-                      <i class="fa-solid fa-copy me-1" aria-hidden="true"></i> <span aria-live="polite">Copy</span>
-                    </button>
+                    <button class="btn btn-sm copy-button btn-outline-secondary fw-semibold" id="copy-options" type="button" hidden=""><i class="fa-solid fa-copy me-1" aria-hidden="true"></i> <span aria-live="polite">Copy</span></button>
                     <button class="btn btn-sm btn-outline-secondary fw-semibold" id="reset-settings" type="button"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i> Reset</button>
                   </div>
                 </div>
@@ -118,16 +110,7 @@
                 <div class="accordion accordion-flush">
                   <div class="accordion-item">
                     <h4 class="accordion-header">
-                      <button
-                        class="accordion-button font-monospace"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#appearance-settings"
-                        aria-expanded="true"
-                        aria-controls="appearance-settings"
-                      >
-                        Preview appearance
-                      </button>
+                      <button class="accordion-button font-monospace" type="button" data-bs-toggle="collapse" data-bs-target="#appearance-settings" aria-expanded="true" aria-controls="appearance-settings">Preview appearance</button>
                     </h4>
                     <div id="appearance-settings" class="accordion-collapse collapse show">
                       <div class="accordion-body">
@@ -158,10 +141,8 @@
                             <option value="system-ui, sans-serif">System sans</option>
                             <option value="Georgia, serif">Serif</option>
                           </select>
-                          <label class="d-block form-label" for="preview-size">Text size (rem)</label
-                          ><input id="preview-size" class="form-control mb-2" type="number" min="0.5" max="3" step="0.125" placeholder="Viewer default" />
-                          <label class="d-block form-label" for="preview-leading">Line height</label
-                          ><input id="preview-leading" class="form-control mb-2" type="number" min="1" max="3" step="0.1" placeholder="Viewer default" />
+                          <label class="d-block form-label" for="preview-size">Text size (rem)</label><input id="preview-size" class="form-control mb-2" type="number" min="0.5" max="3" step="0.125" placeholder="Viewer default" />
+                          <label class="d-block form-label" for="preview-leading">Line height</label><input id="preview-leading" class="form-control mb-2" type="number" min="1" max="3" step="0.1" placeholder="Viewer default" />
                           <fieldset id="preview-controls-font" class="mb-3">
                             <legend class="small mb-2 form-label">Controls font</legend>
                             <div class="btn-group w-100" role="group" aria-label="Controls font">
@@ -181,18 +162,12 @@
                           <label class="d-block form-label" for="preview-container-bg">Content &amp; controls background</label>
                           <div class="input-group mb-2">
                             <input id="preview-container-bg" class="form-control" type="text" placeholder="Theme default" title="CSS color, including transparent, hex, or rgba" maxlength="80" />
-                            <button class="btn btn-outline-secondary" type="button" data-color-picker="preview-container-bg" aria-label="Choose content and controls background color"><i class="fa-solid fa-palette" aria-hidden="true"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" data-color-picker="preview-container-bg" aria-label="Choose content and controls background color">
+                              <i class="fa-solid fa-palette" aria-hidden="true"></i>
+                            </button>
                           </div>
                           <label class="d-block form-label" for="preview-ink">Text color</label
-                          ><input
-                            id="preview-ink"
-                            class="form-control mb-2"
-                            type="text"
-                            placeholder="Theme default"
-                            pattern="#[0-9a-fA-F]{6}"
-                            title="Six-digit hex color, for example #eeeeee"
-                            maxlength="7"
-                          />
+                          ><input id="preview-ink" class="form-control mb-2" type="text" placeholder="Theme default" pattern="#[0-9a-fA-F]{6}" title="Six-digit hex color, for example #eeeeee" maxlength="7" />
                           <p class="form-text">Appearance is CSS, separate from API options. Blank fields use viewer or theme defaults.</p>
                           <button id="copy-appearance" class="btn btn-sm btn-outline-secondary fw-semibold" type="button"><i class="fa-solid fa-copy me-1" aria-hidden="true"></i> Copy CSS</button>
                           <p id="appearance-status" class="mt-2 form-text" role="status"></p>
@@ -209,30 +184,17 @@
                   </div>
                   <div class="accordion-item">
                     <h4 class="accordion-header">
-                      <button
-                        class="accordion-button font-monospace"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#viewer-settings"
-                        aria-expanded="true"
-                        aria-controls="viewer-settings"
-                      >
-                        Viewer controls
-                      </button>
+                      <button class="accordion-button font-monospace" type="button" data-bs-toggle="collapse" data-bs-target="#viewer-settings" aria-expanded="true" aria-controls="viewer-settings">Viewer controls</button>
                     </h4>
                     <div id="viewer-settings" class="accordion-collapse collapse show">
                       <div class="accordion-body" id="viewer-options">
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="toolbar" name="toolbar" type="checkbox" role="switch" checked="" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="toolbar"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="toolbar" name="toolbar" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="toolbar"
                             >Viewer header</label
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="credits" name="credits" type="checkbox" role="switch" checked="" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="credits"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="credits" name="credits" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="credits"
                             >Credits</label
                           >
                         </div>
@@ -265,13 +227,10 @@
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="statusBar" name="statusBar" type="checkbox" role="switch" checked="" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="statusBar"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="statusBar" name="statusBar" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="statusBar"
                             >Status information</label
                           >
                         </div>
-
 
                         <div class="row g-2 mt-3 align-items-end">
                           <fieldset class="col-6" id="controlsSize">
@@ -280,9 +239,7 @@
                               <input class="btn-check" id="controlsSize-small" name="controlsSize" type="radio" value="small" aria-label="Small controls" />
                               <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-small" title="Small" data-bs-toggle="tooltip" data-bs-placement="bottom">a</label>
                               <input class="btn-check" id="controlsSize-regular" name="controlsSize" type="radio" value="regular" aria-label="Regular controls" checked="" />
-                              <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-regular" title="Regular" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                >Aa</label
-                              >
+                              <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-regular" title="Regular" data-bs-toggle="tooltip" data-bs-placement="bottom">Aa</label>
                               <input class="btn-check" id="controlsSize-large" name="controlsSize" type="radio" value="large" aria-label="Large controls" />
                               <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-large" title="Large" data-bs-toggle="tooltip" data-bs-placement="bottom">A</label>
                             </div>
@@ -306,16 +263,7 @@
                   </div>
                   <div class="accordion-item">
                     <h4 class="accordion-header">
-                      <button
-                        class="accordion-button font-monospace"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#render-settings"
-                        aria-expanded="true"
-                        aria-controls="render-settings"
-                      >
-                        Rendering
-                      </button>
+                      <button class="accordion-button font-monospace" type="button" data-bs-toggle="collapse" data-bs-target="#render-settings" aria-expanded="true" aria-controls="render-settings">Rendering</button>
                     </h4>
                     <div id="render-settings" class="accordion-collapse collapse show">
                       <div class="accordion-body">
@@ -329,9 +277,7 @@
                           </div>
                         </fieldset>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="levelFilter" name="levelFilter" type="checkbox" role="switch" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="levelFilter"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="levelFilter" name="levelFilter" type="checkbox" role="switch" /><label class="form-check-label flex-grow-1 py-2" for="levelFilter"
                             >Severity filter</label
                           >
                         </div>
@@ -343,41 +289,30 @@
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="copyEntries" name="copyEntries" type="checkbox" role="switch" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="copyEntries"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="copyEntries" name="copyEntries" type="checkbox" role="switch" /><label class="form-check-label flex-grow-1 py-2" for="copyEntries"
                             >Copy entries</label
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="details" name="details" type="checkbox" role="switch" checked="" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="details"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="details" name="details" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="details"
                             >Entry details</label
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
-                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="loadMore" name="loadMore" type="checkbox" role="switch" checked="" /><label
-                            class="form-check-label flex-grow-1 py-2"
-                            for="loadMore"
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="loadMore" name="loadMore" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="loadMore"
                             >Load more button</label
                           >
                         </div>
                         <label class="form-check form-switch d-flex align-items-center gap-3 ps-0 m-0"
-                          ><span class="form-check-label flex-grow-1 py-2">Search</span
-                          ><input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" type="checkbox" name="search" id="search" role="switch" /></label
+                          ><span class="form-check-label flex-grow-1 py-2">Search</span><input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" type="checkbox" name="search" id="search" role="switch" /></label
                         ><label class="form-check form-switch d-flex align-items-center gap-3 ps-0 m-0"
                           ><span class="form-check-label flex-grow-1 py-2">Auto-scroll</span
                           ><input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" type="checkbox" name="autoScroll" id="autoScroll" role="switch" /></label
-                        ><label class="d-block form-label" for="batchSize">Display batch size</label
-                        ><input class="form-control mb-3" id="batchSize" name="batchSize" type="number" min="1" value="200" aria-describedby="batchSize-help" />
+                        ><label class="d-block form-label" for="batchSize">Display batch size</label><input class="form-control mb-3" id="batchSize" name="batchSize" type="number" min="1" value="200" aria-describedby="batchSize-help" />
                         <p class="form-text" id="batchSize-help">Entries per display batch (1–1000).</p>
-                        <label class="d-block form-label" for="maxEntries">Retained entries</label
-                        ><input class="form-control mb-3" id="maxEntries" name="maxEntries" type="number" min="1" value="10000" aria-describedby="maxEntries-help" />
+                        <label class="d-block form-label" for="maxEntries">Retained entries</label><input class="form-control mb-3" id="maxEntries" name="maxEntries" type="number" min="1" value="10000" aria-describedby="maxEntries-help" />
                         <p class="form-text" id="maxEntries-help">Retain the newest entries (1–100000).</p>
-                        <p class="form-text">
-                          Custom parsing is available through the <code>parser(entry, index)</code> callback. <a class="link-body-emphasis link-offset-2" href="README.md#log-options">See the API</a>.
-                        </p>
+                        <p class="form-text">Custom parsing is available through the <code>parser(entry, index)</code> callback. <a class="link-body-emphasis link-offset-2" href="README.md#log-options">See the API</a>.</p>
                       </div>
                     </div>
                   </div>
@@ -390,17 +325,17 @@
                   readonly=""
                   spellcheck="false"
                   wrap="off"
-                  aria-label="Complete viewer configuration as JSON"
-                ></textarea>
+                  aria-label="Complete viewer configuration as JSON"></textarea>
               </div>
             </section>
             <section id="source-panel" class="tab-pane panel d-md-flex flex-column source-panel col-12 col-md-6 col-xl-4" aria-labelledby="source-heading">
               <div class="panel-heading border-bottom px-3 px-xxl-4 py-3 d-flex align-items-center justify-content-between gap-2 flex-wrap flex-md-nowrap">
                 <h3 id="source-heading" class="h6 m-0 fw-semibold"><span class="small font-monospace text-body-secondary me-2">02</span> <label for="source">Log source</label></h3>
                 <div class="d-flex gap-1 flex-shrink-0">
-                  <button id="render" class="btn btn-sm text-nowrap btn-outline-secondary fw-semibold" type="button" aria-label="Render source" title="Render source"><i class="fa-solid fa-play me-1" aria-hidden="true"></i><span class="d-none d-xxl-inline">Render</span></button>
-                  <button id="restore-source" class="btn btn-sm text-nowrap btn-outline-secondary fw-semibold" type="button">
-                    <i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i> Restore</button
+                  <button id="render" class="btn btn-sm text-nowrap btn-outline-secondary fw-semibold" type="button" aria-label="Render source" title="Render source">
+                    <i class="fa-solid fa-play me-1" aria-hidden="true"></i><span class="d-none d-xxl-inline">Render</span>
+                  </button>
+                  <button id="restore-source" class="btn btn-sm text-nowrap btn-outline-secondary fw-semibold" type="button"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i> Restore</button
                   ><button id="copy-source" class="btn btn-sm text-nowrap btn-outline-secondary fw-semibold copy-button" type="button"><i class="fa-solid fa-copy me-1" aria-hidden="true"></i> <span aria-live="polite">Copy</span></button>
                 </div>
               </div>
@@ -412,12 +347,12 @@
                   spellcheck="false"
                   autocapitalize="off"
                   autocomplete="off"
-                  title="Ctrl / ⌘ + Enter to render. Tab moves focus."
-                >
+                  title="Ctrl / ⌘ + Enter to render. Tab moves focus.">
 2026-10-30T09:00:00Z INFO Server started
 2026-10-30T09:00:01Z DEBUG Cache ready
 2026-10-30T09:00:02Z WARN Slow query
-{"timestamp":"2026-10-30T09:00:03Z","level":"ERROR","message":"Request failed","request":{"path":"/api","status":503}}</textarea>
+{"timestamp":"2026-10-30T09:00:03Z","level":"ERROR","message":"Request failed","request":{"path":"/api","status":503}}</textarea
+                >
               </div>
               <div id="source-status" class="panel-footer text-break border-top px-4 py-2 small font-monospace text-body-secondary" role="status">Edit to render</div>
             </section>
@@ -463,7 +398,9 @@
           <p class="text-body-secondary small">CDN starters require internet access. Local starters need the viewer files beside the HTML.</p>
           <p class="text-body-secondary small">Playground powered by <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/spa.js" target="_blank" rel="noopener">SPA.js</a>.</p>
           <p id="install-note" class="text-body-secondary small mb-2">CDN follows the latest release; updates may take time to reach caches.</p>
-          <a class="small link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer#readme" target="_blank" rel="noopener">Read the full API <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
+          <a class="small link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer#readme" target="_blank" rel="noopener"
+            >Read the full API <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i
+          ></a>
         </div>
         <div class="col-lg-9">
           <div class="code-box bg-body-tertiary border">
@@ -483,8 +420,7 @@
               readonly=""
               spellcheck="false"
               wrap="soft"
-              aria-label="Complete HTML integration"
-            ></textarea>
+              aria-label="Complete HTML integration"></textarea>
             <p id="export-status" class="small text-body-secondary mx-4 my-0" role="status" aria-live="polite"></p>
           </div>
         </div>
@@ -494,7 +430,7 @@
       <p class="small text-body-secondary mb-3">Need another format, or a Markdown editor?</p>
       <div class="d-flex flex-wrap align-items-center gap-3">
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #D8CDF5; --logo-dark: #C4B5FD" aria-hidden="true">md↓</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #d8cdf5; --logo-dark: #c4b5fd" aria-hidden="true">md↓</span>
           <span class="text-decoration-underline">MD</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-editor/">
@@ -502,31 +438,31 @@
           <span class="text-decoration-underline">MD.edit</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-json-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #F3E4B4; --logo-dark: #F2D98D" aria-hidden="true">{ }</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f3e4b4; --logo-dark: #f2d98d" aria-hidden="true">{ }</span>
           <span class="text-decoration-underline">JSON</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-csv-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #C0DFCA; --logo-dark: #A9D6B8" aria-hidden="true">csv</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0dfca; --logo-dark: #a9d6b8" aria-hidden="true">csv</span>
           <span class="text-decoration-underline">CSV</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-log-viewer/" aria-current="page">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #F6D2BD; --logo-dark: #F3BFA0" aria-hidden="true">log</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f6d2bd; --logo-dark: #f3bfa0" aria-hidden="true">log</span>
           <span class="text-decoration-underline">LOG</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-diff-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #F4C7CF; --logo-dark: #EEADB8" aria-hidden="true">±</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f4c7cf; --logo-dark: #eeadb8" aria-hidden="true">±</span>
           <span class="text-decoration-underline">DIFF</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-xml-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #C0E2EE; --logo-dark: #A3D5E8" aria-hidden="true">&lt;/&gt;</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0e2ee; --logo-dark: #a3d5e8" aria-hidden="true">&lt;/&gt;</span>
           <span class="text-decoration-underline">XML</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-yaml-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #E5CCE3; --logo-dark: #DAB6D7" aria-hidden="true">yml</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #e5cce3; --logo-dark: #dab6d7" aria-hidden="true">yml</span>
           <span class="text-decoration-underline">YAML</span>
         </a>
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-code-viewer/">
-          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #CAD8F4; --logo-dark: #AEC5EF" aria-hidden="true">{ }</span>
+          <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #cad8f4; --logo-dark: #aec5ef" aria-hidden="true">{ }</span>
           <span class="text-decoration-underline">CODE</span>
         </a>
       </div>
@@ -539,9 +475,7 @@
         </p>
         <div class="d-flex flex-wrap gap-3">
           <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer/blob/main/LICENSE">MIT license</a>
-          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer"
-            >Source &amp; contributions <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i
-          ></a>
+          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer">Source &amp; contributions <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
           <a class="link-body-emphasis link-offset-2" href="https://ko-fi.com/byuwur">Buy me a Pandebono <i class="fa-brands fa-ko-fi ms-1" aria-hidden="true"></i></a>
         </div>
       </div>
@@ -555,7 +489,7 @@
         font-display: swap;
       }
       :root {
-        --accent: #F3BFA0;
+        --accent: #f3bfa0;
         --accent-text: var(--accent);
         --accent-ink: #212529;
         --bs-body-font-family: Archivo, var(--bs-font-sans-serif);
@@ -568,8 +502,8 @@
         --bs-body-bg-rgb: 20, 22, 24;
       }
       :root[data-bs-theme="light"] {
-        --accent: #F6D2BD;
-        --accent-text: #945A38;
+        --accent: #f6d2bd;
+        --accent-text: #945a38;
       }
       html {
         scroll-padding-top: 1rem;
@@ -845,7 +779,23 @@
         const status = document.getElementById("render-status");
         const initialSource = source.value;
         const initialSecond = second?.value;
-        const defaults = { layout: "inline", toolbar: true, credits: true, fontSizeControls: true, statusBar: true, levelFilter: false, autoScrollControl: false, copyEntries: false, details: true, loadMore: true, controlsCompact: true, search: false, autoScroll: false, batchSize: 200, maxEntries: 10000 };
+        const defaults = {
+          layout: "inline",
+          toolbar: true,
+          credits: true,
+          fontSizeControls: true,
+          statusBar: true,
+          levelFilter: false,
+          autoScrollControl: false,
+          copyEntries: false,
+          details: true,
+          loadMore: true,
+          controlsCompact: true,
+          search: false,
+          autoScroll: false,
+          batchSize: 200,
+          maxEntries: 10000
+        };
         let previewReady = false;
         let renderVersion = 0;
         let sourceVersion = 0;
@@ -853,29 +803,33 @@
         function settingsJSON(options) {
           const field = (id) => (id === "preview-controls-font" ? document.querySelector('[name="preview-controls-font"]:checked')?.value : document.getElementById(id)?.value) || null;
           const { forceMonospace, toolbar, credits, themeToggle, fontSizeControls, copyButton, controlsCompact, controlsSize, controlsPosition, ...rendering } = options;
-          return JSON.stringify({
-            theme: document.querySelector('[name="previewTheme"]:checked').value,
-            palette: field("preview-palette") || "monokai",
-            fontFamily: field("preview-font"),
-            fontSize: field("preview-size") === null ? null : Number(field("preview-size")),
-            lineHeight: field("preview-leading") === null ? null : Number(field("preview-leading")),
-            controlsFont: field("preview-controls-font") || "ui-monospace, monospace",
-            backgroundColor: field("preview-bg"),
-            containerBackgroundColor: field("preview-container-bg"),
-            textColor: field("preview-ink"),
-            customThemeCSS: field("preview-palette") === "custom" ? field("custom-theme-css") : null,
-            forceMonospace,
-            toolbar,
-            credits,
-            themeToggle,
-            fontSizeControls,
-            copyButton,
-            controlsCompact,
-            controlsSize,
-            controlsPosition,
-            parser: "Built-in parser. Supply parser(entry, index) in JavaScript to customize.",
-            ...rendering
-          }, null, 2);
+          return JSON.stringify(
+            {
+              theme: document.querySelector('[name="previewTheme"]:checked').value,
+              palette: field("preview-palette") || "monokai",
+              fontFamily: field("preview-font"),
+              fontSize: field("preview-size") === null ? null : Number(field("preview-size")),
+              lineHeight: field("preview-leading") === null ? null : Number(field("preview-leading")),
+              controlsFont: field("preview-controls-font") || "ui-monospace, monospace",
+              backgroundColor: field("preview-bg"),
+              containerBackgroundColor: field("preview-container-bg"),
+              textColor: field("preview-ink"),
+              customThemeCSS: field("preview-palette") === "custom" ? field("custom-theme-css") : null,
+              forceMonospace,
+              toolbar,
+              credits,
+              themeToggle,
+              fontSizeControls,
+              copyButton,
+              controlsCompact,
+              controlsSize,
+              controlsPosition,
+              parser: "Built-in parser. Supply parser(entry, index) in JavaScript to customize.",
+              ...rendering
+            },
+            null,
+            2
+          );
         }
 
         const readOptions = () =>
@@ -925,7 +879,9 @@
           const viewer = frame.contentDocument.getElementById("viewer");
           new MutationObserver(() => {
             const mode = getPreviewMode(viewer);
-            themeInputs.forEach((input) => { input.checked = input.value === mode; });
+            themeInputs.forEach((input) => {
+              input.checked = input.value === mode;
+            });
             setPreviewMode(viewer, mode);
             updateOptions();
             const toggle = frame.contentDocument.querySelector(".byVIEWthemeToggle");
@@ -954,10 +910,12 @@
         });
         form.addEventListener("submit", (event) => event.preventDefault());
         document.getElementById("render").addEventListener("click", render);
-        themeInputs.forEach((input) => input.addEventListener("change", () => {
-          updateOptions();
-          if (previewReady) setPreviewMode(frame.contentDocument.getElementById("viewer"), input.value);
-        }));
+        themeInputs.forEach((input) =>
+          input.addEventListener("change", () => {
+            updateOptions();
+            if (previewReady) setPreviewMode(frame.contentDocument.getElementById("viewer"), input.value);
+          })
+        );
         document.getElementById("reset").addEventListener("click", () => {
           ++sourceVersion;
           source.value = initialSource;
@@ -1018,9 +976,7 @@
   <\/script>
 </body>
 </html>`;
-          document.getElementById("install-note").textContent = mode === "cdn"
-            ? "CDN follows the latest release; updates may take time to reach caches."
-            : "Place the HTML beside log.js and log.css.";
+          document.getElementById("install-note").textContent = mode === "cdn" ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside log.js and log.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
           document.getElementById("export-status").textContent = "";
         };
@@ -1154,7 +1110,12 @@
               continue;
             }
             const picker = Pickr.create({
-              el: button, useAsButton: true, position: "bottom-start", theme: "classic", default: "#fafaf5", defaultRepresentation: "HEX",
+              el: button,
+              useAsButton: true,
+              position: "bottom-start",
+              theme: "classic",
+              default: "#fafaf5",
+              defaultRepresentation: "HEX",
               components: { preview: true, opacity: true, hue: true, interaction: { hex: true, rgba: false, hsla: false, hsva: false, cmyk: false, input: true, save: true, clear: true } },
               i18n: { "btn:clear": "Theme default", "aria:btn:clear": "Use the theme background" }
             });
@@ -1182,7 +1143,9 @@
             picker.on("save", () => picker.hide());
             pickers.push(picker);
           }
-          window.addEventListener("pagehide", (event) => { if (!event.persisted) pickers.forEach((picker) => picker.destroyAndRemove()); });
+          window.addEventListener("pagehide", (event) => {
+            if (!event.persisted) pickers.forEach((picker) => picker.destroyAndRemove());
+          });
         });
       })();
     </script>
@@ -1229,21 +1192,23 @@
           // Read both modes on temporary containers so exporting CSS never changes the live viewer.
           const themeCSS = (selected) => {
             const document = frame.contentDocument;
-            return ["light", "dark"].map((mode) => {
-              const probe = document.createElement("div");
-              probe.className = `${selector.slice(1)} ${mode}`;
-              probe.dataset.theme = selected;
-              probe.style.display = "none";
-              document.body.appendChild(probe);
-              const style = document.defaultView.getComputedStyle(probe);
-              const rules = [...style]
-                .filter((property) => property.startsWith("--by-") && property !== "--by-view-toggle-position" && !/font|line-height/.test(property))
-                .sort()
-                .map((property) => `  ${property}: ${style.getPropertyValue(property).trim()};`)
-                .join("\n");
-              probe.remove();
-              return `${selector}.${mode}[data-theme="custom"] {\n${rules}\n}`;
-            }).join("\n\n");
+            return ["light", "dark"]
+              .map((mode) => {
+                const probe = document.createElement("div");
+                probe.className = `${selector.slice(1)} ${mode}`;
+                probe.dataset.theme = selected;
+                probe.style.display = "none";
+                document.body.appendChild(probe);
+                const style = document.defaultView.getComputedStyle(probe);
+                const rules = [...style]
+                  .filter((property) => property.startsWith("--by-") && property !== "--by-view-toggle-position" && !/font|line-height/.test(property))
+                  .sort()
+                  .map((property) => `  ${property}: ${style.getPropertyValue(property).trim()};`)
+                  .join("\n");
+                probe.remove();
+                return `${selector}.${mode}[data-theme="custom"] {\n${rules}\n}`;
+              })
+              .join("\n\n");
           };
           const apply = () => {
             const viewer = target();
@@ -1273,7 +1238,7 @@
           const loadPalette = () => {
             clearTimeout(themeTimer);
             if (!target()) return;
-            const css = palette.value === "custom" ? customDraft ?? themeCSS("monokai") : themeCSS(palette.value);
+            const css = palette.value === "custom" ? (customDraft ?? themeCSS("monokai")) : themeCSS(palette.value);
             if (editor.value !== css) editor.value = css;
             apply();
             themeStatus.textContent = "";
@@ -1322,7 +1287,10 @@
           });
           document.getElementById("copy-appearance").addEventListener("click", async () => {
             if (fields.some((field) => !field.checkValidity())) return apply();
-            const rules = declarations().filter(([, value]) => value).map(([property, value]) => `  ${property}: ${value};`).join("\n");
+            const rules = declarations()
+              .filter(([, value]) => value)
+              .map(([property, value]) => `  ${property}: ${value};`)
+              .join("\n");
             try {
               await navigator.clipboard.writeText(`${selector} {\n${rules}\n}`);
               document.getElementById("appearance-status").textContent = "CSS copied. Place it after the viewer stylesheet.";
