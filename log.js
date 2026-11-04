@@ -11,7 +11,7 @@
   if (global.byLOGviewer?.initialized) return;
 
   /* --- METADATA --- */
-  byLOGviewer.VERSION = "1"; // 2026-11-04
+  byLOGviewer.VERSION = "1.1"; // 2026-11-04
 
   /* --- CONSTANTS --- */
   const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
