@@ -30,7 +30,9 @@
     <meta name="twitter:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/css/shards.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/css/pickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/css/fontawesome.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/pickr.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/popper.min.js" defer=""></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/bootstrap.min.js" defer=""></script>
   </head>
@@ -171,16 +173,16 @@
                               <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="preview-controls-font-2" title="Serif">Serif</label>
                             </div>
                           </fieldset>
-                          <label class="d-block form-label" for="preview-bg">Background color</label
-                          ><input
-                            id="preview-bg"
-                            class="form-control mb-2"
-                            type="text"
-                            placeholder="Theme default"
-                            pattern="#[0-9a-fA-F]{6}"
-                            title="Six-digit hex color, for example #222222"
-                            maxlength="7"
-                          />
+                          <label class="d-block form-label" for="preview-bg">Document background</label>
+                          <div class="input-group mb-2">
+                            <input id="preview-bg" class="form-control" type="text" placeholder="Theme default" title="CSS color, including transparent, hex, or rgba" maxlength="80" />
+                            <button class="btn btn-outline-secondary" type="button" data-color-picker="preview-bg" aria-label="Choose document background color"><i class="fa-solid fa-palette" aria-hidden="true"></i></button>
+                          </div>
+                          <label class="d-block form-label" for="preview-container-bg">Content &amp; controls background</label>
+                          <div class="input-group mb-2">
+                            <input id="preview-container-bg" class="form-control" type="text" placeholder="Theme default" title="CSS color, including transparent, hex, or rgba" maxlength="80" />
+                            <button class="btn btn-outline-secondary" type="button" data-color-picker="preview-container-bg" aria-label="Choose content and controls background color"><i class="fa-solid fa-palette" aria-hidden="true"></i></button>
+                          </div>
                           <label class="d-block form-label" for="preview-ink">Text color</label
                           ><input
                             id="preview-ink"
@@ -807,6 +809,16 @@
           border-top: 0.0625rem solid var(--bs-border-color);
         }
       }
+
+      /* --- COLOR PICKERS --- */
+      .pcr-app {
+        background: var(--bs-body-bg);
+        border: 0.0625rem solid var(--bs-border-color);
+      }
+      .pcr-app .pcr-interaction .pcr-result {
+        background: var(--bs-tertiary-bg);
+        color: var(--bs-body-color);
+      }
     </style>
     <script>
       "use strict";
@@ -849,6 +861,7 @@
             lineHeight: field("preview-leading") === null ? null : Number(field("preview-leading")),
             controlsFont: field("preview-controls-font") || "ui-monospace, monospace",
             backgroundColor: field("preview-bg"),
+            containerBackgroundColor: field("preview-container-bg"),
             textColor: field("preview-ink"),
             customThemeCSS: field("preview-palette") === "custom" ? field("custom-theme-css") : null,
             forceMonospace,
@@ -1128,6 +1141,52 @@
     </script>
 
     <script>
+      (function initColorPickers() {
+        document.addEventListener("DOMContentLoaded", () => {
+          const pickers = [];
+          for (const button of document.querySelectorAll("[data-color-picker]")) {
+            const field = document.getElementById(button.dataset.colorPicker);
+            const validate = () => field.setCustomValidity(!field.value || CSS.supports("color", field.value) ? "" : "Enter a CSS color or transparent.");
+            field.addEventListener("input", validate);
+            field.addEventListener("change", validate);
+            if (!window.Pickr) {
+              button.hidden = true;
+              continue;
+            }
+            const picker = Pickr.create({
+              el: button, useAsButton: true, position: "bottom-start", theme: "classic", default: "#fafaf5", defaultRepresentation: "HEX",
+              components: { preview: true, opacity: true, hue: true, interaction: { hex: true, rgba: false, hsla: false, hsva: false, cmyk: false, input: true, save: true, clear: true } },
+              i18n: { "btn:clear": "Theme default", "aria:btn:clear": "Use the theme background" }
+            });
+            let syncing = false;
+            const change = (value) => {
+              field.value = value;
+              validate();
+              field.dispatchEvent(new Event("change", { bubbles: true }));
+            };
+            picker.on("show", () => {
+              // Opening must not replace a theme default with a fixed color.
+              syncing = true;
+              const frame = document.getElementById("preview-frame");
+              const viewer = frame?.contentDocument?.querySelector("#viewer, #document, #byJSONrenderer") || document.getElementById("editor");
+              const style = viewer?.ownerDocument.defaultView.getComputedStyle(viewer);
+              const themed = style?.getPropertyValue("--by-view-bg") || style?.getPropertyValue("--by-md-bg");
+              picker.setColor(field.value || (field.id === "preview-bg" ? style?.backgroundColor : themed) || "#fafaf5", true);
+              picker.setColorRepresentation("HEX");
+              syncing = false;
+            });
+            picker.on("change", (color) => {
+              if (!syncing) change(color.toHEXA().toString());
+            });
+            picker.on("clear", () => change(""));
+            picker.on("save", () => picker.hide());
+            pickers.push(picker);
+          }
+          window.addEventListener("pagehide", (event) => { if (!event.persisted) pickers.forEach((picker) => picker.destroyAndRemove()); });
+        });
+      })();
+    </script>
+    <script>
       function getPreviewMode(target) {
         return ["light", "dark"].includes(target.dataset.theme) ? target.dataset.theme : target.classList.contains("dark") ? "dark" : "light";
       }
@@ -1152,9 +1211,9 @@
           const editor = document.getElementById("custom-theme-css");
           const themeStatus = document.getElementById("theme-status");
           const selector = `.by${name.toUpperCase()}document`;
-          const bg = name === "md" ? "--by-md-bg" : "--by-view-bg";
+          const bg = "--by-view-document-bg";
           const ink = name === "md" ? "--by-md-text" : name === "json" ? "--by-json-text" : "--by-view-text";
-          const properties = ["font-family", "font-size", "line-height", "--by-view-controls-font", bg, ink];
+          const properties = ["font-family", "font-size", "line-height", "--by-view-controls-font", bg, "--by-view-container-bg", ink];
           const declarations = () => {
             const rules = fields.map((field, index) => {
               const value = field.id === "preview-controls-font" ? field.querySelector("input:checked").value : field.value;
@@ -1209,7 +1268,7 @@
             viewer.dataset.byViewDefaultFontSize = viewer.style.fontSize;
             setPreviewMode(viewer, getPreviewMode(viewer));
             const invalid = fields.some((field) => !field.checkValidity());
-            document.getElementById("appearance-status").textContent = invalid ? "Use the shown number ranges and six-digit hex colors." : "";
+            document.getElementById("appearance-status").textContent = invalid ? "Use valid number ranges and CSS background colors; text color uses six-digit hex." : "";
           };
           const loadPalette = () => {
             clearTimeout(themeTimer);
@@ -1242,8 +1301,13 @@
             button.addEventListener("click", () => {
               clearTimeout(themeTimer);
               customDraft = null;
-              fields.forEach((field) => { if (field.id === "preview-controls-font") field.querySelector('input[value=""]').checked = true;
-                else field.value = ""; });
+              fields.forEach((field) => {
+                if (field.id === "preview-controls-font") field.querySelector('input[value=""]').checked = true;
+                else {
+                  field.value = "";
+                  field.setCustomValidity("");
+                }
+              });
               palette.value = "monokai";
               palette.dispatchEvent(new Event("change", { bubbles: true }));
             })
