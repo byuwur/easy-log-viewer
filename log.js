@@ -7,10 +7,18 @@
  * MIT License (see LICENSE).
  */
 (function (global) {
-  /* --- SETUP --- */
+  /* --- INITIALIZATION --- */
   if (global.byLOGviewer?.initialized) return;
+
+  /* --- METADATA --- */
+  byLOGviewer.VERSION = "1"; // 2026-11-04
+
+  /* --- CONSTANTS --- */
+  const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
+
+  /* --- STATE --- */
   const instances = new WeakMap();
-  /* --- DOM HELPERS --- */
+  /* --- HELPERS --- */
   const node = (tag, className = "", text) => {
     const element = document.createElement(tag);
     element.className = className;
@@ -55,78 +63,6 @@
   /** Yield at a chunk boundary so input events and replacement renders can run. */
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
-  /* --- PARSING --- */
-  const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
-  /** Map recognized severity aliases; unknown formats remain explicitly UNKNOWN. */
-  const normalizeLevel = (value) => {
-    const level = String(value ?? "").toUpperCase();
-    if (level === "WARNING") return "WARN";
-    if (level === "CRITICAL") return "FATAL";
-    return levels.includes(level) ? level : "UNKNOWN";
-  };
-  /** Serialize log details safely; distinguish ancestor cycles from repeated sibling references. */
-  const stringify = (value) => {
-    const ancestors = [];
-    return (
-      JSON.stringify(
-        value,
-        function (key, entry) {
-          if (typeof entry === "bigint") return entry.toString();
-          if (!entry || typeof entry !== "object") return entry;
-          while (ancestors.length && ancestors.at(-1) !== this) ancestors.pop();
-          if (ancestors.includes(entry)) return "[Circular]";
-          ancestors.push(entry);
-          return entry;
-        },
-        2
-      ) ?? String(value)
-    );
-  };
-  /** Recognize structured records or leading metadata; malformed JSON remains an ordinary message. */
-  const defaultParse = (input) => {
-    if (typeof input === "string") {
-      const trimmed = input.trim();
-      if (trimmed.startsWith("{")) {
-        try {
-          const object = JSON.parse(input);
-          if (object && typeof object === "object" && !Array.isArray(object)) return defaultParse(object);
-        } catch {
-          /* Non-JSON logs remain ordinary text. */
-        }
-      }
-      const timestamp = input.match(/^\[?(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\]?\s*/);
-      const rest = timestamp ? input.slice(timestamp[0].length) : input;
-      const severity = rest.match(/^\s*\[?(TRACE|DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL)\]?(?=\s|:|$)[:\s]*/i);
-      return { level: severity?.[1], timestamp: timestamp?.[1] ?? "", message: severity ? rest.slice(severity[0].length) : rest };
-    }
-    if (!input || typeof input !== "object" || Array.isArray(input)) throw new TypeError("Log entries must be strings or records.");
-    const { level, severity, timestamp, time, message, msg, ...details } = input;
-    return {
-      level: level ?? severity,
-      timestamp: timestamp ?? time ?? "",
-      message: message ?? msg ?? "(structured entry)",
-      details: Object.keys(details).length ? details : undefined
-    };
-  };
-  /** Split complete text batches into entries; array strings preserve multiline events as one entry. */
-  const logInputs = (input) => {
-    if (typeof input === "string") {
-      if (input.length > 10000000) throw new RangeError("Log text exceeds 10 million characters.");
-      if (!input) return [];
-      const lines = input.replace(/\r\n?/g, "\n").split("\n");
-      if (lines.at(-1) === "") lines.pop();
-      if (lines.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
-      return lines;
-    }
-    if (Array.isArray(input)) {
-      if (input.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
-      return input;
-    }
-    if (input && typeof input === "object") return [input];
-    throw new TypeError("Log input must be text, a record, or an array of entries.");
-  };
-
-
   /* --- CONTROLS --- */
   // Mirrored across the family so each viewer can run without a shared runtime.
   /**
@@ -285,6 +221,76 @@
         button.setAttribute("aria-label", button.title);
       }
     });
+  };
+
+  /* --- PARSING --- */
+  /** Map recognized severity aliases; unknown formats remain explicitly UNKNOWN. */
+  const normalizeLevel = (value) => {
+    const level = String(value ?? "").toUpperCase();
+    if (level === "WARNING") return "WARN";
+    if (level === "CRITICAL") return "FATAL";
+    return levels.includes(level) ? level : "UNKNOWN";
+  };
+  /** Serialize log details safely; distinguish ancestor cycles from repeated sibling references. */
+  const stringify = (value) => {
+    const ancestors = [];
+    return (
+      JSON.stringify(
+        value,
+        function (key, entry) {
+          if (typeof entry === "bigint") return entry.toString();
+          if (!entry || typeof entry !== "object") return entry;
+          while (ancestors.length && ancestors.at(-1) !== this) ancestors.pop();
+          if (ancestors.includes(entry)) return "[Circular]";
+          ancestors.push(entry);
+          return entry;
+        },
+        2
+      ) ?? String(value)
+    );
+  };
+  /** Recognize structured records or leading metadata; malformed JSON remains an ordinary message. */
+  const defaultParse = (input) => {
+    if (typeof input === "string") {
+      const trimmed = input.trim();
+      if (trimmed.startsWith("{")) {
+        try {
+          const object = JSON.parse(input);
+          if (object && typeof object === "object" && !Array.isArray(object)) return defaultParse(object);
+        } catch {
+          /* Non-JSON logs remain ordinary text. */
+        }
+      }
+      const timestamp = input.match(/^\[?(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\]?\s*/);
+      const rest = timestamp ? input.slice(timestamp[0].length) : input;
+      const severity = rest.match(/^\s*\[?(TRACE|DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL)\]?(?=\s|:|$)[:\s]*/i);
+      return { level: severity?.[1], timestamp: timestamp?.[1] ?? "", message: severity ? rest.slice(severity[0].length) : rest };
+    }
+    if (!input || typeof input !== "object" || Array.isArray(input)) throw new TypeError("Log entries must be strings or records.");
+    const { level, severity, timestamp, time, message, msg, ...details } = input;
+    return {
+      level: level ?? severity,
+      timestamp: timestamp ?? time ?? "",
+      message: message ?? msg ?? "(structured entry)",
+      details: Object.keys(details).length ? details : undefined
+    };
+  };
+  /** Split complete text batches into entries; array strings preserve multiline events as one entry. */
+  const logInputs = (input) => {
+    if (typeof input === "string") {
+      if (input.length > 10000000) throw new RangeError("Log text exceeds 10 million characters.");
+      if (!input) return [];
+      const lines = input.replace(/\r\n?/g, "\n").split("\n");
+      if (lines.at(-1) === "") lines.pop();
+      if (lines.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
+      return lines;
+    }
+    if (Array.isArray(input)) {
+      if (input.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
+      return input;
+    }
+    if (input && typeof input === "object") return [input];
+    throw new TypeError("Log input must be text, a record, or an array of entries.");
   };
 
   /* --- LIFECYCLE --- */
@@ -498,11 +504,11 @@
     return { ready: state.ready, append, destroy: state.destroy };
   }
 
-  global.byLOGviewer = byLOGviewer;
-  byLOGviewer.VERSION = "1";
-  byLOGviewer.initialized = true;
   byLOGviewer.parse = (input) => {
     const entry = defaultParse(input);
     return { ...entry, level: normalizeLevel(entry.level) };
   };
+  /* --- EXPORT --- */
+  global.byLOGviewer = byLOGviewer;
+  byLOGviewer.initialized = true;
 })(typeof window !== "undefined" ? window : this);
