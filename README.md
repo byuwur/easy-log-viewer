@@ -57,6 +57,14 @@ The controller also exposes `append(batch): Promise<boolean>`. Batches are queue
 
 Only the newest `maxEntries` are retained. Calling `append()` after disposal resolves false. The initial `ready` Promise belongs to the initial batch.
 
+```javascript
+const logs = byLOGviewer(target, []);
+await logs.ready;
+const accepted = await logs.append({ level: "info", message: "Upload complete" });
+// accepted is false if the batch failed or this instance was disposed.
+logs.destroy(); // Call when the host panel is removed.
+```
+
 ## Log options
 
 | Option | Default | Behavior |
@@ -76,24 +84,26 @@ Text batches are limited to 10 million characters and 100,000 entries. Parsing/f
 
 ## Shared controls and lifecycle
 
-| Option | Default | Behavior |
-| --- | --- | --- |
-| `toolbar` | `true` | Show the viewer header; secondary tools are configured separately. |
-| `credits` | `true` | Show attribution in the header. |
-| `statusBar` | `true` | Show counts and metadata. Loading, errors, and empty results remain visible. |
-| `levelFilter` | `false` | Show the severity filter. |
-| `autoScrollControl` | `false` | Show the auto-scroll switch; autoScroll also works without it. |
-| `copyEntries` | `false` | Show a copy button on each entry. |
-| `details` | `true` | Show structured entry details. |
-| `loadMore` | `true` | Load entries in batches; false displays every matching entry. |
-| `themeToggle` | `true` | Show the theme toggle. |
-| `fontSizeControls` | `true` | Show text-size controls. |
-| `copyButton` | `true` | Show full source copy button. |
-| `controlsSize` | `"regular"` | `"small"`, `"regular"`, or `"large"`; invalid values use `"regular"`. |
-| `controlsCompact` | `true` | Keep credits beside controls; `false` stacks them. Wraps as needed. |
-| `controlsPosition` | `"top"` | Sticky `"top"` or `"bottom"` toolbar; invalid values use `"top"`. |
+| Option              | Default     | Behavior                                                                     |
+| ------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `toolbar`           | `true`      | Show the viewer header; secondary tools are configured separately.           |
+| `credits`           | `true`      | Show attribution in the header.                                              |
+| `statusBar`         | `true`      | Show counts and metadata. Loading, errors, and empty results remain visible. |
+| `levelFilter`       | `false`     | Show the severity filter.                                                    |
+| `autoScrollControl` | `false`     | Show the auto-scroll switch; autoScroll also works without it.               |
+| `copyEntries`       | `false`     | Show a copy button on each entry.                                            |
+| `details`           | `true`      | Show structured entry details.                                               |
+| `loadMore`          | `true`      | Load entries in batches; false displays every matching entry.                |
+| `themeToggle`       | `true`      | Show the theme toggle.                                                       |
+| `fontSizeControls`  | `true`      | Show text-size controls.                                                     |
+| `copyButton`        | `true`      | Show full source copy button.                                                |
+| `controlsSize`      | `"regular"` | `"small"`, `"regular"`, or `"large"`; invalid values use `"regular"`.        |
+| `controlsCompact`   | `true`      | Keep credits beside controls; `false` stacks them. Wraps as needed.          |
+| `controlsPosition`  | `"top"`     | Sticky `"top"` or `"bottom"` toolbar; invalid values use `"top"`.            |
 
-The controller exposes `ready` and `destroy()`. `ready` resolves `true` after initial rendering, or `false` on a displayed data error or cancellation. Invalid targets/options can throw synchronously.
+The controller exposes `ready`, `append()`, and `destroy()`. `ready` resolves `true` after initial rendering, or `false` on a displayed data error or cancellation. Invalid targets/options can throw synchronously.
+
+`ready` describes the initial render only. Await each later `append()` call's returned promise to track that batch.
 
 Re-rendering disposes the previous instance. `destroy()` cancels pending work and clears the target only if the instance still owns it. Duplicate script loads preserve the API. Read its version with `byLOGviewer.VERSION`.
 
@@ -105,7 +115,7 @@ Requires a modern browser with async functions, WeakMap, ES2022 array methods, a
 
 `--by-view-content-font` and `--by-view-line-height` set source/tree typography.
 
-The default header shows Theme, text-size controls, and Copy. Secondary tools are opt-in. Use `toolbar: false` to hide the header, or switch individual controls off as needed.
+Use `toolbar: false` to hide the header, or disable `credits`, `themeToggle`, `fontSizeControls`, and `copyButton` individually. Content actions such as search and format-specific buttons use their own options.
 
 Controls use monospace by default; override `--by-view-controls-font` to change it.
 
@@ -113,12 +123,12 @@ Controls use monospace by default; override `--by-view-controls-font` to change 
 
 `log.css` includes all palettes in Light and Dark. Monokai is the default.
 
-| Palette | `data-theme` | What it looks like |
-| --- | --- | --- |
-| Monokai (default) | `monokai` | Warm light and dark colors. |
-| GitHub | `github` | Familiar neutral surfaces and syntax colors. |
-| Solarized | `solarized` | Warm light or deep blue-green dark surfaces. |
-| High Contrast | `high-contrast` | Black/white surfaces, strong text, borders, and focus indicators. |
+| Palette           | `data-theme`    | What it looks like                                                |
+| ----------------- | --------------- | ----------------------------------------------------------------- |
+| Monokai (default) | `monokai`       | Warm light and dark colors.                                       |
+| GitHub            | `github`        | Familiar neutral surfaces and syntax colors.                      |
+| Solarized         | `solarized`     | Warm light or deep blue-green dark surfaces.                      |
+| High Contrast     | `high-contrast` | Black/white surfaces, strong text, borders, and focus indicators. |
 
 Use a mode class and a palette name together:
 
@@ -138,7 +148,7 @@ High Contrast text colors target at least [7:1 contrast](https://www.w3.org/WAI/
 
 ### Make it yours
 
-**Custom theme CSS** starts with the selected palette's complete Light/Dark defaults, including controls and format-specific colors. Switching presets keeps your custom draft until Reset. On your page, use `data-theme="custom"` with `class="light"` or `class="dark"`.
+The playground's **Custom theme CSS** field edits both modes of the selected palette. Export those rules to your own stylesheet and use `data-theme="custom"` with `class="light"` or `class="dark"`. Custom drafts stay in the playground; the renderer does not store them.
 
 Define a named palette after the viewer stylesheet. Unspecified colors inherit Monokai:
 
@@ -191,9 +201,11 @@ node --test tests/rendering.cjs
 
 ## The easy viewers
 
-Need a viewer for another format? Explore the family:
+Need another format, or a Markdown editor? Explore the family:
 
 [Markdown](https://github.com/byuwur/easy-md-viewer) · [JSON](https://github.com/byuwur/easy-json-viewer) · [CSV & TSV](https://github.com/byuwur/easy-csv-viewer) · [Logs](https://github.com/byuwur/easy-log-viewer) · [Diff](https://github.com/byuwur/easy-diff-viewer) · [XML](https://github.com/byuwur/easy-xml-viewer) · [YAML](https://github.com/byuwur/easy-yaml-viewer) · [Source code](https://github.com/byuwur/easy-code-viewer)
+
+[Write Markdown with easy-md-editor](https://github.com/byuwur/easy-md-editor).
 
 ## License
 
