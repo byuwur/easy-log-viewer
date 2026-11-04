@@ -484,7 +484,8 @@ test("family customization, navigation and monospace controls", async () => {
     const root = frame.locator(".byLOGdocument");
     const initial = await root.evaluate((element) => ({ font: element.style.fontFamily, size: element.style.fontSize, bg: element.style.getPropertyValue("--by-view-bg") }));
     assert.match(await frame.locator(".byVIEWtoolbar").evaluate((element) => getComputedStyle(element).fontFamily), /monospace/);
-    assert.equal(await page.locator('[aria-label="Viewer suite"] a').count(), 8);
+    assert.equal(await page.locator('[aria-label="Viewer suite"] a').count(), 9);
+    assert.equal(await page.locator(".viewer-suite").getByRole("link", { name: "MD.edit", exact: true }).getAttribute("href"), "https://byuwur.github.io/easy-md-editor/");
     assert.equal(await page.locator('[aria-label="Viewer suite"]').getByRole("link", { name: "LOG", exact: true }).getAttribute("aria-current"), "page");
     assert.equal(await page.locator(".site-footer .fa-heart").count(), 1);
     assert.equal(await page.locator("header .fa-github").count(), 1);
