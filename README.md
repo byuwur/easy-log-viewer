@@ -19,8 +19,8 @@ Open `index.html` for the local playground; its page assets require internet acc
 **Recommended: CDN.** No downloads or package manager.
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.js" defer></script>
+<link href="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.min.js" defer></script>
 <div id="viewer" data-theme="light"></div>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -86,8 +86,8 @@ Text batches are limited to 10 million characters and 100,000 entries. Parsing/f
 
 | Option              | Default     | Behavior                                                                                                                                                   |
 | ------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animations` | `true` | Brief control/disclosure motion and background fades; overrides the system motion preference. |
-| `appearAnimation` | `false` | Fade and gently move the viewer in when `animations` is enabled. Initial rendering remains immediate by default. |
+| `animations`        | `true`      | Brief control/disclosure motion and background fades; overrides the system motion preference.                                                              |
+| `appearAnimation`   | `false`     | Fade and gently move the viewer in when `animations` is enabled. Initial rendering remains immediate by default.                                           |
 | `toolbar`           | `true`      | Show the viewer header; secondary tools are configured separately.                                                                                         |
 | `credits`           | `true`      | Show attribution in the header.                                                                                                                            |
 | `displayContainer`  | `true`      | Show the content panel frame and inner horizontal padding. `false` also hides status information.                                                          |
@@ -156,63 +156,63 @@ The playground uses SPA.js's Pickr assets for color and opacity, with text input
 **48 palettes, each with Light and Dark modes.** Monokai, GitHub, Solarized, and High Contrast are included in `log.css`. Load the optional `log.themes.css` after it for the other 44 skins:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.themes.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.themes.min.css" />
 ```
 
 For local use, save `log.themes.css` beside `log.css`. The playground loads both stylesheets; default HTML starters use the core stylesheet. Known extra presets without the pack fall back to the current mode and emit a one-time `console.warn` naming the required file. Custom CSS names do not need the pack.
 
 The picker groups palettes into Essentials, Editor classics, App inspired, Colorful, and Reading & nature. Palette definitions remain at the end of each stylesheet.
 
-| Palette | `data-theme` | What it looks like |
-| --- | --- | --- |
-| Monokai (default) | `monokai` | Warm light and dark colors; the default. |
-| GitHub | `github` | Neutral GitHub surfaces and syntax. |
-| Solarized | `solarized` | Warm paper and deep blue-green surfaces. |
-| High Contrast | `high-contrast` | Strong text, borders, and focus indicators. |
-| Dracula | `dracula` | Purple with vivid pink, green, and cyan. |
-| Darcula | `darcula` | Charcoal surfaces and warm IDE accents. |
-| Nord | `nord` | Arctic blues and snowy neutral surfaces. |
-| Catppuccin | `catppuccin` | Latte and Mocha with soft mauve accents. |
-| Catppuccin Frappé | `catppuccin-frappe` | Cooler Catppuccin with a blue accent. |
-| Catppuccin Macchiato | `catppuccin-macchiato` | Catppuccin with a warm pink accent. |
-| Rosé Pine | `rose-pine` | Dawn and Pine with dusty rose accents. |
-| Rosé Pine Moon | `rose-pine-moon` | A duskier violet take on Rosé Pine. |
-| Gruvbox | `gruvbox` | Warm retro browns, olive, and orange. |
-| Gruvbox Material | `gruvbox-material` | Softer earthy surfaces and muted greens. |
-| Tokyo Night | `tokyo-night` | Tokyo Day and Night with electric blues. |
-| Tokyo Storm | `tokyo-storm` | A brighter blue-gray Tokyo evening. |
-| Tokyo Moon | `tokyo-moon` | Indigo nights and luminous lavender. |
-| One | `one` | Clean One Light and One Dark colors. |
-| Material | `material` | Blue-gray material surfaces and cyan. |
-| Material Ocean | `material-ocean` | Deep navy with soft fluorescent accents. |
-| Night Owl | `night-owl` | Little Light and deep-blue night colors. |
-| Synthwave | `synthwave` | Neon magenta and cyan with no glow effects. |
-| Ayu | `ayu` | Warm amber over light paper or dark navy. |
-| Everforest | `everforest` | Soft forest greens and cream. |
-| Kanagawa | `kanagawa` | Ink, old paper, and Japanese wave colors. |
-| Selenized | `selenized` | Balanced teal surfaces and restrained color. |
-| VS Code | `vscode` | Familiar neutral editor surfaces and blue. |
-| Monokai Dimmed | `monokai-dimmed` | Quieter charcoal and desaturated Monokai. |
-| Discord | `discord` | Blurple accents and familiar chat surfaces. |
-| Slack | `slack` | Aubergine, warm pink, and friendly teal. |
-| BONYUR | `bonyur` | Signature teal and pink over warm neutral ink. |
-| Sakura | `sakura` | Cherry-blossom pink from surface to syntax. |
-| Bubblegum | `bubblegum` | Saturated hot-pink surfaces and cyan accents. |
-| Candy | `candy` | Pink and mint with playful lavender syntax. |
-| Rose Gold | `rose-gold` | Dusty pink and warm copper. |
-| Lavender | `lavender` | Lilac surfaces with deep violet accents. |
-| Cyberpunk | `cyberpunk` | Acid yellow, electric cyan, and magenta. |
-| Sunset | `sunset` | Burnt orange, coral, and evening purple. |
-| Volcano | `volcano` | Lava reds over warm ash. |
-| Amber | `amber` | Golden amber inspired by old displays. |
-| Terminal | `terminal` | Phosphor greens on near-black. |
-| Paper | `paper` | Warm cream, brown ink, and quiet margins. |
-| Ink | `ink` | Grayscale surfaces and restrained syntax. |
-| Ocean | `ocean` | Deep ocean blue and clear turquoise. |
-| Forest | `forest` | Rich green surfaces and mossy accents. |
-| Mint | `mint` | Fresh mint surfaces and cool teal. |
-| Ice | `ice` | Glacial blue, crisp whites, and silver. |
-| Sepia | `sepia` | Aged parchment and warm brown ink. |
+| Palette              | `data-theme`           | What it looks like                             |
+| -------------------- | ---------------------- | ---------------------------------------------- |
+| Monokai (default)    | `monokai`              | Warm light and dark colors; the default.       |
+| GitHub               | `github`               | Neutral GitHub surfaces and syntax.            |
+| Solarized            | `solarized`            | Warm paper and deep blue-green surfaces.       |
+| High Contrast        | `high-contrast`        | Strong text, borders, and focus indicators.    |
+| Dracula              | `dracula`              | Purple with vivid pink, green, and cyan.       |
+| Darcula              | `darcula`              | Charcoal surfaces and warm IDE accents.        |
+| Nord                 | `nord`                 | Arctic blues and snowy neutral surfaces.       |
+| Catppuccin           | `catppuccin`           | Latte and Mocha with soft mauve accents.       |
+| Catppuccin Frappé    | `catppuccin-frappe`    | Cooler Catppuccin with a blue accent.          |
+| Catppuccin Macchiato | `catppuccin-macchiato` | Catppuccin with a warm pink accent.            |
+| Rosé Pine            | `rose-pine`            | Dawn and Pine with dusty rose accents.         |
+| Rosé Pine Moon       | `rose-pine-moon`       | A duskier violet take on Rosé Pine.            |
+| Gruvbox              | `gruvbox`              | Warm retro browns, olive, and orange.          |
+| Gruvbox Material     | `gruvbox-material`     | Softer earthy surfaces and muted greens.       |
+| Tokyo Night          | `tokyo-night`          | Tokyo Day and Night with electric blues.       |
+| Tokyo Storm          | `tokyo-storm`          | A brighter blue-gray Tokyo evening.            |
+| Tokyo Moon           | `tokyo-moon`           | Indigo nights and luminous lavender.           |
+| One                  | `one`                  | Clean One Light and One Dark colors.           |
+| Material             | `material`             | Blue-gray material surfaces and cyan.          |
+| Material Ocean       | `material-ocean`       | Deep navy with soft fluorescent accents.       |
+| Night Owl            | `night-owl`            | Little Light and deep-blue night colors.       |
+| Synthwave            | `synthwave`            | Neon magenta and cyan with no glow effects.    |
+| Ayu                  | `ayu`                  | Warm amber over light paper or dark navy.      |
+| Everforest           | `everforest`           | Soft forest greens and cream.                  |
+| Kanagawa             | `kanagawa`             | Ink, old paper, and Japanese wave colors.      |
+| Selenized            | `selenized`            | Balanced teal surfaces and restrained color.   |
+| VS Code              | `vscode`               | Familiar neutral editor surfaces and blue.     |
+| Monokai Dimmed       | `monokai-dimmed`       | Quieter charcoal and desaturated Monokai.      |
+| Discord              | `discord`              | Blurple accents and familiar chat surfaces.    |
+| Slack                | `slack`                | Aubergine, warm pink, and friendly teal.       |
+| BONYUR               | `bonyur`               | Signature teal and pink over warm neutral ink. |
+| Sakura               | `sakura`               | Cherry-blossom pink from surface to syntax.    |
+| Bubblegum            | `bubblegum`            | Saturated hot-pink surfaces and cyan accents.  |
+| Candy                | `candy`                | Pink and mint with playful lavender syntax.    |
+| Rose Gold            | `rose-gold`            | Dusty pink and warm copper.                    |
+| Lavender             | `lavender`             | Lilac surfaces with deep violet accents.       |
+| Cyberpunk            | `cyberpunk`            | Acid yellow, electric cyan, and magenta.       |
+| Sunset               | `sunset`               | Burnt orange, coral, and evening purple.       |
+| Volcano              | `volcano`              | Lava reds over warm ash.                       |
+| Amber                | `amber`                | Golden amber inspired by old displays.         |
+| Terminal             | `terminal`             | Phosphor greens on near-black.                 |
+| Paper                | `paper`                | Warm cream, brown ink, and quiet margins.      |
+| Ink                  | `ink`                  | Grayscale surfaces and restrained syntax.      |
+| Ocean                | `ocean`                | Deep ocean blue and clear turquoise.           |
+| Forest               | `forest`               | Rich green surfaces and mossy accents.         |
+| Mint                 | `mint`                 | Fresh mint surfaces and cool teal.             |
+| Ice                  | `ice`                  | Glacial blue, crisp whites, and silver.        |
+| Sepia                | `sepia`                | Aged parchment and warm brown ink.             |
 
 Editor and app skins are inspired adaptations, including light counterparts where needed; colors are adjusted for readable text and controls rather than exact replicas. All palettes use the same layout and need no assets beyond the core stylesheet and optional theme pack.
 

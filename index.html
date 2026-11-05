@@ -28,7 +28,7 @@
     <meta name="twitter:description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
     <meta name="twitter:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" />
     <meta name="twitter:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/shards.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/shards.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/pickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/fontawesome.min.css" />
@@ -36,8 +36,8 @@
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/popper.min.js" defer=""></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/bootstrap.min.js" defer=""></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/animate.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.css" />
-    <script src="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.min.js" defer></script>
   </head>
 
   <body class="byVIEWmotion">
@@ -1125,6 +1125,7 @@
         const installButtons = [...document.querySelectorAll("[data-install]")];
         const updateIntegration = (mode = "cdn") => {
           const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/" : "";
+          const min = mode === "cdn" ? ".min" : "";
           const endScript = "</" + "script>";
           // Explicit lines preserve export indentation when the page is formatted.
           const html = [
@@ -1134,8 +1135,8 @@
             '    <meta charset="utf-8">',
             '    <meta name="viewport" content="width=device-width, initial-scale=1">',
             "    <title>easy-log-viewer</title>",
-            `    <link rel="stylesheet" href="${base}log.css">`,
-            `    <script src="${base}log.js" defer>${endScript}`,
+            `    <link rel="stylesheet" href="${base}log${min}.css">`,
+            `    <script src="${base}log${min}.js" defer>${endScript}`,
             "  </head>",
             "  <body>",
             '    <div id="viewer" data-theme="light"></div>',
@@ -1417,7 +1418,11 @@
           const loadPalette = () => {
             clearTimeout(themeTimer);
             if (!target()) return;
-            if (!["monokai", "github", "solarized", "high-contrast", "custom"].includes(palette.value) && !themesWarned && frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue("--by-log-themes-loaded").trim() !== "1") {
+            if (
+              !["monokai", "github", "solarized", "high-contrast", "custom"].includes(palette.value) &&
+              !themesWarned &&
+              frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue("--by-log-themes-loaded").trim() !== "1"
+            ) {
               themesWarned = true;
               console.warn(`easy-log-viewer: Import log.themes.css after log.css to use "${palette.value}".`);
             }
