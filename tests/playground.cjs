@@ -9,6 +9,12 @@ const path = require("node:path");
 const test = require("node:test");
 const { chromium } = require("playwright");
 
+// Read the displayed source without line numbers or status text.
+const readStarter = async (page) => {
+  await page.locator('#integration-code[aria-busy="false"]').waitFor();
+  return (await page.locator("#integration-code .byCODEtext").allTextContents()).join("\n");
+};
+
 /* --- THEME FIXTURES --- */
 // Caller-provided legacy stylesheets reuse the canonical palettes without distribution files.
 const legacyThemeCSS = (theme) => {
@@ -47,6 +53,11 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await page.route("**/*", async (route) => {
       if (route.request().url() === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
       const url = new URL(route.request().url());
+      if (["https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.css", "https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.js"].includes(url.href)) {
+        const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+        assert.ok(response.ok, "Unable to load pinned CODE asset");
+        return route.fulfill({ body: await response.text(), contentType: url.pathname.endsWith(".js") ? "text/javascript" : "text/css" });
+      }
       if (url.origin !== "https://viewer.test") return route.abort();
       const file = path.basename(url.pathname);
       if (/^log\.(light|dark)\.css$/.test(file)) return route.fulfill({ body: legacyThemeCSS(file.includes(".dark.css") ? "dark" : "light"), contentType: "text/css" });
@@ -70,13 +81,41 @@ test("suite playground, exports, and stylesheet controls", async () => {
       .evaluate(() => byLOGviewer.VERSION);
     assert.ok((await page.frameLocator("#preview-frame").locator(".byVIEWinfo").textContent()).includes(` v${release} `), "Credits must match the runtime release");
     const cdnBase = "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/";
+    const starterViewer = page.locator("#integration-code.byCODEdocument");
+    assert.equal(await page.evaluate(() => byCODEviewer.VERSION), "1.5");
+    assert.equal(await starterViewer.getAttribute("data-theme"), "dark");
+    await starterViewer.locator(".byCODEtext").first().waitFor();
+    assert.ok((await starterViewer.locator(".byCODElineNumber").count()) > 0);
+    assert.equal(await starterViewer.locator(".byVIEWtoolbar, button, input, select").count(), 0);
+    assert.equal(await starterViewer.locator(".byVIEWstatus:visible").count(), 0);
+    assert.deepEqual(await starterViewer.evaluate((element) => [element, element.querySelector(".byVIEWpanel"), element.querySelector(".byCODElineNumber")].map((node) => getComputedStyle(node).backgroundColor)), [
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)"
+    ]);
+    assert.ok((await starterViewer.locator(".byCODEtag").count()) > 0);
+    assert.equal(await page.locator("#integration-code script").count(), 0);
+    const starterTagColor = await starterViewer
+      .locator(".byCODEtag")
+      .first()
+      .evaluate((token) => getComputedStyle(token).color);
+    await page.locator("#site-theme").click();
+    assert.equal(await starterViewer.getAttribute("data-theme"), "light");
+    assert.notEqual(
+      await starterViewer
+        .locator(".byCODEtag")
+        .first()
+        .evaluate((token) => getComputedStyle(token).color),
+      starterTagColor
+    );
+    await page.locator("#site-theme").click();
     const readme = require("node:fs").readFileSync(path.join(__dirname, "../README.md"), "utf8");
     for (const extension of ["css", "js"]) assert.ok(readme.includes(`${cdnBase}log.${extension}`), "README assets must match the CDN starter");
     assert.equal(await page.locator("#install-note").textContent(), "CDN follows the latest release; updates may take time to reach caches.");
-    assert.ok((await page.locator("#integration-code").inputValue()).includes(`href="${cdnBase}log.css"`));
+    assert.ok((await readStarter(page)).includes(`href="${cdnBase}log.css"`));
     assert.equal(await page.locator('[data-install="cdn"]').getAttribute("aria-pressed"), "true");
     await page.locator('[data-install="local"]').click();
-    const starter = await page.locator("#integration-code").inputValue();
+    const starter = await readStarter(page);
     await page.evaluate(() => {
       window.successfulClipboardWrite = navigator.clipboard.writeText;
       navigator.clipboard.writeText = async () => {
@@ -85,7 +124,10 @@ test("suite playground, exports, and stylesheet controls", async () => {
     });
     await page.locator("#copy-html").click();
     await page.waitForFunction(() => document.querySelector("#copy-html span").textContent === "Failed");
-    assert.equal(await page.locator("#integration-code").evaluate((element) => document.activeElement === element && element.selectionEnd === element.value.length), true);
+    assert.equal(
+      await page.locator("#integration-code").evaluate((element) => document.activeElement === element && document.getSelection().toString() === [...element.querySelectorAll(".byCODEtext")].map((line) => line.textContent).join("\n")),
+      true
+    );
     assert.match(await page.locator("#copy-html").getAttribute("title"), /Ctrl\+C/);
     await page.evaluate(() => {
       navigator.clipboard.writeText = window.successfulClipboardWrite;
@@ -108,7 +150,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await page.locator("#source").fill("");
     await page.locator("#render").click();
     await page.waitForFunction(() => !document.getElementById("render-status").textContent.includes("Rendering"));
-    assert.equal(await page.locator("#integration-code").inputValue(), starter);
+    assert.equal(await readStarter(page), starter);
     await page.locator("#copy-html").click();
     assert.equal(await page.evaluate(() => copiedHTML), starter);
     const [download] = await Promise.all([page.waitForEvent("download"), page.locator("#download-html").click()]);
@@ -136,7 +178,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await exported.locator(".byVIEWcopy").click();
     assert.equal(await exported.evaluate(() => copiedSource), expectedCopy);
     await page.locator('[data-install="cdn"]').click();
-    const cdnStarter = await page.locator("#integration-code").inputValue();
+    const cdnStarter = await readStarter(page);
     assert.equal(cdnStarter.replaceAll(cdnBase, ""), starter, "Only asset paths change between modes");
     assert.ok(cdnStarter.includes('href="' + cdnBase + 'log.css"'));
     assert.ok(cdnStarter.includes('src="' + cdnBase + 'log.js"'));
@@ -165,7 +207,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     assert.deepEqual(cdnRequests.sort(), [cdnBase + "log.css", cdnBase + "log.js"]);
     await cdnPage.close();
     await page.locator('[data-install="local"]').click();
-    assert.equal(await page.locator("#integration-code").inputValue(), starter);
+    assert.equal(await readStarter(page), starter);
     assert.equal(await page.locator('[data-install="local"]').getAttribute("aria-pressed"), "true");
     // Caller-provided legacy stylesheets still synchronize unassigned viewers.
     await exported.evaluate(async () => {

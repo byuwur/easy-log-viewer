@@ -36,6 +36,8 @@
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/popper.min.js" defer=""></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/bootstrap.min.js" defer=""></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.css" />
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.5/code.js" defer></script>
   </head>
 
   <body class="byVIEWmotion">
@@ -422,8 +424,8 @@
           ></a>
         </div>
         <div class="col-lg-9">
-          <div class="code-box bg-body-tertiary border">
-            <div class="code-toolbar px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div class="code-box border">
+            <div class="code-toolbar bg-body-tertiary px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
               <div class="btn-group" role="group" aria-label="Integration asset source">
                 <button class="btn btn-outline-secondary fw-semibold" type="button" data-install="cdn" aria-pressed="true">CDN</button>
                 <button class="btn btn-outline-secondary fw-semibold" type="button" data-install="local" aria-pressed="false">Local files</button>
@@ -433,13 +435,7 @@
                 ><button id="download-html" class="btn btn-accent btn-sm px-3 fw-semibold" type="button"><i class="fa-solid fa-download me-1" aria-hidden="true"></i> Download HTML</button>
               </div>
             </div>
-            <textarea
-              id="integration-code"
-              class="integration-code m-0 form-control font-monospace d-block w-100 border-0 px-4 py-3 overflow-auto bg-body"
-              readonly=""
-              spellcheck="false"
-              wrap="soft"
-              aria-label="Complete HTML integration"></textarea>
+            <div id="integration-code" class="integration-code m-0 font-monospace d-block w-100 px-4 py-3 overflow-auto" data-theme="dark" tabindex="0" role="region" aria-label="Complete HTML integration"></div>
             <p id="export-status" class="small text-body-secondary mx-4 my-0" role="status" aria-live="polite"></p>
           </div>
         </div>
@@ -688,9 +684,19 @@
         outline-offset: -0.125rem;
       }
       .integration-code {
+        --by-view-document-bg: #0000;
+        --by-view-container-bg: #0000;
+        border: 0;
+        border-radius: 0;
         height: 28rem;
         white-space: pre-wrap;
         overflow-wrap: anywhere;
+      }
+      .integration-code > .byVIEWcontent:first-child {
+        padding-top: 0;
+      }
+      .integration-code .byCODElineNumber {
+        background: #0000;
       }
       .accordion {
         --bs-accordion-bg: var(--bs-tertiary-bg);
@@ -1034,14 +1040,30 @@
           siteTheme.querySelector("i").className = `fa-solid ${light ? "fa-moon" : "fa-sun"} me-1`;
           siteTheme.setAttribute("aria-label", `Switch website to ${light ? "dark" : "light"} theme`);
           document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.documentElement).getPropertyValue("--bs-body-bg").trim();
+          document.getElementById("integration-code").dataset.theme = document.documentElement.dataset.bsTheme;
         });
         // --- INTEGRATION ---
         const jsString = (value) => JSON.stringify(value).replaceAll("<", "\\u003c");
+        let integrationHTML = "";
+        function renderIntegration(html) {
+          if (html === integrationHTML) return;
+          integrationHTML = html;
+          const code = document.getElementById("integration-code");
+          if (typeof window.byCODEviewer === "function") {
+            byCODEviewer(code, html, {
+              language: "html",
+              theme: document.documentElement.dataset.bsTheme,
+              fontSize: 1,
+              toolbar: false,
+              displayContainer: false
+            });
+          } else code.textContent = html;
+        }
         const integrationCode = document.getElementById("integration-code");
         const installButtons = [...document.querySelectorAll("[data-install]")];
         const updateIntegration = (mode = "cdn") => {
           const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/" : "";
-          integrationCode.value = `<!doctype html>
+          const html = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -1059,6 +1081,7 @@
   <\/script>
 </body>
 </html>`;
+          renderIntegration(html);
           document.getElementById("install-note").textContent = mode === "cdn" ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside log.js and log.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
           document.getElementById("export-status").textContent = "";
@@ -1074,7 +1097,8 @@
             button.removeAttribute("title");
           } catch {
             selectable.focus();
-            selectable.select();
+            if (typeof selectable.select === "function") selectable.select();
+            else document.getSelection()?.selectAllChildren(selectable);
             caption.textContent = "Failed";
             button.title = "Clipboard unavailable. Press Ctrl+C or ⌘C to copy the selected text.";
           }
@@ -1093,9 +1117,9 @@
           button.addEventListener("focusout", reset);
         });
 
-        document.getElementById("copy-html").addEventListener("click", (event) => copyText(integrationCode.value, integrationCode, event.currentTarget));
+        document.getElementById("copy-html").addEventListener("click", (event) => copyText(integrationHTML, integrationCode, event.currentTarget));
         document.getElementById("download-html").addEventListener("click", () => {
-          const url = URL.createObjectURL(new Blob([integrationCode.value], { type: "text/html;charset=utf-8" }));
+          const url = URL.createObjectURL(new Blob([integrationHTML], { type: "text/html;charset=utf-8" }));
           const link = document.createElement("a");
           link.href = url;
           link.download = "easy-log-viewer.html";
