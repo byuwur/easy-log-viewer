@@ -448,6 +448,7 @@ test("family customization, navigation and monospace controls", async () => {
     await page.locator("#displayContainer").check();
     await frame.waitForFunction(() => !document.querySelector(".byVIEWplain"));
     assert.equal(await page.locator("#statusBar").isDisabled(), false);
+    await frame.locator(".byVIEWpanel > .byVIEWstatus").waitFor({ state: "visible" });
     assert.equal(await frame.locator(".byVIEWpanel > .byVIEWstatus:visible").count(), 1);
     await page.locator("#reset-settings").evaluate((button) => button.click());
     assert.deepEqual(await root.evaluate((element) => ({ font: element.style.fontFamily, size: element.style.fontSize, bg: element.style.getPropertyValue("--by-view-bg") })), initial);
