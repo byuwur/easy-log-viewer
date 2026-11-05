@@ -64,11 +64,52 @@
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
   /* --- APPEARANCE --- */
-  const extraPalettes = new Set(
-    "dracula darcula nord catppuccin catppuccin-frappe catppuccin-macchiato rose-pine rose-pine-moon gruvbox gruvbox-material tokyo-night tokyo-storm tokyo-moon one material material-ocean night-owl synthwave ayu everforest kanagawa selenized vscode monokai-dimmed discord slack bonyur sakura bubblegum candy rose-gold lavender cyberpunk sunset volcano amber terminal paper ink ocean forest mint ice sepia".split(
-      " "
-    )
-  );
+  const extraPalettes = new Set([
+    "dracula",
+    "darcula",
+    "nord",
+    "catppuccin",
+    "catppuccin-frappe",
+    "catppuccin-macchiato",
+    "rose-pine",
+    "rose-pine-moon",
+    "gruvbox",
+    "gruvbox-material",
+    "tokyo-night",
+    "tokyo-storm",
+    "tokyo-moon",
+    "one",
+    "material",
+    "material-ocean",
+    "night-owl",
+    "synthwave",
+    "ayu",
+    "everforest",
+    "kanagawa",
+    "selenized",
+    "vscode",
+    "monokai-dimmed",
+    "discord",
+    "slack",
+    "bonyur",
+    "sakura",
+    "bubblegum",
+    "candy",
+    "rose-gold",
+    "lavender",
+    "cyberpunk",
+    "sunset",
+    "volcano",
+    "amber",
+    "terminal",
+    "paper",
+    "ink",
+    "ocean",
+    "forest",
+    "mint",
+    "ice",
+    "sepia"
+  ]);
   const warnedPalettes = new Set();
   const warnMissingThemes = (element, palette = element.dataset.theme) => {
     if (!extraPalettes.has(palette) || warnedPalettes.has(palette)) return;
