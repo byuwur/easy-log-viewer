@@ -63,6 +63,27 @@
   /** Yield at a chunk boundary so input events and replacement renders can run. */
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
+  /* --- APPEARANCE --- */
+  /** Explicit appearance options override markup; omitted values preserve the container's state. */
+  const applyAppearance = (element, options) => {
+    const { theme, palette, fontSize } = options;
+    if (theme != null && !["light", "dark"].includes(theme)) throw new RangeError("Theme must be light or dark.");
+    if (palette != null && (typeof palette !== "string" || !/^[a-z][\w-]*$/i.test(palette) || ["light", "dark"].includes(palette))) throw new RangeError("Palette must be a CSS theme name; use theme for light or dark.");
+    const size = typeof fontSize === "number" ? `${Math.max(0.5, Math.min(3, fontSize))}rem` : typeof fontSize === "string" ? `clamp(0.5rem, ${fontSize}, 3rem)` : "";
+    if (fontSize != null && (typeof fontSize === "number" ? !Number.isFinite(fontSize) : typeof fontSize !== "string" || !CSS.supports("font-size", size))) throw new RangeError("Font size must be a finite multiplier or a CSS size.");
+    if (theme != null || palette != null) {
+      const mode = theme ?? (["light", "dark"].includes(element.dataset.theme) ? element.dataset.theme : element.classList.contains("dark") ? "dark" : "light");
+      element.classList.toggle("light", mode === "light");
+      element.classList.toggle("dark", mode === "dark");
+      if (palette != null) element.dataset.theme = palette;
+      else if (["light", "dark"].includes(element.dataset.theme)) element.dataset.theme = mode;
+    }
+    if (fontSize != null) {
+      element.style.fontSize = size;
+      element.dataset.byViewDefaultFontSize = element.style.fontSize;
+    }
+  };
+
   /* --- CONTROLS --- */
   // Mirrored across the family so each viewer can run without a shared runtime.
   /**
@@ -298,6 +319,7 @@
   /** Replace the previous owner and return its cancellable state. Only the current owner may clear the host. */
   const mount = (element, options, getText) => {
     if (!(element instanceof HTMLElement)) throw new TypeError("byLOGviewer: element must be an HTMLElement.");
+    applyAppearance(element, options);
     instances.get(element)?.destroy();
     const state = { active: true };
     state.destroy = () => {
