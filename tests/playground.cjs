@@ -116,6 +116,10 @@ test("suite playground, exports, and stylesheet controls", async () => {
     assert.equal(await page.locator('[data-install="cdn"]').getAttribute("aria-pressed"), "true");
     await page.locator('[data-install="local"]').click();
     const starter = await readStarter(page);
+    assert.match(starter, /^ {2}<head>$/m);
+    assert.match(starter, /^ {4}<script>$/m);
+    assert.match(starter, /^ {6}document\.addEventListener\("DOMContentLoaded", \(\) => \{$/m);
+    assert.match(starter, /^ {12}"toolbar": true,/m);
     await page.evaluate(() => {
       window.successfulClipboardWrite = navigator.clipboard.writeText;
       navigator.clipboard.writeText = async () => {

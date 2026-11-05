@@ -1063,24 +1063,32 @@
         const installButtons = [...document.querySelectorAll("[data-install]")];
         const updateIntegration = (mode = "cdn") => {
           const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/" : "";
-          const html = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>easy-log-viewer</title>
-  <link rel="stylesheet" href="${base}log.css">
-  <script src="${base}log.js" defer><\/script>
-</head>
-<body>
-  <div id="viewer" data-theme="light"></div>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      byLOGviewer(document.getElementById("viewer"), ${jsString(initialSource)}, ${JSON.stringify(defaults, null, 2)});
-    });
-  <\/script>
-</body>
-</html>`;
+          const endScript = "</" + "script>";
+          // Explicit lines preserve export indentation when the page is formatted.
+          const html = [
+            "<!doctype html>",
+            '<html lang="en">',
+            "  <head>",
+            '    <meta charset="utf-8">',
+            '    <meta name="viewport" content="width=device-width, initial-scale=1">',
+            "    <title>easy-log-viewer</title>",
+            `    <link rel="stylesheet" href="${base}log.css">`,
+            `    <script src="${base}log.js" defer>${endScript}`,
+            "  </head>",
+            "  <body>",
+            '    <div id="viewer" data-theme="light"></div>',
+            "    <script>",
+            '      document.addEventListener("DOMContentLoaded", () => {',
+            "        byLOGviewer(",
+            '          document.getElementById("viewer"),',
+            `          ${jsString(initialSource)},`,
+            `          ${JSON.stringify(defaults, null, 2).replaceAll("\n", "\n          ")}`,
+            "        );",
+            "      });",
+            `    ${endScript}`,
+            "  </body>",
+            "</html>"
+          ].join("\n");
           renderIntegration(html);
           document.getElementById("install-note").textContent = mode === "cdn" ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside log.js and log.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
