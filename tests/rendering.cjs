@@ -500,6 +500,13 @@ test("viewer defaults, optional tools, and copy feedback", async () => {
         );
       }
     }
+    await page.evaluate(() => renderUI({ displayContainer: false, statusBar: true }));
+    assert.equal(await page.locator(".byVIEWstatus:visible").count(), 0);
+    assert.equal(await page.locator(".byVIEWpanel").evaluate((panel) => parseFloat(getComputedStyle(panel).borderTopWidth)), 0);
+    assert.match(await page.locator(".byVIEWcontent").textContent(), /needle/);
+    await page.evaluate(() => renderUI({ displayContainer: true, statusBar: false }));
+    assert.equal(await page.locator(".byVIEWstatus:visible").count(), 0);
+    assert.ok(await page.locator(".byVIEWpanel").evaluate((panel) => parseFloat(getComputedStyle(panel).borderTopWidth) > 0));
     await page.evaluate(() => renderUI());
     await page.evaluate(() => renderUI({ fontSizeControls: false, statusBar: false }));
     assert.equal(await page.locator(".byVIEWfontSizes").count(), 0);

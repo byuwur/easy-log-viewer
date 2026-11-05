@@ -436,6 +436,19 @@ test("family customization, navigation and monospace controls", async () => {
       await page.waitForFunction((size) => JSON.parse(window.lastCopy).controlsSize === size, size);
       await page.locator('[data-options-view="form"]').evaluate((button) => button.click());
     }
+    await page.locator("#displayContainer").uncheck();
+    await frame.waitForFunction(() => document.querySelector(".byVIEWplain"));
+    assert.equal(await page.locator("#statusBar").isDisabled(), true);
+    assert.equal(await page.locator("#statusBar").isChecked(), true);
+    assert.equal(await frame.locator(".byVIEWstatus:visible").count(), 0);
+    assert.equal(await frame.locator(".byVIEWpanel").evaluate((panel) => parseFloat(getComputedStyle(panel).borderTopWidth)), 0);
+    assert.equal(JSON.parse(await page.locator("#options-json").inputValue()).displayContainer, false);
+    await page.locator("#copy-options").evaluate((button) => button.click());
+    await page.waitForFunction(() => JSON.parse(window.lastCopy).displayContainer === false);
+    await page.locator("#displayContainer").check();
+    await frame.waitForFunction(() => !document.querySelector(".byVIEWplain"));
+    assert.equal(await page.locator("#statusBar").isDisabled(), false);
+    assert.equal(await frame.locator(".byVIEWpanel > .byVIEWstatus:visible").count(), 1);
     await page.locator("#reset-settings").evaluate((button) => button.click());
     assert.deepEqual(await root.evaluate((element) => ({ font: element.style.fontFamily, size: element.style.fontSize, bg: element.style.getPropertyValue("--by-view-bg") })), initial);
     assert.match(await frame.locator(".byVIEWtoolbar").evaluate((element) => getComputedStyle(element).fontFamily), /monospace/);

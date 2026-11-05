@@ -235,6 +235,13 @@
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="displayContainer" name="displayContainer" type="checkbox" role="switch" checked="" /><label
+                            class="form-check-label flex-grow-1 py-2"
+                            for="displayContainer"
+                            >Display container</label
+                          >
+                        </div>
+                        <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
                           <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="statusBar" name="statusBar" type="checkbox" role="switch" checked="" /><label class="form-check-label flex-grow-1 py-2" for="statusBar"
                             >Status information</label
                           >
@@ -856,6 +863,7 @@
           toolbar: true,
           credits: true,
           fontSizeControls: true,
+          displayContainer: true,
           statusBar: true,
           levelFilter: false,
           autoScrollControl: false,
@@ -926,6 +934,7 @@
             const win = frame.contentWindow;
             const target = win.document.getElementById("viewer");
             const options = readOptions();
+            document.getElementById("statusBar").disabled = options.displayContainer === false;
             document.getElementById("options-json").value = settingsJSON(options);
             const result = await win.byLOGviewer(target, source.value, options).ready;
             if (version !== renderVersion) return;

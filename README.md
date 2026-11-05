@@ -89,7 +89,8 @@ Text batches are limited to 10 million characters and 100,000 entries. Parsing/f
 | `animations`        | `true`      | Brief control/disclosure motion. `true` enables it and `false` disables it, overriding the system motion preference.                                       |
 | `toolbar`           | `true`      | Show the viewer header; secondary tools are configured separately.                                                                                         |
 | `credits`           | `true`      | Show attribution in the header.                                                                                                                            |
-| `statusBar`         | `true`      | Show counts and metadata. Loading, errors, and empty results remain visible.                                                                               |
+| `displayContainer`  | `true`      | Show the content panel frame and inner horizontal padding. `false` also hides status information.                                                          |
+| `statusBar`         | `true`      | Show counts and metadata when `displayContainer` is true. With `statusBar: false`, loading and empty results remain visible; errors always remain visible. |
 | `levelFilter`       | `false`     | Show the severity filter.                                                                                                                                  |
 | `autoScrollControl` | `false`     | Show the auto-scroll switch; autoScroll also works without it.                                                                                             |
 | `copyEntries`       | `false`     | Show a copy button on each entry.                                                                                                                          |

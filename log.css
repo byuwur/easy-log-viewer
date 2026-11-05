@@ -310,6 +310,16 @@
   border-radius: var(--by-view-radius, 0.65em);
   background: var(--by-view-container-bg, var(--by-view-bg));
 }
+.byLOGdocument.byVIEWplain .byVIEWpanel {
+  border: 0;
+  border-radius: 0;
+}
+.byLOGdocument.byVIEWplain .byVIEWstatus {
+  display: none;
+}
+.byLOGdocument.byVIEWplain .byVIEWpanel > :not(.byVIEWstatus) {
+  padding-inline: 0;
+}
 .byLOGdocument .byVIEWpanel > .byVIEWstatus {
   margin: 0;
   padding: 0.375em 0.625em;
