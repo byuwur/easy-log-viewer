@@ -333,11 +333,17 @@
   font: 0.875rem/1.25 var(--by-view-controls-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
   white-space: normal;
 }
+.byLOGdocument > .byVIEWtoolbar[data-size="xs"] {
+  font-size: 0.5rem;
+}
 .byLOGdocument > .byVIEWtoolbar[data-size="small"] {
   font-size: 0.7rem;
 }
 .byLOGdocument > .byVIEWtoolbar[data-size="large"] {
   font-size: 1rem;
+}
+.byLOGdocument > .byVIEWtoolbar[data-size="xl"] {
+  font-size: 1.25rem;
 }
 .byLOGdocument.byVIEWbottom {
   padding-top: 1rem;

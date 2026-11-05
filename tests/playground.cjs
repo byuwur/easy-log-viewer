@@ -280,16 +280,26 @@ test("family customization, navigation and monospace controls", async () => {
       true,
       "Every switch lines up at the right edge and center of its row"
     );
-    for (const width of [768, 1280]) {
+    await page.locator("#config-panel").evaluate((panel) => panel.classList.add("active"));
+    for (const width of [360, 768, 1024, 1280]) {
       await page.setViewportSize({ width, height: 720 });
       assert.equal(
         await page.locator("#controlsSize").evaluate((size) => {
           const a = size.querySelector(".btn-group").getBoundingClientRect();
-          const b = document.querySelector("#controlsPosition .btn-group").getBoundingClientRect();
-          return Math.abs(a.top - b.top) < 1 && Math.abs(a.width - b.width) < 1 && a.right < b.left;
+          const position = document.getElementById("controlsPosition");
+          const b = position.querySelector(".btn-group").getBoundingClientRect();
+          const legend = position.querySelector("legend");
+          return (
+            Math.abs(a.top - b.top) < 1 &&
+            Math.abs(size.getBoundingClientRect().width - 2 * position.getBoundingClientRect().width) < 1 &&
+            a.right < b.left &&
+            legend.textContent === "Position" &&
+            legend.getBoundingClientRect().height <= parseFloat(getComputedStyle(legend).lineHeight) + 1 &&
+            [...size.querySelectorAll("label")].every((label) => label.scrollWidth <= label.clientWidth + 1 && label.getBoundingClientRect().right <= a.right + 1)
+          );
         }),
         true,
-        "Size and position controls share one evenly divided row"
+        "Size and position controls share a 2:1 row without wrapping"
       );
     }
     assert.deepEqual(
@@ -413,6 +423,19 @@ test("family customization, navigation and monospace controls", async () => {
     assert.deepEqual(JSON.parse(await page.evaluate(() => lastCopy)), configuration);
     assert.ok(!Object.keys(configuration).some((key) => key.startsWith("preview")));
     await page.locator('[data-options-view="form"]').evaluate((button) => button.click());
+    for (const [size, rem] of [
+      ["xs", 0.5],
+      ["xl", 1.25]
+    ]) {
+      await page.locator(`label[for="controlsSize-${size}"]`).click();
+      await frame.waitForFunction((size) => document.querySelector(".byVIEWtoolbar").dataset.size === size, size);
+      assert.equal(await frame.locator(".byVIEWtoolbar").evaluate((toolbar) => parseFloat(getComputedStyle(toolbar).fontSize) / parseFloat(getComputedStyle(document.documentElement).fontSize)), rem);
+      await page.locator('[data-options-view="json"]').evaluate((button) => button.click());
+      assert.equal(JSON.parse(await page.locator("#options-json").inputValue()).controlsSize, size);
+      await page.locator("#copy-options").evaluate((button) => button.click());
+      await page.waitForFunction((size) => JSON.parse(window.lastCopy).controlsSize === size, size);
+      await page.locator('[data-options-view="form"]').evaluate((button) => button.click());
+    }
     await page.locator("#reset-settings").evaluate((button) => button.click());
     assert.deepEqual(await root.evaluate((element) => ({ font: element.style.fontFamily, size: element.style.fontSize, bg: element.style.getPropertyValue("--by-view-bg") })), initial);
     assert.match(await frame.locator(".byVIEWtoolbar").evaluate((element) => getComputedStyle(element).fontFamily), /monospace/);

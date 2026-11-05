@@ -241,19 +241,23 @@
                         </div>
 
                         <div class="row g-2 mt-3 align-items-end">
-                          <fieldset class="col-6" id="controlsSize">
+                          <fieldset class="col-8" id="controlsSize">
                             <legend class="small mb-2 form-label">Controls Size</legend>
                             <div class="btn-group w-100" role="group" aria-label="Control size">
+                              <input class="btn-check" id="controlsSize-xs" name="controlsSize" type="radio" value="xs" aria-label="Extra small controls" />
+                              <label class="btn btn-sm px-1 flex-fill btn-outline-secondary fw-semibold" for="controlsSize-xs" title="Extra small" data-bs-toggle="tooltip" data-bs-placement="bottom">XS</label>
                               <input class="btn-check" id="controlsSize-small" name="controlsSize" type="radio" value="small" aria-label="Small controls" />
-                              <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-small" title="Small" data-bs-toggle="tooltip" data-bs-placement="bottom">a</label>
+                              <label class="btn btn-sm px-1 flex-fill btn-outline-secondary fw-semibold" for="controlsSize-small" title="Small" data-bs-toggle="tooltip" data-bs-placement="bottom">a</label>
                               <input class="btn-check" id="controlsSize-regular" name="controlsSize" type="radio" value="regular" aria-label="Regular controls" checked="" />
-                              <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-regular" title="Regular" data-bs-toggle="tooltip" data-bs-placement="bottom">Aa</label>
+                              <label class="btn btn-sm px-1 flex-fill btn-outline-secondary fw-semibold" for="controlsSize-regular" title="Regular" data-bs-toggle="tooltip" data-bs-placement="bottom">Aa</label>
                               <input class="btn-check" id="controlsSize-large" name="controlsSize" type="radio" value="large" aria-label="Large controls" />
-                              <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsSize-large" title="Large" data-bs-toggle="tooltip" data-bs-placement="bottom">A</label>
+                              <label class="btn btn-sm px-1 flex-fill btn-outline-secondary fw-semibold" for="controlsSize-large" title="Large" data-bs-toggle="tooltip" data-bs-placement="bottom">A</label>
+                              <input class="btn-check" id="controlsSize-xl" name="controlsSize" type="radio" value="xl" aria-label="Extra large controls" />
+                              <label class="btn btn-sm px-1 flex-fill btn-outline-secondary fw-semibold" for="controlsSize-xl" title="Extra large" data-bs-toggle="tooltip" data-bs-placement="bottom">XL</label>
                             </div>
                           </fieldset>
-                          <fieldset class="col-6" id="controlsPosition">
-                            <legend class="small mb-2 form-label">Controls Position</legend>
+                          <fieldset class="col-4" id="controlsPosition">
+                            <legend class="small mb-2 form-label text-nowrap">Position</legend>
                             <div class="btn-group w-100" role="group" aria-label="Controls position">
                               <input class="btn-check" id="controlsPosition-top" name="controlsPosition" type="radio" value="top" aria-label="Top controls" checked="" />
                               <label class="btn btn-sm flex-fill btn-outline-secondary fw-semibold" for="controlsPosition-top" title="Top" data-bs-toggle="tooltip" data-bs-placement="bottom"
