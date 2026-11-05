@@ -35,9 +35,10 @@
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/pickr.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/popper.min.js" defer=""></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/js/bootstrap.min.js" defer=""></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.6/css/animate.min.css" />
   </head>
 
-  <body>
+  <body class="byVIEWmotion">
     <a class="visually-hidden-focusable position-absolute top-0 start-0 p-3 z-3 bg-body-tertiary link-body-emphasis" href="#playground">Skip to playground</a>
     <header class="border-bottom">
       <nav class="navbar navbar-expand-md site-width container-fluid" aria-label="Main navigation">
@@ -224,6 +225,13 @@
                             class="form-check-label flex-grow-1 py-2"
                             for="controlsCompact"
                             >Compact controls</label
+                          >
+                        </div>
+                        <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
+                          <input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" id="animations" name="animations" type="checkbox" role="switch" checked="" /><label
+                            class="form-check-label flex-grow-1 py-2"
+                            for="animations"
+                            >Animations</label
                           >
                         </div>
                         <div class="form-switch d-flex align-items-center gap-3 ps-0 m-0">
@@ -753,6 +761,66 @@
         background: var(--bs-tertiary-bg);
         color: var(--bs-body-color);
       }
+
+      /* --- MOTION --- */
+      body {
+        --by-view-motion-duration: 0s;
+      }
+      body.byVIEWmotion {
+        --by-view-motion-duration: 0.18s;
+      }
+      body :is(.btn, .form-control, .form-select, .form-check-input, .accordion-button, summary, a) {
+        transition:
+          color var(--by-view-motion-duration) ease,
+          background-color var(--by-view-motion-duration) ease,
+          border-color var(--by-view-motion-duration) ease,
+          box-shadow var(--by-view-motion-duration) ease,
+          opacity var(--by-view-motion-duration) ease,
+          translate var(--by-view-motion-duration) ease-out !important;
+      }
+      body.byVIEWmotion :is(.btn, summary):active {
+        translate: 0 0.0625em;
+      }
+      body .collapsing {
+        transition: height var(--by-view-motion-duration) ease-out !important;
+      }
+      body .fade {
+        transition: opacity var(--by-view-motion-duration) ease-out !important;
+      }
+      body.byVIEWmotion .animate__animated {
+        animation-duration: var(--by-view-motion-duration) !important;
+      }
+      body.byVIEWmotion details::details-content {
+        interpolate-size: allow-keywords;
+        block-size: 0;
+        opacity: 0;
+        overflow: clip;
+        transition:
+          block-size var(--by-view-motion-duration) ease,
+          opacity var(--by-view-motion-duration) ease,
+          content-visibility var(--by-view-motion-duration) allow-discrete;
+      }
+      body.byVIEWmotion details[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+      }
+      body:not(.byVIEWmotion),
+      body:not(.byVIEWmotion) *,
+      body:not(.byVIEWmotion) *::before,
+      body:not(.byVIEWmotion) *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      @media print {
+        body,
+        body *,
+        body *::before,
+        body *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
     </style>
     <script>
       "use strict";
@@ -791,6 +859,7 @@
           details: true,
           loadMore: true,
           controlsCompact: true,
+          animations: true,
           search: false,
           autoScroll: false,
           batchSize: 200,
@@ -802,7 +871,7 @@
         let debounce;
         function settingsJSON(options) {
           const field = (id) => (id === "preview-controls-font" ? document.querySelector('[name="preview-controls-font"]:checked')?.value : document.getElementById(id)?.value) || null;
-          const { forceMonospace, toolbar, credits, themeToggle, fontSizeControls, copyButton, controlsCompact, controlsSize, controlsPosition, ...rendering } = options;
+          const { forceMonospace, toolbar, credits, themeToggle, fontSizeControls, copyButton, controlsCompact, animations, controlsSize, controlsPosition, ...rendering } = options;
           return JSON.stringify(
             {
               theme: document.querySelector('[name="previewTheme"]:checked').value,
@@ -822,6 +891,7 @@
               fontSizeControls,
               copyButton,
               controlsCompact,
+              animations,
               controlsSize,
               controlsPosition,
               parser: "Built-in parser. Supply parser(entry, index) in JavaScript to customize.",
@@ -1026,6 +1096,7 @@
         // --- PLAYGROUND CONTROLS ---
 
         const updateOptions = () => {
+          document.body.classList.toggle("byVIEWmotion", document.getElementById("animations").checked);
           try {
             document.getElementById("options-json").value = settingsJSON(readOptions());
           } catch {
@@ -1302,6 +1373,21 @@
           loadPalette();
         });
       })("log");
+    </script>
+
+    <script>
+      // Animate deliberate panel changes; initial content and render batches stay visible.
+      document.addEventListener("shown.bs.tab", (event) => {
+        const target = event.target.getAttribute("data-bs-target") || event.target.getAttribute("href");
+        if (target?.startsWith("#")) document.getElementById(target.slice(1))?.classList.add("animate__animated", "animate__fadeIn");
+      });
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-options-view]");
+        if (!button) return;
+        const json = document.getElementById("options-json-panel");
+        const panel = button.dataset.optionsView === "json" ? json : json?.parentElement.querySelector("form");
+        panel?.classList.add("animate__animated", "animate__fadeIn");
+      });
     </script>
   </body>
 </html>

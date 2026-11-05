@@ -509,7 +509,7 @@ test("family customization, navigation and monospace controls", async () => {
         .then((labels) => labels.map((label) => label.trim()).slice(0, 3)),
       ["Preview appearance", "Viewer controls", "Rendering"]
     );
-    assert.deepEqual(await page.locator("#options-json").evaluate((editor) => Object.keys(JSON.parse(editor.value)).slice(0, 18)), [
+    assert.deepEqual(await page.locator("#options-json").evaluate((editor) => Object.keys(JSON.parse(editor.value)).slice(0, 19)), [
       "theme",
       "palette",
       "fontFamily",
@@ -526,6 +526,7 @@ test("family customization, navigation and monospace controls", async () => {
       "fontSizeControls",
       "copyButton",
       "controlsCompact",
+      "animations",
       "controlsSize",
       "controlsPosition"
     ]);
@@ -558,6 +559,7 @@ test("family customization, navigation and monospace controls", async () => {
     await page.locator(".preview-appearance").evaluate((element) => {
       element.open = true;
     });
+    await page.waitForFunction(() => getComputedStyle(document.querySelector(".preview-appearance"), "::details-content").opacity === "1");
     await page.locator("#preview-controls-font-0").focus();
     await page.keyboard.press("ArrowRight");
     assert.equal(await page.locator("#preview-controls-font-1").isChecked(), true);
@@ -1130,6 +1132,70 @@ test("document and content backgrounds stay independent through theme and toolba
         .evaluate((element) => getComputedStyle(element).backgroundColor),
       "rgba(0, 0, 0, 0)"
     );
+  } finally {
+    await browser.close();
+  }
+});
+
+test("animation options preserve initial visibility and override system motion preferences", async () => {
+  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  try {
+    const page = await browser.newPage({ reducedMotion: "reduce" });
+    await page.route("https://cdn.jsdelivr.net/**", (route) => (route.request().url().endsWith("fontawesome.min.css") ? route.fulfill({ body: "", contentType: "text/css" }) : route.abort()));
+    await page.setContent('<div id="motion-viewer" data-theme="light"></div>');
+    await page.addStyleTag({ path: path.join(__dirname, "../log.css") });
+    await page.addScriptTag({ path: path.join(__dirname, "../log.js") });
+    await page.evaluate(() => {
+      window.renderMotion = async (animations) => {
+        window.motionController = byLOGviewer(document.getElementById("motion-viewer"), "INFO Ready", { animations });
+        await motionController?.ready;
+      };
+    });
+    await page.evaluate(() => renderMotion());
+    const root = page.locator("#motion-viewer");
+    assert.equal(await root.evaluate((element) => element.classList.contains("byVIEWmotion")), true);
+    assert.equal(await root.evaluate((element) => getComputedStyle(element).opacity), "1");
+    assert.equal(await root.evaluate((element) => element.getAnimations({ subtree: true }).length), 0, "Initial content does not animate");
+    assert.equal(
+      await root
+        .locator("button")
+        .first()
+        .evaluate((element) => getComputedStyle(element).transitionDuration.split(",")[0]),
+      "0.18s"
+    );
+    const disclosure = await root.evaluateHandle((element) => {
+      const details = document.createElement("details");
+      details.id = "motion-disclosure";
+      details.innerHTML = "<summary>Details</summary><p>Already available content</p>";
+      element.append(details);
+      getComputedStyle(details, "::details-content").blockSize;
+      return details;
+    });
+    await disclosure.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
+    const opening = await disclosure.evaluate(async (details) => {
+      details.open = true;
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      return Number(getComputedStyle(details, "::details-content").opacity);
+    });
+    assert.ok(opening > 0 && opening < 1, "A deliberate disclosure eases in even with reduced motion requested");
+    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "1");
+    await disclosure.evaluate((details) => {
+      details.open = false;
+    });
+    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
+    assert.equal(await disclosure.evaluate((details) => details.open), false);
+    await page.evaluate(() => renderMotion(false));
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    assert.equal(await root.evaluate((element) => element.classList.contains("byVIEWmotion")), false);
+    assert.equal(
+      await root
+        .locator("button")
+        .first()
+        .evaluate((element) => getComputedStyle(element).transitionDuration),
+      "0s"
+    );
+    assert.equal(await root.evaluate((element) => element.getAnimations({ subtree: true }).length), 0);
   } finally {
     await browser.close();
   }
