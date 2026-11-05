@@ -326,7 +326,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25em;
+  gap: 0.125rem;
   margin: 0;
   padding: 0.5rem 0;
   background: #0000;
@@ -368,7 +368,7 @@
   max-width: 100%;
   color: var(--by-view-muted);
   opacity: 0.25;
-  font-size: 0.75em;
+  font-size: 0.875em;
   text-align: right;
   overflow-wrap: anywhere;
 }
