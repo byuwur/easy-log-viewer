@@ -472,6 +472,35 @@ test("viewer defaults, optional tools, and copy feedback", async () => {
     assert.equal(await page.locator(".byVIEWactions :is(input, select, button):visible").count(), 0);
     assert.equal(await page.locator(".byVIEWstatus:visible").count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    for (const controlsPosition of ["top", "bottom"]) {
+      for (const toolbar of [true, false]) {
+        const edges = await page.evaluate(
+          async (options) => {
+            await renderUI(options);
+            const host = document.getElementById("viewer");
+            const bounds = host.getBoundingClientRect();
+            const style = getComputedStyle(host);
+            const panel = host.querySelector(".byVIEWpanel").getBoundingClientRect();
+            const first = host.firstElementChild,
+              last = host.lastElementChild;
+            const topToolbar = first.classList.contains("byVIEWtoolbar");
+            const bottomToolbar = last.classList.contains("byVIEWtoolbar");
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            return [
+              ((topToolbar ? first.getBoundingClientRect().top : panel.top) - bounds.top - parseFloat(style.borderTopWidth)) / rem,
+              (bounds.bottom - parseFloat(style.borderBottomWidth) - (bottomToolbar ? last.getBoundingClientRect().bottom : panel.bottom)) / rem
+            ];
+          },
+          { controlsPosition, toolbar }
+        );
+        const expected = [toolbar && controlsPosition === "top" ? 0 : 0.75, toolbar && controlsPosition === "bottom" ? 0 : 0.75];
+        assert.ok(
+          edges.every((edge, index) => Math.abs(edge - expected[index]) < 0.01),
+          `${controlsPosition}, toolbar=${toolbar}: ${edges}`
+        );
+      }
+    }
+    await page.evaluate(() => renderUI());
     await page.evaluate(() => renderUI({ fontSizeControls: false, statusBar: false }));
     assert.equal(await page.locator(".byVIEWfontSizes").count(), 0);
     assert.equal(await page.locator(".byVIEWstatus:visible").count(), 0);
