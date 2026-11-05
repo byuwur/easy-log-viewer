@@ -8,7 +8,7 @@
 .byLOGdocument.light:not([data-theme="dark"]),
 .byLOGdocument[data-theme="light"] {
   color-scheme: light;
-  --by-view-toggle-position: 25%;
+  --by-view-toggle-position: -100%;
   --by-view-muted: #8a8875;
   --by-view-bg: #fafaf5;
   --by-view-text: #272822;
@@ -29,7 +29,7 @@
 .byLOGdocument.dark:not([data-theme="light"]),
 .byLOGdocument[data-theme="dark"] {
   color-scheme: dark;
-  --by-view-toggle-position: 75%;
+  --by-view-toggle-position: 0%;
   --by-view-muted: #75715e;
   --by-view-bg: #272822;
   --by-view-text: #f8f8f2;
@@ -441,11 +441,12 @@
 .byLOGdocument > .byVIEWtoolbar .byVIEWthemeToggle {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1.5em);
+  place-content: center;
   place-items: center;
-  width: calc(3.5em - 0.125rem);
-  height: 1.75em;
-  padding: 0;
+  width: 3.75em;
+  height: 2em;
+  padding: 0.125em;
   border-radius: 2em;
   font-family: ui-monospace, monospace;
   font-variant-emoji: text;
@@ -463,14 +464,14 @@
   content: "";
   position: absolute;
   top: 50%;
-  left: var(--by-view-toggle-position);
-  width: calc(1.5em - 0.125rem);
-  height: calc(1.5em - 0.125rem);
-  transform: translate(-50%, -50%);
+  left: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  transform: translate(var(--by-view-toggle-position), -50%);
   pointer-events: none;
   border-radius: 50%;
   background: currentColor;
-  transition: left var(--by-view-motion-duration, 0s) ease-out;
+  transition: transform var(--by-view-motion-duration, 0s) ease-out;
 }
 
 .byLOGdocument .byVIEWactions {

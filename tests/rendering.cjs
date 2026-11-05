@@ -1014,8 +1014,9 @@ test("viewer defaults, optional tools, and copy feedback", async () => {
                 const innerWidth = rect.width - parseFloat(style.borderLeftWidth) - parseFloat(style.borderRightWidth);
                 const innerHeight = rect.height - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth);
                 const position = (value, extent) => (value.endsWith("%") ? (parseFloat(value) * extent) / 100 : parseFloat(value));
-                const centerX = rect.left + parseFloat(style.borderLeftWidth) + position(thumb.left, innerWidth);
-                const centerY = rect.top + parseFloat(style.borderTopWidth) + position(thumb.top, innerHeight);
+                const transform = new DOMMatrixReadOnly(thumb.transform);
+                const centerX = rect.left + parseFloat(style.borderLeftWidth) + position(thumb.left, innerWidth) + transform.m41 + parseFloat(thumb.width) / 2;
+                const centerY = rect.top + parseFloat(style.borderTopWidth) + position(thumb.top, innerHeight) + transform.m42 + parseFloat(thumb.height) / 2;
                 const icons = [...button.querySelectorAll("svg")];
                 const icon = icons[mode === "dark" ? 1 : 0].getBoundingClientRect();
                 return [Math.abs(centerX - icon.x - icon.width / 2), Math.abs(centerY - icon.y - icon.height / 2), Math.abs(centerY - rect.y - rect.height / 2)];
