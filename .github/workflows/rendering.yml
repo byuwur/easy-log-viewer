@@ -10,6 +10,15 @@ permissions:
 
 jobs:
   rendering:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: rendering
+            name: Library
+          - suite: playground
+            name: Playground
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -21,9 +30,9 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock playwright@1.63.0
           node "$RUNNER_TEMP/viewer-tests/node_modules/playwright/cli.js" install --with-deps chromium
-      - name: Check source and rendering
+      - name: Check source and ${{ matrix.name }} tests
         env:
           NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
         run: |
           node --check log.js
-          node --test tests/rendering.cjs
+          node --test tests/${{ matrix.suite }}.cjs
