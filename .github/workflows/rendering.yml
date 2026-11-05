@@ -19,7 +19,13 @@ jobs:
             name: Library
           - suite: playground
             name: Playground
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      # Keep the image and npm package on the same Playwright version.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
+    env:
+      BROWSER_CHANNEL: chromium
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -27,9 +33,7 @@ jobs:
         with:
           node-version: 22
       - name: Install browser test tools
-        run: |
-          npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock playwright@1.63.0
-          node "$RUNNER_TEMP/viewer-tests/node_modules/playwright/cli.js" install --with-deps chromium
+        run: npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock --no-audit --no-fund playwright@1.63.0
       - name: Check source and ${{ matrix.name }} tests
         env:
           NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
