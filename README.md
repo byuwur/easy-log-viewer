@@ -150,14 +150,68 @@ The outer document and inner surfaces have independent CSS backgrounds. Both fol
 
 The playground uses SPA.js's Pickr assets for color and opacity, with text inputs when Pickr is unavailable. **Copy CSS** exports the appearance overrides; clear a field to restore its theme default. The renderer needs no color-picker dependency.
 
-`log.css` includes all palettes in Light and Dark. Monokai is the default.
+**48 palettes, each with Light and Dark modes.** Monokai, GitHub, Solarized, and High Contrast are included in `log.css`. Load the optional `log.themes.css` after it for the other 44 skins:
 
-| Palette           | `data-theme`    | What it looks like                                                |
-| ----------------- | --------------- | ----------------------------------------------------------------- |
-| Monokai (default) | `monokai`       | Warm light and dark colors.                                       |
-| GitHub            | `github`        | Familiar neutral surfaces and syntax colors.                      |
-| Solarized         | `solarized`     | Warm light or deep blue-green dark surfaces.                      |
-| High Contrast     | `high-contrast` | Black/white surfaces, strong text, borders, and focus indicators. |
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/log.themes.css" />
+```
+
+For local use, save `log.themes.css` beside `log.css`. The playground loads both stylesheets; default HTML starters use the core stylesheet. Known extra presets without the pack fall back to the current mode and emit a one-time `console.warn` naming the required file. Custom CSS names do not need the pack.
+
+The picker groups palettes into Essentials, Editor classics, App inspired, Colorful, and Reading & nature. Palette definitions remain at the end of each stylesheet.
+
+| Palette | `data-theme` | What it looks like |
+| --- | --- | --- |
+| Monokai (default) | `monokai` | Warm light and dark colors; the default. |
+| GitHub | `github` | Neutral GitHub surfaces and syntax. |
+| Solarized | `solarized` | Warm paper and deep blue-green surfaces. |
+| High Contrast | `high-contrast` | Strong text, borders, and focus indicators. |
+| Dracula | `dracula` | Purple with vivid pink, green, and cyan. |
+| Darcula | `darcula` | Charcoal surfaces and warm IDE accents. |
+| Nord | `nord` | Arctic blues and snowy neutral surfaces. |
+| Catppuccin | `catppuccin` | Latte and Mocha with soft mauve accents. |
+| Catppuccin Frappé | `catppuccin-frappe` | Cooler Catppuccin with a blue accent. |
+| Catppuccin Macchiato | `catppuccin-macchiato` | Catppuccin with a warm pink accent. |
+| Rosé Pine | `rose-pine` | Dawn and Pine with dusty rose accents. |
+| Rosé Pine Moon | `rose-pine-moon` | A duskier violet take on Rosé Pine. |
+| Gruvbox | `gruvbox` | Warm retro browns, olive, and orange. |
+| Gruvbox Material | `gruvbox-material` | Softer earthy surfaces and muted greens. |
+| Tokyo Night | `tokyo-night` | Tokyo Day and Night with electric blues. |
+| Tokyo Storm | `tokyo-storm` | A brighter blue-gray Tokyo evening. |
+| Tokyo Moon | `tokyo-moon` | Indigo nights and luminous lavender. |
+| One | `one` | Clean One Light and One Dark colors. |
+| Material | `material` | Blue-gray material surfaces and cyan. |
+| Material Ocean | `material-ocean` | Deep navy with soft fluorescent accents. |
+| Night Owl | `night-owl` | Little Light and deep-blue night colors. |
+| Synthwave | `synthwave` | Neon magenta and cyan with no glow effects. |
+| Ayu | `ayu` | Warm amber over light paper or dark navy. |
+| Everforest | `everforest` | Soft forest greens and cream. |
+| Kanagawa | `kanagawa` | Ink, old paper, and Japanese wave colors. |
+| Selenized | `selenized` | Balanced teal surfaces and restrained color. |
+| VS Code | `vscode` | Familiar neutral editor surfaces and blue. |
+| Monokai Dimmed | `monokai-dimmed` | Quieter charcoal and desaturated Monokai. |
+| Discord | `discord` | Blurple accents and familiar chat surfaces. |
+| Slack | `slack` | Aubergine, warm pink, and friendly teal. |
+| BONYUR | `bonyur` | Signature teal and pink over warm neutral ink. |
+| Sakura | `sakura` | Cherry-blossom pink from surface to syntax. |
+| Bubblegum | `bubblegum` | Saturated hot-pink surfaces and cyan accents. |
+| Candy | `candy` | Pink and mint with playful lavender syntax. |
+| Rose Gold | `rose-gold` | Dusty pink and warm copper. |
+| Lavender | `lavender` | Lilac surfaces with deep violet accents. |
+| Cyberpunk | `cyberpunk` | Acid yellow, electric cyan, and magenta. |
+| Sunset | `sunset` | Burnt orange, coral, and evening purple. |
+| Volcano | `volcano` | Lava reds over warm ash. |
+| Amber | `amber` | Golden amber inspired by old displays. |
+| Terminal | `terminal` | Phosphor greens on near-black. |
+| Paper | `paper` | Warm cream, brown ink, and quiet margins. |
+| Ink | `ink` | Grayscale surfaces and restrained syntax. |
+| Ocean | `ocean` | Deep ocean blue and clear turquoise. |
+| Forest | `forest` | Rich green surfaces and mossy accents. |
+| Mint | `mint` | Fresh mint surfaces and cool teal. |
+| Ice | `ice` | Glacial blue, crisp whites, and silver. |
+| Sepia | `sepia` | Aged parchment and warm brown ink. |
+
+Editor and app skins are inspired adaptations, including light counterparts where needed; colors are adjusted for readable text and controls rather than exact replicas. All palettes use the same layout and need no assets beyond the core stylesheet and optional theme pack.
 
 Use a mode class and a palette name together:
 
@@ -182,14 +236,14 @@ The playground's **Custom theme CSS** field edits both modes of the selected pal
 Define a named palette after the viewer stylesheet. Unspecified colors inherit Monokai:
 
 ```css
-.byLOGdocument.light[data-theme="ocean"] {
+.byLOGdocument.light[data-theme="my-ocean"] {
   --by-view-bg: #f3f8fc;
   --by-view-text: #102a43;
   --by-view-border: #486581;
   --by-view-accent: #005a9c;
 }
 
-.byLOGdocument.dark[data-theme="ocean"] {
+.byLOGdocument.dark[data-theme="my-ocean"] {
   --by-view-bg: #102a43;
   --by-view-text: #f0f6fc;
   --by-view-border: #9fb3c8;
@@ -198,7 +252,7 @@ Define a named palette after the viewer stylesheet. Unspecified colors inherit M
 ```
 
 ```html
-<div id="viewer" class="dark" data-theme="ocean"></div>
+<div id="viewer" class="dark" data-theme="my-ocean"></div>
 ```
 
 Named palettes need no JavaScript registration or extra theme files.

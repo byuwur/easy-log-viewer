@@ -3,157 +3,6 @@
 /* Monokai is the default. Classes select mode; named data-theme values select a palette.
    data-theme="light" / "dark" remain mode aliases and override mode classes. */
 
-/* --- LIGHT --- */
-.byLOGdocument,
-.byLOGdocument.light:not([data-theme="dark"]),
-.byLOGdocument[data-theme="light"] {
-  color-scheme: light;
-  --by-view-toggle-position: -100%;
-  --by-view-muted: #8a8875;
-  --by-view-bg: #fafaf5;
-  --by-view-text: #272822;
-  --by-view-border: #d8d8c8;
-  --by-view-secondary: #686856;
-  --by-view-accent: #087f8c;
-  --by-view-alt: #eeeee4;
-  --by-view-string: #647d00;
-  --by-view-literal: #7c42b5;
-  --by-view-error: #c7255e;
-  --by-log-warn: #9b7200;
-  --by-log-error: #c7255e;
-  --by-log-info: #087f8c;
-  --by-log-debug: #686856;
-}
-
-/* --- DARK --- */
-.byLOGdocument.dark:not([data-theme="light"]),
-.byLOGdocument[data-theme="dark"] {
-  color-scheme: dark;
-  --by-view-toggle-position: 0%;
-  --by-view-muted: #75715e;
-  --by-view-bg: #272822;
-  --by-view-text: #f8f8f2;
-  --by-view-border: #49483e;
-  --by-view-secondary: #a6a28c;
-  --by-view-accent: #66d9ef;
-  --by-view-alt: #34352f;
-  --by-view-string: #e6db74;
-  --by-view-literal: #ae81ff;
-  --by-view-error: #f92672;
-  --by-log-warn: #e6db74;
-  --by-log-error: #f92672;
-  --by-log-info: #66d9ef;
-  --by-log-debug: #a6a28c;
-}
-
-/* --- GITHUB --- */
-/* Light */
-.byLOGdocument[data-theme="github"]:not(.dark) {
-  --by-view-muted: #59636e;
-  --by-view-bg: #ffffff;
-  --by-view-text: #1f2328;
-  --by-view-border: #8c959f;
-  --by-view-secondary: #59636e;
-  --by-view-accent: #0969da;
-  --by-view-alt: #f6f8fa;
-  --by-view-string: #0a3069;
-  --by-view-literal: #8250df;
-  --by-view-error: #a40e26;
-  --by-log-warn: #9a6700;
-  --by-log-error: #a40e26;
-  --by-log-info: #0969da;
-  --by-log-debug: #59636e;
-}
-/* Dark */
-.byLOGdocument.dark[data-theme="github"] {
-  --by-view-muted: #9198a1;
-  --by-view-bg: #0d1117;
-  --by-view-text: #f0f6fc;
-  --by-view-border: #6e7681;
-  --by-view-secondary: #9198a1;
-  --by-view-accent: #58a6ff;
-  --by-view-alt: #161b22;
-  --by-view-string: #a5d6ff;
-  --by-view-literal: #d2a8ff;
-  --by-view-error: #ff7b72;
-  --by-log-warn: #d29922;
-  --by-log-error: #ff7b72;
-  --by-log-info: #58a6ff;
-  --by-log-debug: #9198a1;
-}
-
-/* --- SOLARIZED --- */
-/* Light */
-.byLOGdocument[data-theme="solarized"]:not(.dark) {
-  --by-view-muted: #657b83;
-  --by-view-bg: #fdf6e3;
-  --by-view-text: #586e75;
-  --by-view-border: #93a1a1;
-  --by-view-secondary: #657b83;
-  --by-view-accent: #268bd2;
-  --by-view-alt: #eee8d5;
-  --by-view-string: #859900;
-  --by-view-literal: #6c71c4;
-  --by-view-error: #dc322f;
-  --by-log-warn: #b58900;
-  --by-log-error: #dc322f;
-  --by-log-info: #268bd2;
-  --by-log-debug: #657b83;
-}
-/* Dark */
-.byLOGdocument.dark[data-theme="solarized"] {
-  --by-view-muted: #839496;
-  --by-view-bg: #002b36;
-  --by-view-text: #93a1a1;
-  --by-view-border: #586e75;
-  --by-view-secondary: #839496;
-  --by-view-accent: #268bd2;
-  --by-view-alt: #073642;
-  --by-view-string: #859900;
-  --by-view-literal: #b58900;
-  --by-view-error: #dc322f;
-  --by-log-warn: #b58900;
-  --by-log-error: #dc322f;
-  --by-log-info: #268bd2;
-  --by-log-debug: #839496;
-}
-
-/* --- HIGH CONTRAST --- */
-/* Light */
-.byLOGdocument[data-theme="high-contrast"]:not(.dark) {
-  --by-view-muted: #333333;
-  --by-view-bg: #ffffff;
-  --by-view-text: #000000;
-  --by-view-border: #333333;
-  --by-view-secondary: #333333;
-  --by-view-accent: #0038a8;
-  --by-view-alt: #f0f0f0;
-  --by-view-string: #005a30;
-  --by-view-literal: #5c0066;
-  --by-view-error: #9b0000;
-  --by-log-warn: #594300;
-  --by-log-error: #9b0000;
-  --by-log-info: #0038a8;
-  --by-log-debug: #333333;
-}
-/* Dark */
-.byLOGdocument.dark[data-theme="high-contrast"] {
-  --by-view-muted: #dddddd;
-  --by-view-bg: #000000;
-  --by-view-text: #ffffff;
-  --by-view-border: #ffffff;
-  --by-view-secondary: #dddddd;
-  --by-view-accent: #00ffff;
-  --by-view-alt: #171717;
-  --by-view-string: #ffff00;
-  --by-view-literal: #ffb5ff;
-  --by-view-error: #ffb3b3;
-  --by-log-warn: #ffff00;
-  --by-log-error: #ffb3b3;
-  --by-log-info: #00ffff;
-  --by-log-debug: #dddddd;
-}
-
 /* --- VIEWER --- */
 .byLOGdocument {
   position: relative;
@@ -620,4 +469,156 @@
 
 .byLOGdocument .byVIEWinfo {
   transition: opacity var(--by-view-motion-duration) ease-out;
+}
+
+/* --- THEMES --- */
+/* --- LIGHT --- */
+.byLOGdocument,
+.byLOGdocument.light:not([data-theme="dark"]),
+.byLOGdocument[data-theme="light"] {
+  color-scheme: light;
+  --by-view-toggle-position: -100%;
+  --by-view-muted: #8a8875;
+  --by-view-bg: #fafaf5;
+  --by-view-text: #272822;
+  --by-view-border: #d8d8c8;
+  --by-view-secondary: #686856;
+  --by-view-accent: #087f8c;
+  --by-view-alt: #eeeee4;
+  --by-view-string: #647d00;
+  --by-view-literal: #7c42b5;
+  --by-view-error: #c7255e;
+  --by-log-warn: #9b7200;
+  --by-log-error: #c7255e;
+  --by-log-info: #087f8c;
+  --by-log-debug: #686856;
+}
+
+/* --- DARK --- */
+.byLOGdocument.dark:not([data-theme="light"]),
+.byLOGdocument[data-theme="dark"] {
+  color-scheme: dark;
+  --by-view-toggle-position: 0%;
+  --by-view-muted: #75715e;
+  --by-view-bg: #272822;
+  --by-view-text: #f8f8f2;
+  --by-view-border: #49483e;
+  --by-view-secondary: #a6a28c;
+  --by-view-accent: #66d9ef;
+  --by-view-alt: #34352f;
+  --by-view-string: #e6db74;
+  --by-view-literal: #ae81ff;
+  --by-view-error: #f92672;
+  --by-log-warn: #e6db74;
+  --by-log-error: #f92672;
+  --by-log-info: #66d9ef;
+  --by-log-debug: #a6a28c;
+}
+
+/* --- GITHUB --- */
+/* Light */
+.byLOGdocument[data-theme="github"]:not(.dark) {
+  --by-view-muted: #59636e;
+  --by-view-bg: #ffffff;
+  --by-view-text: #1f2328;
+  --by-view-border: #8c959f;
+  --by-view-secondary: #59636e;
+  --by-view-accent: #0969da;
+  --by-view-alt: #f6f8fa;
+  --by-view-string: #0a3069;
+  --by-view-literal: #8250df;
+  --by-view-error: #a40e26;
+  --by-log-warn: #9a6700;
+  --by-log-error: #a40e26;
+  --by-log-info: #0969da;
+  --by-log-debug: #59636e;
+}
+/* Dark */
+.byLOGdocument.dark[data-theme="github"] {
+  --by-view-muted: #9198a1;
+  --by-view-bg: #0d1117;
+  --by-view-text: #f0f6fc;
+  --by-view-border: #6e7681;
+  --by-view-secondary: #9198a1;
+  --by-view-accent: #58a6ff;
+  --by-view-alt: #161b22;
+  --by-view-string: #a5d6ff;
+  --by-view-literal: #d2a8ff;
+  --by-view-error: #ff7b72;
+  --by-log-warn: #d29922;
+  --by-log-error: #ff7b72;
+  --by-log-info: #58a6ff;
+  --by-log-debug: #9198a1;
+}
+
+/* --- SOLARIZED --- */
+/* Light */
+.byLOGdocument[data-theme="solarized"]:not(.dark) {
+  --by-view-muted: #657b83;
+  --by-view-bg: #fdf6e3;
+  --by-view-text: #586e75;
+  --by-view-border: #93a1a1;
+  --by-view-secondary: #657b83;
+  --by-view-accent: #268bd2;
+  --by-view-alt: #eee8d5;
+  --by-view-string: #859900;
+  --by-view-literal: #6c71c4;
+  --by-view-error: #dc322f;
+  --by-log-warn: #b58900;
+  --by-log-error: #dc322f;
+  --by-log-info: #268bd2;
+  --by-log-debug: #657b83;
+}
+/* Dark */
+.byLOGdocument.dark[data-theme="solarized"] {
+  --by-view-muted: #839496;
+  --by-view-bg: #002b36;
+  --by-view-text: #93a1a1;
+  --by-view-border: #586e75;
+  --by-view-secondary: #839496;
+  --by-view-accent: #268bd2;
+  --by-view-alt: #073642;
+  --by-view-string: #859900;
+  --by-view-literal: #b58900;
+  --by-view-error: #dc322f;
+  --by-log-warn: #b58900;
+  --by-log-error: #dc322f;
+  --by-log-info: #268bd2;
+  --by-log-debug: #839496;
+}
+
+/* --- HIGH CONTRAST --- */
+/* Light */
+.byLOGdocument[data-theme="high-contrast"]:not(.dark) {
+  --by-view-muted: #333333;
+  --by-view-bg: #ffffff;
+  --by-view-text: #000000;
+  --by-view-border: #333333;
+  --by-view-secondary: #333333;
+  --by-view-accent: #0038a8;
+  --by-view-alt: #f0f0f0;
+  --by-view-string: #005a30;
+  --by-view-literal: #5c0066;
+  --by-view-error: #9b0000;
+  --by-log-warn: #594300;
+  --by-log-error: #9b0000;
+  --by-log-info: #0038a8;
+  --by-log-debug: #333333;
+}
+/* Dark */
+.byLOGdocument.dark[data-theme="high-contrast"] {
+  --by-view-muted: #dddddd;
+  --by-view-bg: #000000;
+  --by-view-text: #ffffff;
+  --by-view-border: #ffffff;
+  --by-view-secondary: #dddddd;
+  --by-view-accent: #00ffff;
+  --by-view-alt: #171717;
+  --by-view-string: #ffff00;
+  --by-view-literal: #ffb5ff;
+  --by-view-error: #ffb3b3;
+  --by-log-warn: #ffff00;
+  --by-log-error: #ffb3b3;
+  --by-log-info: #00ffff;
+  --by-log-debug: #dddddd;
 }

@@ -331,13 +331,17 @@ test("named palettes retain mode, isolate custom CSS, and meet High Contrast tar
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
   try {
     const page = await browser.newPage();
+    const warnings = [];
+    page.on("console", (message) => {
+      if (message.type() === "warning" && message.text().includes("log.themes.css")) warnings.push(message.text());
+    });
     await page.setContent('<div id="outside">Host</div><div id="viewer"></div><div id="other" data-theme="dark"></div>');
     await page.addStyleTag({ path: path.join(__dirname, "../log.css") });
     await page.addScriptTag({ path: path.join(__dirname, "../log.js") });
     await page.evaluate(
       async (args) => {
         window.renderPalette = async (id) => {
-          const controller = window.byLOGviewer(document.getElementById(id), ...args);
+          const controller = window.byLOGviewer(document.getElementById(id), ...args.slice(0, 1), { ...args[1], animations: false });
           if (controller?.ready) await controller.ready;
         };
         await renderPalette("viewer");
@@ -367,6 +371,69 @@ test("named palettes retain mode, isolate custom CSS, and meet High Contrast tar
       await root.locator(".byVIEWthemeToggle").click();
       assert.equal(await background(), colors[0]);
     }
+    assert.equal(warnings.length, 0, "Core palettes need no optional pack");
+    await root.evaluate((element) => {
+      element.dataset.theme = "dracula";
+    });
+    await page.evaluate(() => renderPalette("viewer"));
+    assert.match(warnings[0], /log\.themes\.css/);
+    await page.evaluate(() => renderPalette("viewer"));
+    assert.equal(warnings.length, 1, "Repeated renders do not repeat a missing-pack warning");
+    await root.evaluate((element) => {
+      element.dataset.theme = "custom-user";
+    });
+    await page.evaluate(() => renderPalette("viewer"));
+    assert.equal(warnings.length, 1, "Custom CSS names are supported without a pack");
+    await page.addStyleTag({ path: path.join(__dirname, "../log.themes.css") });
+    await root.evaluate((element) => {
+      element.dataset.theme = "bubblegum";
+    });
+    await page.evaluate(() => renderPalette("viewer"));
+    assert.equal(warnings.length, 1, "Loaded packs do not warn for other presets");
+    const paletteSelect = require("node:fs")
+      .readFileSync(path.join(__dirname, "../index.html"), "utf8")
+      .match(/<select id="preview-palette"[\s\S]*?<\/select>/)[0];
+    const paletteNames = [...paletteSelect.matchAll(/<option value="([^"]+)"/g)].map((match) => match[1]).filter((name) => name !== "custom");
+    assert.equal(paletteNames.length, 48);
+    assert.equal(new Set(paletteNames).size, 48);
+    const readme = require("node:fs").readFileSync(path.join(__dirname, "../README.md"), "utf8");
+    for (const name of paletteNames) assert.match(readme, new RegExp("\\|\\s*`" + name + "`\\s*\\|"), `${name} must be documented`);
+    const failures = await root.evaluate((element, names) => {
+      const luminance = (value) => {
+        const channels = value.startsWith("#")
+          ? value
+              .slice(1)
+              .match(/../g)
+              .map((part) => parseInt(part, 16))
+          : value
+              .match(/[\d.]+/g)
+              .slice(0, 3)
+              .map(Number);
+        const linear = channels.map((channel) => channel / 255).map((channel) => (channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4));
+        return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
+      };
+      const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + 0.05) / (Math.min(luminance(a), luminance(b)) + 0.05);
+      const failures = [];
+      for (const name of names.filter((name) => !["monokai", "github", "solarized", "high-contrast"].includes(name))) {
+        element.dataset.theme = name;
+        for (const mode of ["light", "dark"]) {
+          element.classList.toggle("dark", mode === "dark");
+          element.classList.toggle("light", mode === "light");
+          const style = getComputedStyle(element);
+          const variables = [...style].map((name) => [name, style.getPropertyValue(name).trim()]).filter(([, value]) => /^#[\da-f]{6}$/i.test(value));
+          const backgrounds = [style.backgroundColor, ...variables.filter(([name]) => /-(?:alt|code-bg|add|remove)$/.test(name)).map(([, value]) => value)];
+          const textColors = [["text", style.color], ...variables.filter(([name]) => /-(?:text|secondary|accent|string|literal|error|warn|info|debug|comment|keyword|number|property|tag|link|quote|toggle|placeholder|muted)$/.test(name))];
+          for (const [property, value] of textColors) {
+            if (backgrounds.some((background) => contrast(value, background) < 4.5)) failures.push(`${name} ${mode} ${property}`);
+          }
+          const border = variables.find(([name]) => /^--by-(?:view|json|md)-border$/.test(name))?.[1];
+          if (border && contrast(border, style.backgroundColor) < 3) failures.push(`${name} ${mode} border`);
+        }
+      }
+      element.dataset.theme = "high-contrast";
+      return failures;
+    }, paletteNames);
+    assert.deepEqual(failures, [], "New palettes must keep text and control boundaries readable in both modes");
     for (const mode of ["light", "dark"]) {
       await root.evaluate((element, mode) => {
         element.classList.toggle("dark", mode === "dark");
@@ -414,9 +481,9 @@ test("named palettes retain mode, isolate custom CSS, and meet High Contrast tar
       element.dataset.theme = "light";
     });
     assert.equal(await background(), "rgb(250, 250, 245)", "Legacy mode aliases override classes");
-    await page.addStyleTag({ content: '.byLOGdocument.light[data-theme="ocean"] { --by-view-bg: #f3f8fc; } .byLOGdocument.dark[data-theme="ocean"] { --by-view-bg: #102a43; }' });
+    await page.addStyleTag({ content: '.byLOGdocument.light[data-theme="custom-ocean"] { --by-view-bg: #f3f8fc; } .byLOGdocument.dark[data-theme="custom-ocean"] { --by-view-bg: #102a43; }' });
     await root.evaluate((element) => {
-      element.dataset.theme = "ocean";
+      element.dataset.theme = "custom-ocean";
       element.classList.remove("light", "dark");
     });
     await page.route("https://legacy.test/**", (route) => route.fulfill({ body: "", contentType: "text/css" }));
@@ -435,7 +502,7 @@ test("named palettes retain mode, isolate custom CSS, and meet High Contrast tar
     assert.equal(await background(), "rgb(250, 250, 245)", "An unclassified custom palette starts in Light");
     await root.locator(".byVIEWthemeToggle").click();
     assert.equal(await background(), "rgb(16, 42, 67)");
-    assert.equal(await root.getAttribute("data-theme"), "ocean");
+    assert.equal(await root.getAttribute("data-theme"), "custom-ocean");
     assert.equal(await page.locator("#byVIEWtheme").getAttribute("href"), "https://legacy.test/log.dark.css?cache=1#theme");
     assert.equal(await page.locator("#other").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(39, 40, 34)");
     assert.equal(await page.locator("#outside").evaluate((element) => getComputedStyle(element).getPropertyValue("--by-view-muted")), "");
@@ -832,8 +899,8 @@ test("appearance options override markup and preserve independent viewer state",
       return renderAppearance({ theme: "light", toolbar: false });
     });
     assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.dataset.theme, element.classList.contains("dark"), element.classList.contains("light")]), ["light", false, true]);
-    await page.evaluate(() => renderAppearance({ theme: "dark", palette: "ocean", fontSize: 1.125, toolbar: false }));
-    assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.dataset.theme, element.classList.contains("dark"), element.style.fontSize]), ["ocean", true, "1.125rem"]);
+    await page.evaluate(() => renderAppearance({ theme: "dark", palette: "custom-ocean", fontSize: 1.125, toolbar: false }));
+    assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.dataset.theme, element.classList.contains("dark"), element.style.fontSize]), ["custom-ocean", true, "1.125rem"]);
     const preserved = await page.locator("#appearance").evaluate((element) => [element.className, element.dataset.theme, element.style.fontSize]);
     await page.evaluate(() => renderAppearance());
     assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.className, element.dataset.theme, element.style.fontSize]), preserved);

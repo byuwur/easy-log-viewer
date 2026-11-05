@@ -592,12 +592,23 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
     await page.waitForFunction(() => JSON.parse(document.getElementById("options-json").value).theme === "light");
     assert.equal(await palette.inputValue(), "github");
     assert.equal(await background(), "rgb(255, 255, 255)");
-    for (const name of ["solarized", "high-contrast"]) {
+    assert.equal(await palette.locator("optgroup").count(), 5);
+    assert.equal(await palette.locator("option").count(), 49);
+    for (const [name, expected] of Object.entries({
+      solarized: "rgb(0, 43, 54)",
+      dracula: "rgb(40, 42, 54)",
+      darcula: "rgb(43, 43, 43)",
+      discord: "rgb(49, 51, 56)",
+      sakura: "rgb(48, 28, 44)",
+      bubblegum: "rgb(59, 11, 45)",
+      terminal: "rgb(13, 26, 17)",
+      "high-contrast": "rgb(0, 0, 0)"
+    })) {
       await palette.selectOption(name);
       assert.equal(await root.getAttribute("data-theme"), name);
       assert.ok((await editor.inputValue()).includes("--by-view-bg"));
       await setMode("dark");
-      assert.equal(await background(), name === "solarized" ? "rgb(0, 43, 54)" : "rgb(0, 0, 0)");
+      assert.equal(await background(), expected);
     }
     await page.locator(".preview-appearance").evaluate((element) => {
       element.open = true;

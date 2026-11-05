@@ -1,0 +1,1591 @@
+/* Optional palettes. Load after log.css; Monokai, GitHub, Solarized, and High Contrast are built in. */
+
+/* A namespaced marker lets detached fragments check availability without a DOM probe. */
+:root {
+  --by-log-themes-loaded: 1;
+}
+
+/* --- THEMES --- */
+/* --- DRACULA --- */
+
+.byLOGdocument[data-theme="dracula"]:not(.dark) {
+  --by-view-muted: #635f70;
+  --by-view-bg: #fffbeb;
+  --by-view-text: #1f1f1f;
+  --by-view-border: #89877f;
+  --by-view-secondary: #635f70;
+  --by-view-accent: #644ac9;
+  --by-view-alt: #f1edde;
+  --by-view-string: #317039;
+  --by-view-literal: #9451a1;
+  --by-view-error: #a92535;
+  --by-log-warn: #906200;
+  --by-log-error: #a92535;
+  --by-log-info: #644ac9;
+  --by-log-debug: #635f70;
+}
+
+.byLOGdocument.dark[data-theme="dracula"] {
+  --by-view-muted: #a8a3bf;
+  --by-view-bg: #282a36;
+  --by-view-text: #f8f8f2;
+  --by-view-border: #808186;
+  --by-view-secondary: #a8a3bf;
+  --by-view-accent: #bd93f9;
+  --by-view-alt: #343746;
+  --by-view-string: #f1fa8c;
+  --by-view-literal: #bd93f9;
+  --by-view-error: #ff8080;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff8080;
+  --by-log-info: #bd93f9;
+  --by-log-debug: #a8a3bf;
+}
+
+/* --- DARCULA --- */
+
+.byLOGdocument[data-theme="darcula"]:not(.dark) {
+  --by-view-muted: #65615e;
+  --by-view-bg: #faf7f2;
+  --by-view-text: #333333;
+  --by-view-border: #868683;
+  --by-view-secondary: #65615e;
+  --by-view-accent: #7a4d19;
+  --by-view-alt: #eee8e0;
+  --by-view-string: #50723b;
+  --by-view-literal: #6556a1;
+  --by-view-error: #b33a3a;
+  --by-log-warn: #8d6000;
+  --by-log-error: #b33a3a;
+  --by-log-info: #7a4d19;
+  --by-log-debug: #65615e;
+}
+
+.byLOGdocument.dark[data-theme="darcula"] {
+  --by-view-muted: #a9a7a2;
+  --by-view-bg: #2b2b2b;
+  --by-view-text: #a9b7c6;
+  --by-view-border: #7c8186;
+  --by-view-secondary: #a9a7a2;
+  --by-view-accent: #d99a65;
+  --by-view-alt: #363636;
+  --by-view-string: #7cb584;
+  --by-view-literal: #86acc9;
+  --by-view-error: #ff817f;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff817f;
+  --by-log-info: #d99a65;
+  --by-log-debug: #a9a7a2;
+}
+
+/* --- NORD --- */
+
+.byLOGdocument[data-theme="nord"]:not(.dark) {
+  --by-view-muted: #536174;
+  --by-view-bg: #eceff4;
+  --by-view-text: #2e3440;
+  --by-view-border: #80838a;
+  --by-view-secondary: #536174;
+  --by-view-accent: #38687b;
+  --by-view-alt: #e1e7ef;
+  --by-view-string: #3f6843;
+  --by-view-literal: #755a89;
+  --by-view-error: #a94053;
+  --by-log-warn: #875c00;
+  --by-log-error: #a94053;
+  --by-log-info: #38687b;
+  --by-log-debug: #536174;
+}
+
+.byLOGdocument.dark[data-theme="nord"] {
+  --by-view-muted: #a7b1c2;
+  --by-view-bg: #2e3440;
+  --by-view-text: #eceff4;
+  --by-view-border: #898d95;
+  --by-view-secondary: #a7b1c2;
+  --by-view-accent: #88c0d0;
+  --by-view-alt: #3b4252;
+  --by-view-string: #a3be8c;
+  --by-view-literal: #c5a8c0;
+  --by-view-error: #d9a2a7;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #d9a2a7;
+  --by-log-info: #88c0d0;
+  --by-log-debug: #a7b1c2;
+}
+
+/* --- CATPPUCCIN --- */
+
+.byLOGdocument[data-theme="catppuccin"]:not(.dark) {
+  --by-view-muted: #616478;
+  --by-view-bg: #eff1f5;
+  --by-view-text: #4c4f69;
+  --by-view-border: #82848e;
+  --by-view-secondary: #616478;
+  --by-view-accent: #8337e5;
+  --by-view-alt: #e6e9ef;
+  --by-view-string: #2e731f;
+  --by-view-literal: #ad4407;
+  --by-view-error: #ca0e37;
+  --by-log-warn: #885d00;
+  --by-log-error: #ca0e37;
+  --by-log-info: #8337e5;
+  --by-log-debug: #616478;
+}
+
+.byLOGdocument.dark[data-theme="catppuccin"] {
+  --by-view-muted: #a6adc8;
+  --by-view-bg: #1e1e2e;
+  --by-view-text: #cdd6f4;
+  --by-view-border: #787c8e;
+  --by-view-secondary: #a6adc8;
+  --by-view-accent: #cba6f7;
+  --by-view-alt: #313244;
+  --by-view-string: #a6e3a1;
+  --by-view-literal: #fab387;
+  --by-view-error: #f38ba8;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f38ba8;
+  --by-log-info: #cba6f7;
+  --by-log-debug: #a6adc8;
+}
+
+/* --- CATPPUCCIN FRAPPÉ --- */
+
+.byLOGdocument[data-theme="catppuccin-frappe"]:not(.dark) {
+  --by-view-muted: #616478;
+  --by-view-bg: #eff1f5;
+  --by-view-text: #4c4f69;
+  --by-view-border: #82848e;
+  --by-view-secondary: #616478;
+  --by-view-accent: #1b5cdc;
+  --by-view-alt: #e6e9ef;
+  --by-view-string: #2e731f;
+  --by-view-literal: #ad4407;
+  --by-view-error: #ca0e37;
+  --by-log-warn: #885d00;
+  --by-log-error: #ca0e37;
+  --by-log-info: #1b5cdc;
+  --by-log-debug: #616478;
+}
+
+.byLOGdocument.dark[data-theme="catppuccin-frappe"] {
+  --by-view-muted: #aab2d1;
+  --by-view-bg: #303446;
+  --by-view-text: #c6d0f5;
+  --by-view-border: #8c91a5;
+  --by-view-secondary: #aab2d1;
+  --by-view-accent: #99b3f0;
+  --by-view-alt: #414559;
+  --by-view-string: #a6d189;
+  --by-view-literal: #efa179;
+  --by-view-error: #ed9fa0;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ed9fa0;
+  --by-log-info: #99b3f0;
+  --by-log-debug: #aab2d1;
+}
+
+/* --- CATPPUCCIN MACCHIATO --- */
+
+.byLOGdocument[data-theme="catppuccin-macchiato"]:not(.dark) {
+  --by-view-muted: #616478;
+  --by-view-bg: #eff1f5;
+  --by-view-text: #4c4f69;
+  --by-view-border: #82848e;
+  --by-view-secondary: #616478;
+  --by-view-accent: #ca0e37;
+  --by-view-alt: #e6e9ef;
+  --by-view-string: #2e731f;
+  --by-view-literal: #ad4407;
+  --by-view-error: #ca0e37;
+  --by-log-warn: #885d00;
+  --by-log-error: #ca0e37;
+  --by-log-info: #ca0e37;
+  --by-log-debug: #616478;
+}
+
+.byLOGdocument.dark[data-theme="catppuccin-macchiato"] {
+  --by-view-muted: #a5adcb;
+  --by-view-bg: #24273a;
+  --by-view-text: #cad3f5;
+  --by-view-border: #7e8499;
+  --by-view-secondary: #a5adcb;
+  --by-view-accent: #f5bde6;
+  --by-view-alt: #363a4f;
+  --by-view-string: #a6da95;
+  --by-view-literal: #f5a97f;
+  --by-view-error: #ed8796;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ed8796;
+  --by-log-info: #f5bde6;
+  --by-log-debug: #a5adcb;
+}
+
+/* --- ROSÉ PINE --- */
+
+.byLOGdocument[data-theme="rose-pine"]:not(.dark) {
+  --by-view-muted: #68657e;
+  --by-view-bg: #faf4ed;
+  --by-view-text: #575279;
+  --by-view-border: #89848d;
+  --by-view-secondary: #68657e;
+  --by-view-accent: #975366;
+  --by-view-alt: #f2e9e1;
+  --by-view-string: #286983;
+  --by-view-literal: #925856;
+  --by-view-error: #975366;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #975366;
+  --by-log-info: #975366;
+  --by-log-debug: #68657e;
+}
+
+.byLOGdocument.dark[data-theme="rose-pine"] {
+  --by-view-muted: #9692ae;
+  --by-view-bg: #191724;
+  --by-view-text: #e0def4;
+  --by-view-border: #6f6d7c;
+  --by-view-secondary: #9692ae;
+  --by-view-accent: #eb6f92;
+  --by-view-alt: #26233a;
+  --by-view-string: #f6c177;
+  --by-view-literal: #c4a7e7;
+  --by-view-error: #eb6f92;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #eb6f92;
+  --by-log-info: #eb6f92;
+  --by-log-debug: #9692ae;
+}
+
+/* --- ROSÉ PINE MOON --- */
+
+.byLOGdocument[data-theme="rose-pine-moon"]:not(.dark) {
+  --by-view-muted: #68657e;
+  --by-view-bg: #faf4ed;
+  --by-view-text: #575279;
+  --by-view-border: #89848d;
+  --by-view-secondary: #68657e;
+  --by-view-accent: #726086;
+  --by-view-alt: #f2e9e1;
+  --by-view-string: #286983;
+  --by-view-literal: #925856;
+  --by-view-error: #975366;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #975366;
+  --by-log-info: #726086;
+  --by-log-debug: #68657e;
+}
+
+.byLOGdocument.dark[data-theme="rose-pine-moon"] {
+  --by-view-muted: #a09cb6;
+  --by-view-bg: #232136;
+  --by-view-text: #e0def4;
+  --by-view-border: #737186;
+  --by-view-secondary: #a09cb6;
+  --by-view-accent: #c4a7e7;
+  --by-view-alt: #2a273f;
+  --by-view-string: #f6c177;
+  --by-view-literal: #ea9a97;
+  --by-view-error: #ed7b9b;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ed7b9b;
+  --by-log-info: #c4a7e7;
+  --by-log-debug: #a09cb6;
+}
+
+/* --- GRUVBOX --- */
+
+.byLOGdocument[data-theme="gruvbox"]:not(.dark) {
+  --by-view-muted: #6b5f56;
+  --by-view-bg: #fbf1c7;
+  --by-view-text: #3c3836;
+  --by-view-border: #827c68;
+  --by-view-secondary: #6b5f56;
+  --by-view-accent: #82590f;
+  --by-view-alt: #ebdbb2;
+  --by-view-string: #67630c;
+  --by-view-literal: #8f3f71;
+  --by-view-error: #9d0006;
+  --by-log-warn: #825900;
+  --by-log-error: #9d0006;
+  --by-log-info: #82590f;
+  --by-log-debug: #6b5f56;
+}
+
+.byLOGdocument.dark[data-theme="gruvbox"] {
+  --by-view-muted: #b0a28f;
+  --by-view-bg: #282828;
+  --by-view-text: #ebdbb2;
+  --by-view-border: #888374;
+  --by-view-secondary: #b0a28f;
+  --by-view-accent: #fabd2f;
+  --by-view-alt: #3c3836;
+  --by-view-string: #b8bb26;
+  --by-view-literal: #d790a3;
+  --by-view-error: #fc8071;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #fc8071;
+  --by-log-info: #fabd2f;
+  --by-log-debug: #b0a28f;
+}
+
+/* --- GRUVBOX MATERIAL --- */
+
+.byLOGdocument[data-theme="gruvbox-material"]:not(.dark) {
+  --by-view-muted: #665b52;
+  --by-view-bg: #f2e5bc;
+  --by-view-text: #514036;
+  --by-view-border: #827762;
+  --by-view-secondary: #665b52;
+  --by-view-accent: #596226;
+  --by-view-alt: #e8d5a6;
+  --by-view-string: #596226;
+  --by-view-literal: #7c4f6c;
+  --by-view-error: #9d0006;
+  --by-log-warn: #7e5600;
+  --by-log-error: #9d0006;
+  --by-log-info: #596226;
+  --by-log-debug: #665b52;
+}
+
+.byLOGdocument.dark[data-theme="gruvbox-material"] {
+  --by-view-muted: #b1a390;
+  --by-view-bg: #292828;
+  --by-view-text: #d4be98;
+  --by-view-border: #898175;
+  --by-view-secondary: #b1a390;
+  --by-view-accent: #a9b665;
+  --by-view-alt: #3c3836;
+  --by-view-string: #a9b665;
+  --by-view-literal: #d791a4;
+  --by-view-error: #ee8883;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ee8883;
+  --by-log-info: #a9b665;
+  --by-log-debug: #b1a390;
+}
+
+/* --- TOKYO NIGHT --- */
+
+.byLOGdocument[data-theme="tokyo-night"]:not(.dark) {
+  --by-view-muted: #545c75;
+  --by-view-bg: #e1e2e7;
+  --by-view-text: #343b58;
+  --by-view-border: #757782;
+  --by-view-secondary: #545c75;
+  --by-view-accent: #225cac;
+  --by-view-alt: #d5d6dc;
+  --by-view-string: #4b6330;
+  --by-view-literal: #7440b7;
+  --by-view-error: #b01e49;
+  --by-log-warn: #7c5500;
+  --by-log-error: #b01e49;
+  --by-log-info: #225cac;
+  --by-log-debug: #545c75;
+}
+
+.byLOGdocument.dark[data-theme="tokyo-night"] {
+  --by-view-muted: #a9b1d6;
+  --by-view-bg: #1a1b26;
+  --by-view-text: #c0caf5;
+  --by-view-border: #6c7186;
+  --by-view-secondary: #a9b1d6;
+  --by-view-accent: #7aa2f7;
+  --by-view-alt: #24283b;
+  --by-view-string: #9ece6a;
+  --by-view-literal: #ff9e64;
+  --by-view-error: #f7768e;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f7768e;
+  --by-log-info: #7aa2f7;
+  --by-log-debug: #a9b1d6;
+}
+
+/* --- TOKYO STORM --- */
+
+.byLOGdocument[data-theme="tokyo-storm"]:not(.dark) {
+  --by-view-muted: #57607a;
+  --by-view-bg: #e6e8ef;
+  --by-view-text: #343b58;
+  --by-view-border: #7a7e8a;
+  --by-view-secondary: #57607a;
+  --by-view-accent: #34548a;
+  --by-view-alt: #d9dfeb;
+  --by-view-string: #486523;
+  --by-view-literal: #934e26;
+  --by-view-error: #b22e4f;
+  --by-log-warn: #825900;
+  --by-log-error: #b22e4f;
+  --by-log-info: #34548a;
+  --by-log-debug: #57607a;
+}
+
+.byLOGdocument.dark[data-theme="tokyo-storm"] {
+  --by-view-muted: #a9b1d6;
+  --by-view-bg: #24283b;
+  --by-view-text: #c0caf5;
+  --by-view-border: #787e96;
+  --by-view-secondary: #a9b1d6;
+  --by-view-accent: #7dcfff;
+  --by-view-alt: #2f354d;
+  --by-view-string: #9ece6a;
+  --by-view-literal: #ff9e64;
+  --by-view-error: #f88096;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f88096;
+  --by-log-info: #7dcfff;
+  --by-log-debug: #a9b1d6;
+}
+
+/* --- TOKYO MOON --- */
+
+.byLOGdocument[data-theme="tokyo-moon"]:not(.dark) {
+  --by-view-muted: #605d7b;
+  --by-view-bg: #e8e6f4;
+  --by-view-text: #36355a;
+  --by-view-border: #7c7a8c;
+  --by-view-secondary: #605d7b;
+  --by-view-accent: #6b4bb9;
+  --by-view-alt: #dcd9ec;
+  --by-view-string: #3e6a3a;
+  --by-view-literal: #904f1f;
+  --by-view-error: #a83659;
+  --by-log-warn: #815800;
+  --by-log-error: #a83659;
+  --by-log-info: #6b4bb9;
+  --by-log-debug: #605d7b;
+}
+
+.byLOGdocument.dark[data-theme="tokyo-moon"] {
+  --by-view-muted: #a9b8e8;
+  --by-view-bg: #222436;
+  --by-view-text: #c8d3f5;
+  --by-view-border: #787d92;
+  --by-view-secondary: #a9b8e8;
+  --by-view-accent: #82aaff;
+  --by-view-alt: #2f334d;
+  --by-view-string: #c3e88d;
+  --by-view-literal: #ffc777;
+  --by-view-error: #ff757f;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff757f;
+  --by-log-info: #82aaff;
+  --by-log-debug: #a9b8e8;
+}
+
+/* --- ONE --- */
+
+.byLOGdocument[data-theme="one"]:not(.dark) {
+  --by-view-muted: #676a75;
+  --by-view-bg: #fafafa;
+  --by-view-text: #383a42;
+  --by-view-border: #8a8a8d;
+  --by-view-secondary: #676a75;
+  --by-view-accent: #3665cb;
+  --by-view-alt: #f0f0f1;
+  --by-view-string: #3b773a;
+  --by-view-literal: #8f6201;
+  --by-view-error: #b6453a;
+  --by-log-warn: #906200;
+  --by-log-error: #b6453a;
+  --by-log-info: #3665cb;
+  --by-log-debug: #676a75;
+}
+
+.byLOGdocument.dark[data-theme="one"] {
+  --by-view-muted: #a2a8b2;
+  --by-view-bg: #282c34;
+  --by-view-text: #abb2bf;
+  --by-view-border: #7d8189;
+  --by-view-secondary: #a2a8b2;
+  --by-view-accent: #61afef;
+  --by-view-alt: #333842;
+  --by-view-string: #98c379;
+  --by-view-literal: #d39e6c;
+  --by-view-error: #e89198;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #e89198;
+  --by-log-info: #61afef;
+  --by-log-debug: #a2a8b2;
+}
+
+/* --- MATERIAL --- */
+
+.byLOGdocument[data-theme="material"]:not(.dark) {
+  --by-view-muted: #546e7a;
+  --by-view-bg: #fafafa;
+  --by-view-text: #37474f;
+  --by-view-border: #868b8e;
+  --by-view-secondary: #546e7a;
+  --by-view-accent: #007681;
+  --by-view-alt: #ecf0f1;
+  --by-view-string: #577330;
+  --by-view-literal: #9c5b00;
+  --by-view-error: #c92a3f;
+  --by-log-warn: #906200;
+  --by-log-error: #c92a3f;
+  --by-log-info: #007681;
+  --by-log-debug: #546e7a;
+}
+
+.byLOGdocument.dark[data-theme="material"] {
+  --by-view-muted: #a6b8be;
+  --by-view-bg: #263238;
+  --by-view-text: #eeffff;
+  --by-view-border: #818e92;
+  --by-view-secondary: #a6b8be;
+  --by-view-accent: #89ddff;
+  --by-view-alt: #34434b;
+  --by-view-string: #c3e88d;
+  --by-view-literal: #f79273;
+  --by-view-error: #f39297;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f39297;
+  --by-log-info: #89ddff;
+  --by-log-debug: #a6b8be;
+}
+
+/* --- MATERIAL OCEAN --- */
+
+.byLOGdocument[data-theme="material-ocean"]:not(.dark) {
+  --by-view-muted: #5a687d;
+  --by-view-bg: #eef4fa;
+  --by-view-text: #273347;
+  --by-view-border: #808790;
+  --by-view-secondary: #5a687d;
+  --by-view-accent: #315cb2;
+  --by-view-alt: #e1ebf5;
+  --by-view-string: #367350;
+  --by-view-literal: #915b12;
+  --by-view-error: #b93552;
+  --by-log-warn: #8a5e00;
+  --by-log-error: #b93552;
+  --by-log-info: #315cb2;
+  --by-log-debug: #5a687d;
+}
+
+.byLOGdocument.dark[data-theme="material-ocean"] {
+  --by-view-muted: #8f9bbc;
+  --by-view-bg: #0f111a;
+  --by-view-text: #a6accd;
+  --by-view-border: #686b7b;
+  --by-view-secondary: #8f9bbc;
+  --by-view-accent: #84ffff;
+  --by-view-alt: #1b2030;
+  --by-view-string: #c3e88d;
+  --by-view-literal: #f78c6c;
+  --by-view-error: #ff5370;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff5370;
+  --by-log-info: #84ffff;
+  --by-log-debug: #8f9bbc;
+}
+
+/* --- NIGHT OWL --- */
+
+.byLOGdocument[data-theme="night-owl"]:not(.dark) {
+  --by-view-muted: #656575;
+  --by-view-bg: #fbfbfb;
+  --by-view-text: #403f53;
+  --by-view-border: #898990;
+  --by-view-secondary: #656575;
+  --by-view-accent: #3f68bc;
+  --by-view-alt: #f0f0f3;
+  --by-view-string: #487530;
+  --by-view-literal: #a25800;
+  --by-view-error: #c03c38;
+  --by-log-warn: #906200;
+  --by-log-error: #c03c38;
+  --by-log-info: #3f68bc;
+  --by-log-debug: #656575;
+}
+
+.byLOGdocument.dark[data-theme="night-owl"] {
+  --by-view-muted: #9baebf;
+  --by-view-bg: #011627;
+  --by-view-text: #d6deeb;
+  --by-view-border: #647280;
+  --by-view-secondary: #9baebf;
+  --by-view-accent: #82aaff;
+  --by-view-alt: #0b2942;
+  --by-view-string: #addb67;
+  --by-view-literal: #f78c6c;
+  --by-view-error: #f16462;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f16462;
+  --by-log-info: #82aaff;
+  --by-log-debug: #9baebf;
+}
+
+/* --- SYNTHWAVE --- */
+
+.byLOGdocument[data-theme="synthwave"]:not(.dark) {
+  --by-view-muted: #7f4d80;
+  --by-view-bg: #fff0fc;
+  --by-view-text: #412245;
+  --by-view-border: #8d7d8d;
+  --by-view-secondary: #7f4d80;
+  --by-view-accent: #b3188f;
+  --by-view-alt: #f5def1;
+  --by-view-string: #13735e;
+  --by-view-literal: #965700;
+  --by-view-error: #bc2d54;
+  --by-log-warn: #8a5e00;
+  --by-log-error: #bc2d54;
+  --by-log-info: #b3188f;
+  --by-log-debug: #7f4d80;
+}
+
+.byLOGdocument.dark[data-theme="synthwave"] {
+  --by-view-muted: #bca3d2;
+  --by-view-bg: #262335;
+  --by-view-text: #f4e9ff;
+  --by-view-border: #7c768a;
+  --by-view-secondary: #bca3d2;
+  --by-view-accent: #ff7edb;
+  --by-view-alt: #342b47;
+  --by-view-string: #72f1b8;
+  --by-view-literal: #fede5d;
+  --by-view-error: #fe767f;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #fe767f;
+  --by-log-info: #ff7edb;
+  --by-log-debug: #bca3d2;
+}
+
+/* --- AYU --- */
+
+.byLOGdocument[data-theme="ayu"]:not(.dark) {
+  --by-view-muted: #686b6f;
+  --by-view-bg: #fafafa;
+  --by-view-text: #575f66;
+  --by-view-border: #87898b;
+  --by-view-secondary: #686b6f;
+  --by-view-accent: #926000;
+  --by-view-alt: #f0eee8;
+  --by-view-string: #59731c;
+  --by-view-literal: #7c5d9b;
+  --by-view-error: #a84f4f;
+  --by-log-warn: #906200;
+  --by-log-error: #a84f4f;
+  --by-log-info: #926000;
+  --by-log-debug: #686b6f;
+}
+
+.byLOGdocument.dark[data-theme="ayu"] {
+  --by-view-muted: #9c9b96;
+  --by-view-bg: #0f1419;
+  --by-view-text: #bfbdb6;
+  --by-view-border: #6b6e6e;
+  --by-view-secondary: #9c9b96;
+  --by-view-accent: #ffcc66;
+  --by-view-alt: #1a232d;
+  --by-view-string: #b8cc52;
+  --by-view-literal: #e6b450;
+  --by-view-error: #f07178;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f07178;
+  --by-log-info: #ffcc66;
+  --by-log-debug: #9c9b96;
+}
+
+/* --- EVERFOREST --- */
+
+.byLOGdocument[data-theme="everforest"]:not(.dark) {
+  --by-view-muted: #5d6a72;
+  --by-view-bg: #fdf6e3;
+  --by-view-text: #5c6a72;
+  --by-view-border: #868781;
+  --by-view-secondary: #5d6a72;
+  --by-view-accent: #4d7231;
+  --by-view-alt: #f3ead3;
+  --by-view-string: #527135;
+  --by-view-literal: #845a87;
+  --by-view-error: #aa4954;
+  --by-log-warn: #8d6000;
+  --by-log-error: #aa4954;
+  --by-log-info: #4d7231;
+  --by-log-debug: #5d6a72;
+}
+
+.byLOGdocument.dark[data-theme="everforest"] {
+  --by-view-muted: #aab4a8;
+  --by-view-bg: #2d353b;
+  --by-view-text: #d3c6aa;
+  --by-view-border: #8c8c85;
+  --by-view-secondary: #aab4a8;
+  --by-view-accent: #a7c080;
+  --by-view-alt: #374247;
+  --by-view-string: #a7c080;
+  --by-view-literal: #d9a1bc;
+  --by-view-error: #ec9c9d;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ec9c9d;
+  --by-log-info: #a7c080;
+  --by-log-debug: #aab4a8;
+}
+
+/* --- KANAGAWA --- */
+
+.byLOGdocument[data-theme="kanagawa"]:not(.dark) {
+  --by-view-muted: #5f5f5c;
+  --by-view-bg: #f2ecbc;
+  --by-view-text: #545464;
+  --by-view-border: #7f7c6d;
+  --by-view-secondary: #5f5f5c;
+  --by-view-accent: #46608d;
+  --by-view-alt: #e7dbad;
+  --by-view-string: #52653a;
+  --by-view-literal: #914a62;
+  --by-view-error: #aa3647;
+  --by-log-warn: #815800;
+  --by-log-error: #aa3647;
+  --by-log-info: #46608d;
+  --by-log-debug: #5f5f5c;
+}
+
+.byLOGdocument.dark[data-theme="kanagawa"] {
+  --by-view-muted: #a5a397;
+  --by-view-bg: #1f1f28;
+  --by-view-text: #dcd7ba;
+  --by-view-border: #75746d;
+  --by-view-secondary: #a5a397;
+  --by-view-accent: #7e9cd8;
+  --by-view-alt: #2a2a37;
+  --by-view-string: #98bb6c;
+  --by-view-literal: #d4839d;
+  --by-view-error: #f17575;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f17575;
+  --by-log-info: #7e9cd8;
+  --by-log-debug: #a5a397;
+}
+
+/* --- SELENIZED --- */
+
+.byLOGdocument[data-theme="selenized"]:not(.dark) {
+  --by-view-muted: #56696f;
+  --by-view-bg: #fbf3db;
+  --by-view-text: #53676d;
+  --by-view-border: #81837a;
+  --by-view-secondary: #56696f;
+  --by-view-accent: #0065bd;
+  --by-view-alt: #ece3cc;
+  --by-view-string: #397300;
+  --by-view-literal: #7554ad;
+  --by-view-error: #c51f2a;
+  --by-log-warn: #885d00;
+  --by-log-error: #c51f2a;
+  --by-log-info: #0065bd;
+  --by-log-debug: #56696f;
+}
+
+.byLOGdocument.dark[data-theme="selenized"] {
+  --by-view-muted: #a5b7bc;
+  --by-view-bg: #103c48;
+  --by-view-text: #adbcbc;
+  --by-view-border: #7b9398;
+  --by-view-secondary: #a5b7bc;
+  --by-view-accent: #7db7ff;
+  --by-view-alt: #184956;
+  --by-view-string: #8ac456;
+  --by-view-literal: #f596ce;
+  --by-view-error: #fc9994;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #fc9994;
+  --by-log-info: #7db7ff;
+  --by-log-debug: #a5b7bc;
+}
+
+/* --- VS CODE --- */
+
+.byLOGdocument[data-theme="vscode"]:not(.dark) {
+  --by-view-muted: #686868;
+  --by-view-bg: #ffffff;
+  --by-view-text: #333333;
+  --by-view-border: #8c8c8c;
+  --by-view-secondary: #686868;
+  --by-view-accent: #0068b5;
+  --by-view-alt: #f3f3f3;
+  --by-view-string: #a31515;
+  --by-view-literal: #087d52;
+  --by-view-error: #cd3131;
+  --by-log-warn: #936400;
+  --by-log-error: #cd3131;
+  --by-log-info: #0068b5;
+  --by-log-debug: #686868;
+}
+
+.byLOGdocument.dark[data-theme="vscode"] {
+  --by-view-muted: #a4a4a4;
+  --by-view-bg: #1e1e1e;
+  --by-view-text: #d4d4d4;
+  --by-view-border: #767676;
+  --by-view-secondary: #a4a4a4;
+  --by-view-accent: #4daafc;
+  --by-view-alt: #2d2d30;
+  --by-view-string: #ce9178;
+  --by-view-literal: #b5cea8;
+  --by-view-error: #f48771;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f48771;
+  --by-log-info: #4daafc;
+  --by-log-debug: #a4a4a4;
+}
+
+/* --- MONOKAI DIMMED --- */
+
+.byLOGdocument[data-theme="monokai-dimmed"]:not(.dark) {
+  --by-view-muted: #68685f;
+  --by-view-bg: #f8f6ef;
+  --by-view-text: #41413c;
+  --by-view-border: #878681;
+  --by-view-secondary: #68685f;
+  --by-view-accent: #3f7070;
+  --by-view-alt: #ece9de;
+  --by-view-string: #606e21;
+  --by-view-literal: #805b8c;
+  --by-view-error: #b33f52;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #b33f52;
+  --by-log-info: #3f7070;
+  --by-log-debug: #68685f;
+}
+
+.byLOGdocument.dark[data-theme="monokai-dimmed"] {
+  --by-view-muted: #9a9a91;
+  --by-view-bg: #1e1e1e;
+  --by-view-text: #b9b9b2;
+  --by-view-border: #747472;
+  --by-view-secondary: #9a9a91;
+  --by-view-accent: #8db7b5;
+  --by-view-alt: #2b2b28;
+  --by-view-string: #c4be89;
+  --by-view-literal: #a495b2;
+  --by-view-error: #da8089;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #da8089;
+  --by-log-info: #8db7b5;
+  --by-log-debug: #9a9a91;
+}
+
+/* --- DISCORD --- */
+
+.byLOGdocument[data-theme="discord"]:not(.dark) {
+  --by-view-muted: #606773;
+  --by-view-bg: #ffffff;
+  --by-view-text: #313338;
+  --by-view-border: #8c8c8e;
+  --by-view-secondary: #606773;
+  --by-view-accent: #525ee1;
+  --by-view-alt: #f2f3f5;
+  --by-view-string: #247b4c;
+  --by-view-literal: #8256c3;
+  --by-view-error: #cb3338;
+  --by-log-warn: #936400;
+  --by-log-error: #cb3338;
+  --by-log-info: #525ee1;
+  --by-log-debug: #606773;
+}
+
+.byLOGdocument.dark[data-theme="discord"] {
+  --by-view-muted: #b5bac1;
+  --by-view-bg: #313338;
+  --by-view-text: #f2f3f5;
+  --by-view-border: #828488;
+  --by-view-secondary: #b5bac1;
+  --by-view-accent: #a3aaf8;
+  --by-view-alt: #383a40;
+  --by-view-string: #8fdcaa;
+  --by-view-literal: #d2b6f4;
+  --by-view-error: #ff9094;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9094;
+  --by-log-info: #a3aaf8;
+  --by-log-debug: #b5bac1;
+}
+
+/* --- SLACK --- */
+
+.byLOGdocument[data-theme="slack"]:not(.dark) {
+  --by-view-muted: #765677;
+  --by-view-bg: #fff8fd;
+  --by-view-text: #3f0e40;
+  --by-view-border: #948093;
+  --by-view-secondary: #765677;
+  --by-view-accent: #8d287c;
+  --by-view-alt: #f3e7f3;
+  --by-view-string: #227760;
+  --by-view-literal: #895894;
+  --by-view-error: #be3151;
+  --by-log-warn: #8e6100;
+  --by-log-error: #be3151;
+  --by-log-info: #8d287c;
+  --by-log-debug: #765677;
+}
+
+.byLOGdocument.dark[data-theme="slack"] {
+  --by-view-muted: #c5a6c7;
+  --by-view-bg: #3f0e40;
+  --by-view-text: #f8eaf8;
+  --by-view-border: #927293;
+  --by-view-secondary: #c5a6c7;
+  --by-view-accent: #eba8e4;
+  --by-view-alt: #512052;
+  --by-view-string: #90d8b9;
+  --by-view-literal: #e4bb79;
+  --by-view-error: #ff96ad;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff96ad;
+  --by-log-info: #eba8e4;
+  --by-log-debug: #c5a6c7;
+}
+
+/* --- BONYUR --- */
+
+.byLOGdocument[data-theme="bonyur"]:not(.dark) {
+  --by-view-muted: #606b68;
+  --by-view-bg: #f8f6f0;
+  --by-view-text: #242b2a;
+  --by-view-border: #848682;
+  --by-view-secondary: #606b68;
+  --by-view-accent: #00747a;
+  --by-view-alt: #eceae1;
+  --by-view-string: #5d6f20;
+  --by-view-literal: #8451ab;
+  --by-view-error: #bf3150;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #bf3150;
+  --by-log-info: #00747a;
+  --by-log-debug: #606b68;
+}
+
+.byLOGdocument.dark[data-theme="bonyur"] {
+  --by-view-muted: #a1b5b1;
+  --by-view-bg: #151b1c;
+  --by-view-text: #f2f4ec;
+  --by-view-border: #707572;
+  --by-view-secondary: #a1b5b1;
+  --by-view-accent: #74e1d5;
+  --by-view-alt: #222d2e;
+  --by-view-string: #d6dc86;
+  --by-view-literal: #d5a7ed;
+  --by-view-error: #ff859c;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff859c;
+  --by-log-info: #74e1d5;
+  --by-log-debug: #a1b5b1;
+}
+
+/* --- SAKURA --- */
+
+.byLOGdocument[data-theme="sakura"]:not(.dark) {
+  --by-view-muted: #88586e;
+  --by-view-bg: #fff0f7;
+  --by-view-text: #51263c;
+  --by-view-border: #907c86;
+  --by-view-secondary: #88586e;
+  --by-view-accent: #b82b73;
+  --by-view-alt: #f8deec;
+  --by-view-string: #41704c;
+  --by-view-literal: #8b4ca2;
+  --by-view-error: #ba3052;
+  --by-log-warn: #8a5e00;
+  --by-log-error: #ba3052;
+  --by-log-info: #b82b73;
+  --by-log-debug: #88586e;
+}
+
+.byLOGdocument.dark[data-theme="sakura"] {
+  --by-view-muted: #c09aaf;
+  --by-view-bg: #301c2c;
+  --by-view-text: #fbdbea;
+  --by-view-border: #897180;
+  --by-view-secondary: #c09aaf;
+  --by-view-accent: #ff91ca;
+  --by-view-alt: #44253d;
+  --by-view-string: #b8dc9c;
+  --by-view-literal: #d6b0ff;
+  --by-view-error: #ff879f;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff879f;
+  --by-log-info: #ff91ca;
+  --by-log-debug: #c09aaf;
+}
+
+/* --- BUBBLEGUM --- */
+
+.byLOGdocument[data-theme="bubblegum"]:not(.dark) {
+  --by-view-muted: #824c6e;
+  --by-view-bg: #ffe3f5;
+  --by-view-text: #5a1546;
+  --by-view-border: #927087;
+  --by-view-secondary: #824c6e;
+  --by-view-accent: #b40979;
+  --by-view-alt: #f8cbe8;
+  --by-view-string: #146b54;
+  --by-view-literal: #8c35a3;
+  --by-view-error: #ae284d;
+  --by-log-warn: #7f5700;
+  --by-log-error: #ae284d;
+  --by-log-info: #b40979;
+  --by-log-debug: #824c6e;
+}
+
+.byLOGdocument.dark[data-theme="bubblegum"] {
+  --by-view-muted: #d1a1c0;
+  --by-view-bg: #3b0b2d;
+  --by-view-text: #ffe1f5;
+  --by-view-border: #906a85;
+  --by-view-secondary: #d1a1c0;
+  --by-view-accent: #ff77cd;
+  --by-view-alt: #52133f;
+  --by-view-string: #9ff0ca;
+  --by-view-literal: #e2b0ff;
+  --by-view-error: #ff9caa;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9caa;
+  --by-log-info: #ff77cd;
+  --by-log-debug: #d1a1c0;
+}
+
+/* --- CANDY --- */
+
+.byLOGdocument[data-theme="candy"]:not(.dark) {
+  --by-view-muted: #7a5a80;
+  --by-view-bg: #fff0fd;
+  --by-view-text: #4e2853;
+  --by-view-border: #8e7b8e;
+  --by-view-secondary: #7a5a80;
+  --by-view-accent: #a134ad;
+  --by-view-alt: #f0def4;
+  --by-view-string: #1e7161;
+  --by-view-literal: #8247c1;
+  --by-view-error: #ba2e5b;
+  --by-log-warn: #885d00;
+  --by-log-error: #ba2e5b;
+  --by-log-info: #a134ad;
+  --by-log-debug: #7a5a80;
+}
+
+.byLOGdocument.dark[data-theme="candy"] {
+  --by-view-muted: #c8a3d8;
+  --by-view-bg: #2d163d;
+  --by-view-text: #f9e4ff;
+  --by-view-border: #887393;
+  --by-view-secondary: #c8a3d8;
+  --by-view-accent: #f6a1ee;
+  --by-view-alt: #422451;
+  --by-view-string: #9fe5cc;
+  --by-view-literal: #d2b1ff;
+  --by-view-error: #ff98ba;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff98ba;
+  --by-log-info: #f6a1ee;
+  --by-log-debug: #c8a3d8;
+}
+
+/* --- ROSE GOLD --- */
+
+.byLOGdocument[data-theme="rose-gold"]:not(.dark) {
+  --by-view-muted: #7c5e55;
+  --by-view-bg: #fff3ed;
+  --by-view-text: #57382f;
+  --by-view-border: #8d7e79;
+  --by-view-secondary: #7c5e55;
+  --by-view-accent: #9f4956;
+  --by-view-alt: #f3dfd5;
+  --by-view-string: #516d43;
+  --by-view-literal: #88518a;
+  --by-view-error: #b3364e;
+  --by-log-warn: #885d00;
+  --by-log-error: #b3364e;
+  --by-log-info: #9f4956;
+  --by-log-debug: #7c5e55;
+}
+
+.byLOGdocument.dark[data-theme="rose-gold"] {
+  --by-view-muted: #c9a89d;
+  --by-view-bg: #302127;
+  --by-view-text: #f6e2d8;
+  --by-view-border: #8b7b7b;
+  --by-view-secondary: #c9a89d;
+  --by-view-accent: #eab7a4;
+  --by-view-alt: #453036;
+  --by-view-string: #c5d69a;
+  --by-view-literal: #d8b0e6;
+  --by-view-error: #ff93a1;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff93a1;
+  --by-log-info: #eab7a4;
+  --by-log-debug: #c9a89d;
+}
+
+/* --- LAVENDER --- */
+
+.byLOGdocument[data-theme="lavender"]:not(.dark) {
+  --by-view-muted: #6e5d84;
+  --by-view-bg: #f4eeff;
+  --by-view-text: #3c2d59;
+  --by-view-border: #857e93;
+  --by-view-secondary: #6e5d84;
+  --by-view-accent: #7442c8;
+  --by-view-alt: #e8def7;
+  --by-view-string: #356f56;
+  --by-view-literal: #8a4f90;
+  --by-view-error: #b23564;
+  --by-log-warn: #875c00;
+  --by-log-error: #b23564;
+  --by-log-info: #7442c8;
+  --by-log-debug: #6e5d84;
+}
+
+.byLOGdocument.dark[data-theme="lavender"] {
+  --by-view-muted: #baa5d0;
+  --by-view-bg: #261d38;
+  --by-view-text: #eee1ff;
+  --by-view-border: #7e748f;
+  --by-view-secondary: #baa5d0;
+  --by-view-accent: #c8a0ff;
+  --by-view-alt: #38294d;
+  --by-view-string: #a8dbbd;
+  --by-view-literal: #e9b6d7;
+  --by-view-error: #ff9fbd;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9fbd;
+  --by-log-info: #c8a0ff;
+  --by-log-debug: #baa5d0;
+}
+
+/* --- CYBERPUNK --- */
+
+.byLOGdocument[data-theme="cyberpunk"]:not(.dark) {
+  --by-view-muted: #6f6844;
+  --by-view-bg: #fffbd4;
+  --by-view-text: #36311a;
+  --by-view-border: #88856c;
+  --by-view-secondary: #6f6844;
+  --by-view-accent: #8b218f;
+  --by-view-alt: #f2eaa8;
+  --by-view-string: #377447;
+  --by-view-literal: #9c5706;
+  --by-view-error: #c32d4a;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #c32d4a;
+  --by-log-info: #8b218f;
+  --by-log-debug: #6f6844;
+}
+
+.byLOGdocument.dark[data-theme="cyberpunk"] {
+  --by-view-muted: #bbb397;
+  --by-view-bg: #20152e;
+  --by-view-text: #f8f4bf;
+  --by-view-border: #79716b;
+  --by-view-secondary: #bbb397;
+  --by-view-accent: #fcee09;
+  --by-view-alt: #34213f;
+  --by-view-string: #96f0ba;
+  --by-view-literal: #ffbd71;
+  --by-view-error: #ff8a98;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff8a98;
+  --by-log-info: #fcee09;
+  --by-log-debug: #bbb397;
+}
+
+/* --- SUNSET --- */
+
+.byLOGdocument[data-theme="sunset"]:not(.dark) {
+  --by-view-muted: #825c46;
+  --by-view-bg: #fff0df;
+  --by-view-text: #583427;
+  --by-view-border: #8f7d71;
+  --by-view-secondary: #825c46;
+  --by-view-accent: #a14c1f;
+  --by-view-alt: #f7ddc5;
+  --by-view-string: #556b34;
+  --by-view-literal: #8a4c95;
+  --by-view-error: #b73246;
+  --by-log-warn: #875c00;
+  --by-log-error: #b73246;
+  --by-log-info: #a14c1f;
+  --by-log-debug: #825c46;
+}
+
+.byLOGdocument.dark[data-theme="sunset"] {
+  --by-view-muted: #c7a28f;
+  --by-view-bg: #341f32;
+  --by-view-text: #f9e3d1;
+  --by-view-border: #8f7c80;
+  --by-view-secondary: #c7a28f;
+  --by-view-accent: #ffbe85;
+  --by-view-alt: #4b2d43;
+  --by-view-string: #b9d998;
+  --by-view-literal: #e1a9ed;
+  --by-view-error: #ff8f8a;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff8f8a;
+  --by-log-info: #ffbe85;
+  --by-log-debug: #c7a28f;
+}
+
+/* --- VOLCANO --- */
+
+.byLOGdocument[data-theme="volcano"]:not(.dark) {
+  --by-view-muted: #7e5b54;
+  --by-view-bg: #fff0e9;
+  --by-view-text: #512e28;
+  --by-view-border: #8d7b77;
+  --by-view-secondary: #7e5b54;
+  --by-view-accent: #b63527;
+  --by-view-alt: #f1dcd1;
+  --by-view-string: #476d3b;
+  --by-view-literal: #874b97;
+  --by-view-error: #b82e46;
+  --by-log-warn: #855b00;
+  --by-log-error: #b82e46;
+  --by-log-info: #b63527;
+  --by-log-debug: #7e5b54;
+}
+
+.byLOGdocument.dark[data-theme="volcano"] {
+  --by-view-muted: #c8a297;
+  --by-view-bg: #2a1717;
+  --by-view-text: #f9e5dc;
+  --by-view-border: #85726f;
+  --by-view-secondary: #c8a297;
+  --by-view-accent: #ff977d;
+  --by-view-alt: #422525;
+  --by-view-string: #c4db94;
+  --by-view-literal: #d5aff0;
+  --by-view-error: #ff8a97;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff8a97;
+  --by-log-info: #ff977d;
+  --by-log-debug: #c8a297;
+}
+
+/* --- AMBER --- */
+
+.byLOGdocument[data-theme="amber"]:not(.dark) {
+  --by-view-muted: #74633f;
+  --by-view-bg: #fff5d6;
+  --by-view-text: #503e17;
+  --by-view-border: #8b8168;
+  --by-view-secondary: #74633f;
+  --by-view-accent: #8d5a00;
+  --by-view-alt: #f2e3b5;
+  --by-view-string: #516e3c;
+  --by-view-literal: #885288;
+  --by-view-error: #b52f3e;
+  --by-log-warn: #885d00;
+  --by-log-error: #b52f3e;
+  --by-log-info: #8d5a00;
+  --by-log-debug: #74633f;
+}
+
+.byLOGdocument.dark[data-theme="amber"] {
+  --by-view-muted: #c9b17f;
+  --by-view-bg: #261d0e;
+  --by-view-text: #ffdfa1;
+  --by-view-border: #857454;
+  --by-view-secondary: #c9b17f;
+  --by-view-accent: #ffc766;
+  --by-view-alt: #3a2b14;
+  --by-view-string: #c5d990;
+  --by-view-literal: #e7b686;
+  --by-view-error: #ff9c8d;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9c8d;
+  --by-log-info: #ffc766;
+  --by-log-debug: #c9b17f;
+}
+
+/* --- TERMINAL --- */
+
+.byLOGdocument[data-theme="terminal"]:not(.dark) {
+  --by-view-muted: #497055;
+  --by-view-bg: #eaf9e9;
+  --by-view-text: #183d27;
+  --by-view-border: #758879;
+  --by-view-secondary: #497055;
+  --by-view-accent: #136c37;
+  --by-view-alt: #d8ecd5;
+  --by-view-string: #286a36;
+  --by-view-literal: #665e9e;
+  --by-view-error: #b12c4a;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #b12c4a;
+  --by-log-info: #136c37;
+  --by-log-debug: #497055;
+}
+
+.byLOGdocument.dark[data-theme="terminal"] {
+  --by-view-muted: #8cbe96;
+  --by-view-bg: #0d1a11;
+  --by-view-text: #c4f7c8;
+  --by-view-border: #5d7861;
+  --by-view-secondary: #8cbe96;
+  --by-view-accent: #7df58b;
+  --by-view-alt: #182c1d;
+  --by-view-string: #a8ef9b;
+  --by-view-literal: #b9df80;
+  --by-view-error: #ff9a9a;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9a9a;
+  --by-log-info: #7df58b;
+  --by-log-debug: #8cbe96;
+}
+
+/* --- PAPER --- */
+
+.byLOGdocument[data-theme="paper"]:not(.dark) {
+  --by-view-muted: #766657;
+  --by-view-bg: #fff8ee;
+  --by-view-text: #382b20;
+  --by-view-border: #8c857d;
+  --by-view-secondary: #766657;
+  --by-view-accent: #8b592b;
+  --by-view-alt: #f2e8d7;
+  --by-view-string: #526d39;
+  --by-view-literal: #825a8c;
+  --by-view-error: #b13842;
+  --by-log-warn: #8d6000;
+  --by-log-error: #b13842;
+  --by-log-info: #8b592b;
+  --by-log-debug: #766657;
+}
+
+.byLOGdocument.dark[data-theme="paper"] {
+  --by-view-muted: #b6a48f;
+  --by-view-bg: #201a16;
+  --by-view-text: #f4e6d3;
+  --by-view-border: #7b7268;
+  --by-view-secondary: #b6a48f;
+  --by-view-accent: #d8b58c;
+  --by-view-alt: #302821;
+  --by-view-string: #b9cc91;
+  --by-view-literal: #c8a6d8;
+  --by-view-error: #f29494;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f29494;
+  --by-log-info: #d8b58c;
+  --by-log-debug: #b6a48f;
+}
+
+/* --- INK --- */
+
+.byLOGdocument[data-theme="ink"]:not(.dark) {
+  --by-view-muted: #686868;
+  --by-view-bg: #f7f7f7;
+  --by-view-text: #202020;
+  --by-view-border: #848484;
+  --by-view-secondary: #686868;
+  --by-view-accent: #3e4e62;
+  --by-view-alt: #e9e9e9;
+  --by-view-string: #3c5848;
+  --by-view-literal: #605369;
+  --by-view-error: #a33243;
+  --by-log-warn: #8d6000;
+  --by-log-error: #a33243;
+  --by-log-info: #3e4e62;
+  --by-log-debug: #686868;
+}
+
+.byLOGdocument.dark[data-theme="ink"] {
+  --by-view-muted: #a4a9b2;
+  --by-view-bg: #17191c;
+  --by-view-text: #e5e7eb;
+  --by-view-border: #707276;
+  --by-view-secondary: #a4a9b2;
+  --by-view-accent: #b7c4d8;
+  --by-view-alt: #25292f;
+  --by-view-string: #b4cfbe;
+  --by-view-literal: #cabed7;
+  --by-view-error: #ef9da8;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ef9da8;
+  --by-log-info: #b7c4d8;
+  --by-log-debug: #a4a9b2;
+}
+
+/* --- OCEAN --- */
+
+.byLOGdocument[data-theme="ocean"]:not(.dark) {
+  --by-view-muted: #506c7b;
+  --by-view-bg: #edf8fc;
+  --by-view-text: #173849;
+  --by-view-border: #798990;
+  --by-view-secondary: #506c7b;
+  --by-view-accent: #006b87;
+  --by-view-alt: #deeff5;
+  --by-view-string: #347548;
+  --by-view-literal: #6e55a6;
+  --by-view-error: #b73d51;
+  --by-log-warn: #8b5f00;
+  --by-log-error: #b73d51;
+  --by-log-info: #006b87;
+  --by-log-debug: #506c7b;
+}
+
+.byLOGdocument.dark[data-theme="ocean"] {
+  --by-view-muted: #9db8ca;
+  --by-view-bg: #102a43;
+  --by-view-text: #e1f3fc;
+  --by-view-border: #708596;
+  --by-view-secondary: #9db8ca;
+  --by-view-accent: #7ad9ef;
+  --by-view-alt: #1c3c55;
+  --by-view-string: #acdba5;
+  --by-view-literal: #d5b1f1;
+  --by-view-error: #ff9fac;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9fac;
+  --by-log-info: #7ad9ef;
+  --by-log-debug: #9db8ca;
+}
+
+/* --- FOREST --- */
+
+.byLOGdocument[data-theme="forest"]:not(.dark) {
+  --by-view-muted: #5b6a58;
+  --by-view-bg: #f0f5e8;
+  --by-view-text: #2b3d2b;
+  --by-view-border: #7f877b;
+  --by-view-secondary: #5b6a58;
+  --by-view-accent: #3e713b;
+  --by-view-alt: #e2ead6;
+  --by-view-string: #4a7135;
+  --by-view-literal: #7c5990;
+  --by-view-error: #b33d4d;
+  --by-log-warn: #8a5e00;
+  --by-log-error: #b33d4d;
+  --by-log-info: #3e713b;
+  --by-log-debug: #5b6a58;
+}
+
+.byLOGdocument.dark[data-theme="forest"] {
+  --by-view-muted: #a3b8a1;
+  --by-view-bg: #182b24;
+  --by-view-text: #e4efda;
+  --by-view-border: #79867c;
+  --by-view-secondary: #a3b8a1;
+  --by-view-accent: #a6d69b;
+  --by-view-alt: #263e32;
+  --by-view-string: #c5dfa0;
+  --by-view-literal: #d3b2d9;
+  --by-view-error: #f19da4;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f19da4;
+  --by-log-info: #a6d69b;
+  --by-log-debug: #a3b8a1;
+}
+
+/* --- MINT --- */
+
+.byLOGdocument[data-theme="mint"]:not(.dark) {
+  --by-view-muted: #516e64;
+  --by-view-bg: #eafbf3;
+  --by-view-text: #20483d;
+  --by-view-border: #768a83;
+  --by-view-secondary: #516e64;
+  --by-view-accent: #077565;
+  --by-view-alt: #d5f1e5;
+  --by-view-string: #35763f;
+  --by-view-literal: #7758a0;
+  --by-view-error: #b8385d;
+  --by-log-warn: #8d6000;
+  --by-log-error: #b8385d;
+  --by-log-info: #077565;
+  --by-log-debug: #516e64;
+}
+
+.byLOGdocument.dark[data-theme="mint"] {
+  --by-view-muted: #9fc4b7;
+  --by-view-bg: #14332d;
+  --by-view-text: #dcfff0;
+  --by-view-border: #749188;
+  --by-view-secondary: #9fc4b7;
+  --by-view-accent: #80e1bd;
+  --by-view-alt: #20473e;
+  --by-view-string: #b3e99c;
+  --by-view-literal: #c6b8ed;
+  --by-view-error: #ff9fb8;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9fb8;
+  --by-log-info: #80e1bd;
+  --by-log-debug: #9fc4b7;
+}
+
+/* --- ICE --- */
+
+.byLOGdocument[data-theme="ice"]:not(.dark) {
+  --by-view-muted: #546c78;
+  --by-view-bg: #eff9ff;
+  --by-view-text: #244252;
+  --by-view-border: #7b8991;
+  --by-view-secondary: #546c78;
+  --by-view-accent: #236f9c;
+  --by-view-alt: #deeff9;
+  --by-view-string: #37754c;
+  --by-view-literal: #785ba4;
+  --by-view-error: #b53b60;
+  --by-log-warn: #8d6000;
+  --by-log-error: #b53b60;
+  --by-log-info: #236f9c;
+  --by-log-debug: #546c78;
+}
+
+.byLOGdocument.dark[data-theme="ice"] {
+  --by-view-muted: #a1bdcf;
+  --by-view-bg: #182a3a;
+  --by-view-text: #e2f4ff;
+  --by-view-border: #768794;
+  --by-view-secondary: #a1bdcf;
+  --by-view-accent: #8dd9ff;
+  --by-view-alt: #253e51;
+  --by-view-string: #b0dbb1;
+  --by-view-literal: #cdb5f0;
+  --by-view-error: #ff9fb8;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #ff9fb8;
+  --by-log-info: #8dd9ff;
+  --by-log-debug: #a1bdcf;
+}
+
+/* --- SEPIA --- */
+
+.byLOGdocument[data-theme="sepia"]:not(.dark) {
+  --by-view-muted: #6d5b44;
+  --by-view-bg: #f4e8cf;
+  --by-view-text: #4d3a25;
+  --by-view-border: #837867;
+  --by-view-secondary: #6d5b44;
+  --by-view-accent: #80552b;
+  --by-view-alt: #e6d6b7;
+  --by-view-string: #4d6530;
+  --by-view-literal: #7f4e76;
+  --by-view-error: #aa3240;
+  --by-log-warn: #7e5600;
+  --by-log-error: #aa3240;
+  --by-log-info: #80552b;
+  --by-log-debug: #6d5b44;
+}
+
+.byLOGdocument.dark[data-theme="sepia"] {
+  --by-view-muted: #b5a18a;
+  --by-view-bg: #2b231b;
+  --by-view-text: #ecdcc4;
+  --by-view-border: #877d71;
+  --by-view-secondary: #b5a18a;
+  --by-view-accent: #d5b486;
+  --by-view-alt: #403326;
+  --by-view-string: #b9cb8d;
+  --by-view-literal: #c7a7d0;
+  --by-view-error: #f19995;
+  --by-log-warn: #f2cc7b;
+  --by-log-error: #f19995;
+  --by-log-info: #d5b486;
+  --by-log-debug: #b5a18a;
+}

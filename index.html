@@ -129,10 +129,64 @@
                         </fieldset>
                         <label class="form-label mt-3" for="preview-palette">Color palette</label>
                         <select id="preview-palette" class="form-select">
-                          <option value="monokai">Monokai (default)</option>
-                          <option value="github">GitHub</option>
-                          <option value="solarized">Solarized</option>
-                          <option value="high-contrast">High Contrast</option>
+                          <optgroup label="Essentials">
+                            <option value="monokai">Monokai (default)</option>
+                            <option value="github">GitHub</option>
+                            <option value="solarized">Solarized</option>
+                            <option value="high-contrast">High Contrast</option>
+                          </optgroup>
+                          <optgroup label="Editor classics">
+                            <option value="dracula">Dracula</option>
+                            <option value="darcula">Darcula</option>
+                            <option value="nord">Nord</option>
+                            <option value="catppuccin">Catppuccin</option>
+                            <option value="catppuccin-frappe">Catppuccin Frappé</option>
+                            <option value="catppuccin-macchiato">Catppuccin Macchiato</option>
+                            <option value="rose-pine">Rosé Pine</option>
+                            <option value="rose-pine-moon">Rosé Pine Moon</option>
+                            <option value="gruvbox">Gruvbox</option>
+                            <option value="gruvbox-material">Gruvbox Material</option>
+                            <option value="tokyo-night">Tokyo Night</option>
+                            <option value="tokyo-storm">Tokyo Storm</option>
+                            <option value="tokyo-moon">Tokyo Moon</option>
+                            <option value="one">One</option>
+                            <option value="material">Material</option>
+                            <option value="material-ocean">Material Ocean</option>
+                            <option value="night-owl">Night Owl</option>
+                            <option value="synthwave">Synthwave</option>
+                            <option value="ayu">Ayu</option>
+                            <option value="everforest">Everforest</option>
+                            <option value="kanagawa">Kanagawa</option>
+                            <option value="selenized">Selenized</option>
+                            <option value="vscode">VS Code</option>
+                            <option value="monokai-dimmed">Monokai Dimmed</option>
+                          </optgroup>
+                          <optgroup label="App inspired">
+                            <option value="discord">Discord</option>
+                            <option value="slack">Slack</option>
+                          </optgroup>
+                          <optgroup label="Colorful">
+                            <option value="bonyur">BONYUR</option>
+                            <option value="sakura">Sakura</option>
+                            <option value="bubblegum">Bubblegum</option>
+                            <option value="candy">Candy</option>
+                            <option value="rose-gold">Rose Gold</option>
+                            <option value="lavender">Lavender</option>
+                            <option value="cyberpunk">Cyberpunk</option>
+                            <option value="sunset">Sunset</option>
+                            <option value="volcano">Volcano</option>
+                            <option value="amber">Amber</option>
+                            <option value="terminal">Terminal</option>
+                          </optgroup>
+                          <optgroup label="Reading &amp; nature">
+                            <option value="paper">Paper</option>
+                            <option value="ink">Ink</option>
+                            <option value="ocean">Ocean</option>
+                            <option value="forest">Forest</option>
+                            <option value="mint">Mint</option>
+                            <option value="ice">Ice</option>
+                            <option value="sepia">Sepia</option>
+                          </optgroup>
                           <option value="custom">Custom</option>
                         </select>
                         <details class="preview-appearance mt-3">
@@ -982,7 +1036,7 @@
           render();
         });
         frame.srcdoc =
-          '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="log.css"><style>html,body{margin:0;min-height:100%;}body{background:#fafaf5;}#viewer{min-height:100vh;border:0;}</style><script src="log.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
+          '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="log.css"><link rel="stylesheet" href="log.themes.css"><style>html,body{margin:0;min-height:100%;}body{background:#fafaf5;}#viewer{min-height:100vh;border:0;}</style><script src="log.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
         source.addEventListener("input", () => {
           ++sourceVersion;
           clearTimeout(debounce);
@@ -1303,6 +1357,7 @@
           };
           const initialStyles = new Map();
           let customDraft = null;
+          let themesWarned = false;
           let themeTimer;
           const target = () => frame.contentDocument?.querySelector(selector);
           // Read both modes on temporary containers so exporting CSS never changes the live viewer.
@@ -1317,7 +1372,7 @@
                 document.body.appendChild(probe);
                 const style = document.defaultView.getComputedStyle(probe);
                 const rules = [...style]
-                  .filter((property) => property.startsWith("--by-") && property !== "--by-view-toggle-position" && !/font|line-height/.test(property))
+                  .filter((property) => property.startsWith("--by-") && property !== "--by-view-toggle-position" && !property.endsWith("-themes-loaded") && !/font|line-height/.test(property))
                   .sort()
                   .map((property) => `  ${property}: ${style.getPropertyValue(property).trim()};`)
                   .join("\n");
@@ -1354,6 +1409,10 @@
           const loadPalette = () => {
             clearTimeout(themeTimer);
             if (!target()) return;
+            if (!["monokai", "github", "solarized", "high-contrast", "custom"].includes(palette.value) && !themesWarned && frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue("--by-log-themes-loaded").trim() !== "1") {
+              themesWarned = true;
+              console.warn(`easy-log-viewer: Import log.themes.css after log.css to use "${palette.value}".`);
+            }
             const css = palette.value === "custom" ? (customDraft ?? themeCSS("monokai")) : themeCSS(palette.value);
             if (editor.value !== css) editor.value = css;
             apply();
