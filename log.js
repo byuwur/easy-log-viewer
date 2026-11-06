@@ -7,18 +7,18 @@
  * MIT License (see LICENSE).
  */
 (function (global) {
-  /* --- INITIALIZATION --- */
+  // --- INITIALIZATION ---
   if (global.byLOGviewer?.initialized) return;
 
-  /* --- METADATA --- */
+  // --- METADATA ---
   byLOGviewer.VERSION = "1.4"; // 2026-11-05
 
-  /* --- CONSTANTS --- */
+  // --- CONSTANTS ---
   const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
 
-  /* --- STATE --- */
+  // --- STATE ---
   const instances = new WeakMap();
-  /* --- HELPERS --- */
+  // --- HELPERS ---
   const node = (tag, className = "", text) => {
     const element = document.createElement(tag);
     element.className = className;
@@ -60,10 +60,10 @@
     control.addEventListener("focusout", reset);
     return control;
   };
-  /** Yield at a chunk boundary so input events and replacement renders can run. */
+  // Yield at a chunk boundary so input events and replacement renders can run.
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
-  /* --- APPEARANCE --- */
+  // --- APPEARANCE ---
   const extraPalettes = new Set([
     "dracula",
     "darcula",
@@ -119,7 +119,7 @@
     console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://byuwur.github.io/easy-log-viewer/`);
   };
 
-  /** Explicit appearance options override markup; omitted values preserve the container's state. */
+  // Explicit appearance options override markup; omitted values preserve the container's state.
   const applyAppearance = (element, options) => {
     const { theme, palette, fontSize } = options;
     if (theme != null && !["light", "dark"].includes(theme)) throw new RangeError("Theme must be light or dark.");
@@ -140,7 +140,7 @@
     }
   };
 
-  /* --- CONTROLS --- */
+  // --- CONTROLS ---
   // Mirrored across the family so each viewer can run without a shared runtime.
   /**
    * Adds container light/dark controls, retaining legacy stylesheet links as a fallback.
@@ -300,15 +300,15 @@
     });
   };
 
-  /* --- PARSING --- */
-  /** Map recognized severity aliases; unknown formats remain explicitly UNKNOWN. */
+  // --- PARSING ---
+  // Map recognized severity aliases; unknown formats remain explicitly UNKNOWN.
   const normalizeLevel = (value) => {
     const level = String(value ?? "").toUpperCase();
     if (level === "WARNING") return "WARN";
     if (level === "CRITICAL") return "FATAL";
     return levels.includes(level) ? level : "UNKNOWN";
   };
-  /** Serialize log details safely; distinguish ancestor cycles from repeated sibling references. */
+  // Serialize log details safely; distinguish ancestor cycles from repeated sibling references.
   const stringify = (value) => {
     const ancestors = [];
     return (
@@ -326,7 +326,7 @@
       ) ?? String(value)
     );
   };
-  /** Recognize structured records or leading metadata; malformed JSON remains an ordinary message. */
+  // Recognize structured records or leading metadata; malformed JSON remains an ordinary message.
   const defaultParse = (input) => {
     if (typeof input === "string") {
       const trimmed = input.trim();
@@ -335,7 +335,7 @@
           const object = JSON.parse(input);
           if (object && typeof object === "object" && !Array.isArray(object)) return defaultParse(object);
         } catch {
-          /* Non-JSON logs remain ordinary text. */
+          // Non-JSON logs remain ordinary text.
         }
       }
       const timestamp = input.match(/^\[?(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\]?\s*/);
@@ -352,7 +352,7 @@
       details: Object.keys(details).length ? details : undefined
     };
   };
-  /** Split complete text batches into entries; array strings preserve multiline events as one entry. */
+  // Split complete text batches into entries; array strings preserve multiline events as one entry.
   const logInputs = (input) => {
     if (typeof input === "string") {
       if (input.length > 10000000) throw new RangeError("Log text exceeds 10 million characters.");
@@ -370,9 +370,9 @@
     throw new TypeError("Log input must be text, a record, or an array of entries.");
   };
 
-  /* --- LIFECYCLE --- */
+  // --- LIFECYCLE ---
   // One instance owns the container; replacement disposes its pending work first.
-  /** Replace the previous owner and return its cancellable state. Only the current owner may clear the host. */
+  // Replace the previous owner and return its cancellable state. Only the current owner may clear the host.
   const mount = (element, options, getText) => {
     if (!(element instanceof HTMLElement)) throw new TypeError("byLOGviewer: element must be an HTMLElement.");
     applyAppearance(element, options);
@@ -445,8 +445,8 @@
     return state;
   };
 
-  /* --- PUBLIC API --- */
-  /** Render log text/records. append() queues batches in order; disposal cancels unfinished batches. */
+  // --- PUBLIC API ---
+  // Render log text/records. append() queues batches in order; disposal cancels unfinished batches.
   function byLOGviewer(element, input, options = {}) {
     options = { layout: "inline", batchSize: 200, maxEntries: 10000, autoScroll: false, search: false, ...options };
     options.batchSize = positive(options.batchSize, 200, 1000);
@@ -493,7 +493,7 @@
     const panel = node("div", "byVIEWpanel");
     panel.append(status, list);
     state.content.replaceChildren(actions, panel, more);
-    /* --- RENDERING --- */
+    // --- RENDERING ---
     const render = () => {
       if (!state.active) return;
       const fragment = document.createDocumentFragment();
@@ -519,7 +519,7 @@
       element.setAttribute("aria-busy", "false");
       if (follow.checked) list.scrollTop = list.scrollHeight;
     };
-    /** Filter the retained history cooperatively; a newer query owns the eventual DOM update. */
+    // Filter the retained history cooperatively; a newer query owns the eventual DOM update.
     const refresh = async () => {
       // Append and search can overlap while yielding; only the newest filter result may publish.
       const version = ++generation;
@@ -552,7 +552,7 @@
     state.content.appendChild(error);
     // Serialize appends so parser indices and retained history follow the caller's batch order.
     let queue = Promise.resolve(true);
-    /** Queue one atomic batch. Parsing must finish before retained entries and parser indices advance. */
+    // Queue one atomic batch. Parsing must finish before retained entries and parser indices advance.
     const append = (batch) => {
       queue = queue.then(async () => {
         if (!state.active) return false;
@@ -600,7 +600,7 @@
     const entry = defaultParse(input);
     return { ...entry, level: normalizeLevel(entry.level) };
   };
-  /* --- EXPORT --- */
+  // --- EXPORT ---
   global.byLOGviewer = byLOGviewer;
   byLOGviewer.initialized = true;
 })(typeof window !== "undefined" ? window : this);
