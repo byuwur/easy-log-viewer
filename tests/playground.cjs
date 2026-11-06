@@ -53,7 +53,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await page.route("**/*", async (route) => {
       if (route.request().url() === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
       const url = new URL(route.request().url());
-      if (["https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.6/code.min.css", "https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.6/code.min.js"].includes(url.href)) {
+      if (["https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.css", "https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.js"].includes(url.href)) {
         const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
         assert.ok(response.ok, "Unable to load pinned CODE asset");
         return route.fulfill({ body: await response.text(), contentType: url.pathname.endsWith(".js") ? "text/javascript" : "text/css" });
@@ -82,7 +82,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     assert.ok((await page.frameLocator("#preview-frame").locator(".byVIEWinfo").textContent()).includes(` v${release} `), "Credits must match the runtime release");
     const cdnBase = "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/";
     const starterViewer = page.locator("#integration-code.byCODEdocument");
-    assert.equal(await page.evaluate(() => byCODEviewer.VERSION), "1.6");
+    assert.equal(await page.evaluate(() => byCODEviewer.VERSION), "1.7");
     assert.equal(await starterViewer.getAttribute("data-theme"), "dark");
     await starterViewer.locator(".byCODEtext").first().waitFor();
     assert.ok((await starterViewer.locator(".byCODElineNumber").count()) > 0);
