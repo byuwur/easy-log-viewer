@@ -297,3 +297,5 @@ Need another format, maybe an editor? Explore the family:
 ## License
 
 MIT (c) 2026 Andres Trujillo [Mateus] byUwUr. See [LICENSE](LICENSE).
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/byuwur/easy-log-viewer)
