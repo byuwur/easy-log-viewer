@@ -426,12 +426,7 @@
                   spellcheck="false"
                   autocapitalize="off"
                   autocomplete="off"
-                  title="Ctrl / ⌘ + Enter to render. Tab moves focus.">
-2026-10-30T09:00:00Z INFO Server started
-2026-10-30T09:00:01Z DEBUG Cache ready
-2026-10-30T09:00:02Z WARN Slow query
-{"timestamp":"2026-10-30T09:00:03Z","level":"ERROR","message":"Request failed","request":{"path":"/api","status":503}}</textarea
-                >
+                  title="Ctrl / ⌘ + Enter to render. Tab moves focus."></textarea>
               </div>
               <div id="source-status" class="panel-footer text-break border-top px-4 py-2 small font-monospace text-body-secondary" role="status">Edit to render</div>
             </section>
@@ -920,6 +915,14 @@
         const themeInputs = [...document.querySelectorAll('[name="previewTheme"]')];
         const error = document.getElementById("source-error");
         const status = document.getElementById("render-status");
+        // prettier-ignore
+        const samples = {
+          default: {"name": "Default showcase", "source": "2026-10-30T09:00:00Z INFO Server started\n2026-10-30T09:00:01Z DEBUG Cache ready\n2026-10-30T09:00:02Z WARN Slow query\n{\"timestamp\":\"2026-10-30T09:00:03Z\",\"level\":\"ERROR\",\"message\":\"Request failed\",\"request\":{\"path\":\"/api\",\"status\":503}}"},
+          levels: {"name": "Severity levels", "source": "TRACE Starting\nDEBUG Cache ready\nINFO Connected\nWARN Slow response\nERROR Request failed\nFATAL Service unavailable"},
+          structured: {"name": "Structured logs", "source": "{\"level\":\"INFO\",\"message\":\"Signed in\",\"user\":{\"id\":42,\"name\":\"Andres\"}}\n{\"level\":\"ERROR\",\"message\":\"Request failed\",\"status\":503}"},
+          plain: {"name": "Plain text", "source": "A line with no severity.\nERROR is inside this sentence.\nAnother ordinary line."},
+        };
+        source.value = samples.default.source;
         const initialSource = source.value;
         const initialSecond = second?.value;
         const defaults = {
@@ -1253,14 +1256,10 @@
         document.getElementById("year-txt").textContent = new Date().getFullYear();
 
         // --- EXAMPLES ---
-        const examples = {
-          levels: { label: "Severity levels", source: "TRACE Starting\nDEBUG Cache ready\nINFO Connected\nWARN Slow response\nERROR Request failed\nFATAL Service unavailable" },
-          structured: { label: "Structured logs", source: '{"level":"INFO","message":"Signed in","user":{"id":42,"name":"Andres"}}\n{"level":"ERROR","message":"Request failed","status":503}' },
-          plain: { label: "Plain text", source: "A line with no severity.\nERROR is inside this sentence.\nAnother ordinary line." }
-        };
+
         document.querySelectorAll("[data-example]").forEach((button) =>
           button.addEventListener("click", () => {
-            const example = examples[button.dataset.example];
+            const example = samples[button.dataset.example];
             ++sourceVersion;
             source.value = example.source;
             if (second) second.value = example.second;
