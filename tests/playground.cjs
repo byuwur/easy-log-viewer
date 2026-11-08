@@ -7,7 +7,20 @@
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const test = require("node:test");
-const { chromium } = require("playwright");
+const { chromium, firefox, webkit } = require("playwright");
+const browserEngine = process.env.BROWSER_ENGINE || "chromium";
+assert.ok(["chromium", "firefox", "webkit"].includes(browserEngine), "Unsupported BROWSER_ENGINE");
+const browserType = { chromium, firefox, webkit }[browserEngine];
+// Browser channels and executable overrides apply only to Chromium.
+const launchBrowser = () =>
+  browserType.launch(
+    browserEngine === "chromium"
+      ? {
+          channel: process.env.BROWSER_CHANNEL || undefined,
+          executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined
+        }
+      : {}
+  );
 
 // Read the displayed source without line numbers or status text.
 const readStarter = async (page) => {
@@ -25,6 +38,7 @@ const legacyThemeCSS = (theme) => {
 
 // --- PLAYGROUND ASSETS ---
 let bootstrapCSS;
+// Use the playground's pinned stylesheet so responsive checks exercise its real layout.
 const getBootstrapCSS = () =>
   (bootstrapCSS ??= (async () => {
     if (process.env.BOOTSTRAP_CSS_PATH) return require("node:fs/promises").readFile(process.env.BOOTSTRAP_CSS_PATH, "utf8");
@@ -35,11 +49,12 @@ const getBootstrapCSS = () =>
 
 // --- PLAYGROUND AND STARTER EXPORTS ---
 test("suite playground, exports, and stylesheet controls", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
+    // Capture clipboard writes without depending on OS clipboard permissions.
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
         configurable: true,
@@ -50,6 +65,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
         }
       });
     });
+    // Keep the pinned CODE companion real while serving this viewer from local authored assets.
     await page.route("**/*", async (route) => {
       if (route.request().url() === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
       const url = new URL(route.request().url());
@@ -123,6 +139,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     assert.match(starter, /^ {6}document\.addEventListener\("DOMContentLoaded", \(\) => \{$/m);
     assert.match(starter, /^ {12}"toolbar": true,/m);
     await page.evaluate(() => {
+      // Force a denied write to exercise the selected-text fallback for manual copying.
       window.successfulClipboardWrite = navigator.clipboard.writeText;
       navigator.clipboard.writeText = async () => {
         throw new Error("Denied");
@@ -130,8 +147,11 @@ test("suite playground, exports, and stylesheet controls", async () => {
     });
     await page.locator("#copy-html").click();
     await page.waitForFunction(() => document.querySelector("#copy-html span").textContent === "Failed");
+    // Native selections may contain CRLF and one trailing block newline.
     assert.equal(
-      await page.locator("#integration-code").evaluate((element) => document.activeElement === element && document.getSelection().toString() === [...element.querySelectorAll(".byCODEtext")].map((line) => line.textContent).join("\n")),
+      await page
+        .locator("#integration-code")
+        .evaluate((element) => document.activeElement === element && document.getSelection().toString().replace(/\r\n/g, "\n").replace(/\n$/, "") === [...element.querySelectorAll(".byCODEtext")].map((line) => line.textContent).join("\n")),
       true
     );
     assert.match(await page.locator("#copy-html").getAttribute("title"), /Ctrl\+C/);
@@ -161,6 +181,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     assert.equal(await page.evaluate(() => copiedHTML), starter);
     const [download] = await Promise.all([page.waitForEvent("download"), page.locator("#download-html").click()]);
     assert.equal(await require("node:fs/promises").readFile(await download.path(), "utf8"), starter);
+    // Run the exported starter in a fresh page to catch missing assets or initialization.
     const exported = await browser.newPage();
     await exported.route("https://viewer.test/**", (route) => {
       const file = path.basename(new URL(route.request().url()).pathname).replace(/\.min(?=\.(?:css|js)$)/, "");
@@ -254,7 +275,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
 
 // --- CONFIGURATION AND FAMILY NAVIGATION ---
 test("family customization, navigation and monospace controls", async () => {
-  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined, channel: process.env.BROWSER_CHANNEL || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const errors = [];
@@ -433,9 +454,9 @@ test("family customization, navigation and monospace controls", async () => {
     assert.deepEqual(
       await root.evaluate((element) => {
         const style = getComputedStyle(element);
-        return { font: style.fontFamily, size: style.fontSize, line: style.lineHeight, bg: style.backgroundColor, text: style.color };
+        return { font: style.fontFamily, size: style.fontSize, line: Math.round(parseFloat(style.lineHeight) * 1000) / 1000, bg: style.backgroundColor, text: style.color };
       }),
-      { font: "Georgia, serif", size: "24px", line: "43.2px", bg: "rgb(18, 52, 86)", text: "rgb(254, 220, 186)" }
+      { font: "Georgia, serif", size: "24px", line: 43.2, bg: "rgb(18, 52, 86)", text: "rgb(254, 220, 186)" }
     );
     assert.equal(
       await frame
@@ -554,7 +575,7 @@ test("family customization, navigation and monospace controls", async () => {
 
 // --- PALETTES AND CUSTOM THEME EDITING ---
 test("playground palettes and editable two-mode custom themes stay synchronized", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const errors = [];
@@ -587,6 +608,7 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
         for (const animation of element.getAnimations()) if (animation.transitionProperty === "background-color") animation.finish();
         return getComputedStyle(element).backgroundColor;
       });
+    // Hiding the header must disable dependent controls without erasing their configured values.
     const headerSettings = page.locator('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]');
     const selectedSettings = await headerSettings.evaluateAll((controls) => controls.map((control) => [control.value, control.checked]));
     await page.locator("#toolbar").uncheck();
@@ -647,8 +669,12 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
     await page.locator(".preview-appearance").evaluate((element) => {
       element.open = true;
     });
+    // Distinct light and dark values expose mode mixups and CSS leaking into the host page.
     const custom = '.byLOGdocument.light[data-theme="custom"] { --by-view-bg: #f3f8fc; }\n.byLOGdocument.dark[data-theme="custom"] { --by-view-bg: #102a43; }';
+    // fill() does not wait for the disclosure's opening transition.
+    await page.waitForFunction(() => getComputedStyle(document.querySelector(".preview-appearance"), "::details-content").opacity === "1");
     await editor.fill(custom);
+    assert.equal(await editor.inputValue(), custom);
     await page.waitForFunction(() => document.getElementById("preview-palette").value === "custom");
     assert.equal(await background(), "rgb(16, 42, 67)");
     await setMode("light");

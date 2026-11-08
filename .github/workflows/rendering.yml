@@ -10,22 +10,20 @@ permissions:
 
 jobs:
   rendering:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.suite }} (${{ matrix.browser }})
     strategy:
+      # Report every engine/suite result even if another combination fails.
       fail-fast: false
       matrix:
-        include:
-          - suite: rendering
-            name: Library
-          - suite: playground
-            name: Playground
+        browser: [chromium, firefox, webkit]
+        suite: [rendering, playground]
     runs-on: ubuntu-24.04
     container:
       # Keep the image and npm package on the same Playwright version.
       image: mcr.microsoft.com/playwright:v1.63.0-noble
       options: --ipc=host
     env:
-      BROWSER_CHANNEL: chromium
+      BROWSER_ENGINE: ${{ matrix.browser }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +32,7 @@ jobs:
           node-version: 22
       - name: Install browser test tools
         run: npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock --no-audit --no-fund playwright@1.63.0
-      - name: Check source and ${{ matrix.name }} tests
+      - name: Check source and ${{ matrix.suite }} tests
         env:
           NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
         run: |

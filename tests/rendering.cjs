@@ -7,7 +7,20 @@
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const test = require("node:test");
-const { chromium } = require("playwright");
+const { chromium, firefox, webkit } = require("playwright");
+const browserEngine = process.env.BROWSER_ENGINE || "chromium";
+assert.ok(["chromium", "firefox", "webkit"].includes(browserEngine), "Unsupported BROWSER_ENGINE");
+const browserType = { chromium, firefox, webkit }[browserEngine];
+// Browser channels and executable overrides apply only to Chromium.
+const launchBrowser = () =>
+  browserType.launch(
+    browserEngine === "chromium"
+      ? {
+          channel: process.env.BROWSER_CHANNEL || undefined,
+          executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined
+        }
+      : {}
+  );
 
 // --- THEME FIXTURES ---
 // Caller-provided legacy stylesheets reuse the canonical palettes without distribution files.
@@ -19,7 +32,7 @@ const legacyThemeCSS = (theme) => {
 
 // --- STANDALONE RENDERER ---
 test("LOG standalone browser contracts", async (t) => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const errors = [],
@@ -35,7 +48,7 @@ test("LOG standalone browser contracts", async (t) => {
       if (!filename || filename === "fixture.html")
         return route.fulfill({
           contentType: "text/html",
-          body: '<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="log.css"><script src="log.js"></script><div id="viewer" data-theme="light"></div>'
+          body: '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="log.css"><script src="log.js"></script><div id="viewer" data-theme="light"></div>'
         });
       return route.fulfill({ path: path.join(__dirname, "..", filename), contentType: filename.endsWith(".css") ? "text/css" : "text/javascript" });
     });
@@ -240,7 +253,7 @@ test("LOG standalone browser contracts", async (t) => {
 
 // --- CONTAINER THEMES ---
 test("container themes are scoped, independent, and compatible with legacy links", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const requests = [];
@@ -328,7 +341,7 @@ test("container themes are scoped, independent, and compatible with legacy links
 
 // --- PALETTES AND CONTRAST ---
 test("named palettes retain mode, isolate custom CSS, and meet High Contrast targets", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     const warnings = [];
@@ -513,7 +526,7 @@ test("named palettes retain mode, isolate custom CSS, and meet High Contrast tar
 
 // --- CONTROLS AND CLIPBOARD FEEDBACK ---
 test("viewer defaults, optional tools, and copy feedback", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage({ viewport: { width: 320, height: 720 }, reducedMotion: "reduce" });
     await page.setContent('<div id="viewer"></div>');
@@ -678,7 +691,7 @@ test("viewer defaults, optional tools, and copy feedback", async () => {
 
 // --- DOCUMENT AND CONTENT SURFACES ---
 test("document and content backgrounds stay independent through theme and toolbar changes", async () => {
-  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined, channel: process.env.BROWSER_CHANNEL || "chrome" });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     await page.route("https://cdn.jsdelivr.net/**", (route) => route.abort());
@@ -700,7 +713,7 @@ test("document and content backgrounds stay independent through theme and toolba
     await page.waitForFunction(() => getComputedStyle(document.querySelector("#viewer .byVIEWcopy")).backgroundColor === "rgb(18, 52, 86)");
     for (const changeMode of [false, true]) {
       if (changeMode) await root.locator(".byVIEWthemeToggle").click();
-      assert.equal(await root.evaluate((element) => getComputedStyle(element).backgroundColor), "rgba(0, 0, 0, 0)");
+      assert.match(await root.evaluate((element) => getComputedStyle(element).backgroundColor), /^rgba\([^)]*, 0\)$/);
       assert.equal(await root.locator(".byVIEWpanel").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(18, 52, 86)");
       assert.equal(
         await root
@@ -728,7 +741,7 @@ test("document and content backgrounds stay independent through theme and toolba
 
 // --- INTERACTION MOTION ---
 test("animation options preserve initial visibility and override system motion preferences", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage({ reducedMotion: "reduce" });
     await page.route("https://cdn.jsdelivr.net/**", (route) => (route.request().url().endsWith("fontawesome.min.css") ? route.fulfill({ body: "", contentType: "text/css" }) : route.abort()));
@@ -753,28 +766,42 @@ test("animation options preserve initial visibility and override system motion p
         .evaluate((element) => getComputedStyle(element).transitionDuration.split(",")[0]),
       "0.18s"
     );
-    const disclosure = await root.evaluateHandle((element) => {
-      const details = document.createElement("details");
-      details.id = "motion-disclosure";
-      details.innerHTML = "<summary>Details</summary><p>Already available content</p>";
-      element.append(details);
-      getComputedStyle(details, "::details-content").blockSize;
-      return details;
-    });
-    await disclosure.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
-    const opening = await disclosure.evaluate(async (details) => {
-      details.open = true;
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      return Number(getComputedStyle(details, "::details-content").opacity);
-    });
-    assert.ok(opening > 0 && opening < 1, "A deliberate disclosure eases in even with reduced motion requested");
-    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "1");
-    await disclosure.evaluate((details) => {
-      details.open = false;
-    });
-    await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
-    assert.equal(await disclosure.evaluate((details) => details.open), false);
+    // Disclosure size/exit motion progressively enhances engines supporting intrinsic-size transitions.
+    if (await page.evaluate(() => CSS.supports("interpolate-size", "allow-keywords"))) {
+      const disclosure = await root.evaluateHandle((element) => {
+        const details = document.createElement("details");
+        details.id = "motion-disclosure";
+        details.innerHTML = "<summary>Details</summary><p>Already available content</p>";
+        element.append(details);
+        getComputedStyle(details, "::details-content").blockSize;
+        return details;
+      });
+      await disclosure.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
+      const opening = await disclosure.evaluate(async (details) => {
+        details.open = true;
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return Number(getComputedStyle(details, "::details-content").opacity);
+      });
+      assert.ok(opening > 0 && opening < 1, "A deliberate disclosure eases in even with reduced motion requested");
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "1");
+      await disclosure.evaluate((details) => {
+        details.open = false;
+      });
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("motion-disclosure"), "::details-content").opacity === "0");
+      assert.equal(await disclosure.evaluate((details) => details.open), false);
+    } else {
+      await root.evaluate((element) => {
+        const details = document.createElement("details");
+        details.id = "fallback-disclosure";
+        details.innerHTML = "<summary>Details</summary><p>Available content</p>";
+        element.append(details);
+      });
+      await page.locator("#fallback-disclosure summary").click();
+      await page.locator("#fallback-disclosure p").waitFor({ state: "visible" });
+      await page.locator("#fallback-disclosure summary").click();
+      await page.locator("#fallback-disclosure p").waitFor({ state: "hidden" });
+    }
     await page.evaluate(() => renderMotion(false));
     await page.emulateMedia({ reducedMotion: "no-preference" });
     assert.equal(await root.evaluate((element) => element.classList.contains("byVIEWmotion")), false);
@@ -829,7 +856,7 @@ test("animation options preserve initial visibility and override system motion p
 
 // --- INITIAL APPEARANCE ---
 test("appearance options override markup and preserve independent viewer state", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || undefined, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH || undefined });
+  const browser = await launchBrowser();
   try {
     const page = await browser.newPage();
     await page.route("https://cdn.jsdelivr.net/**", (route) => route.fulfill({ body: "", contentType: "text/css" }));
@@ -942,6 +969,7 @@ test("appearance options override markup and preserve independent viewer state",
     assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.className, element.dataset.theme, element.style.fontSize]), preserved);
     await page.evaluate(() => renderAppearance({ theme: null, palette: null, fontSize: null }));
     assert.deepEqual(await page.locator("#appearance").evaluate((element) => [element.className, element.dataset.theme, element.style.fontSize]), preserved, "Blank exported appearance fields retain the container settings");
+    // Invalid options must leave the current document intact rather than partially reinitializing it.
     for (const options of [
       { theme: "sepia" },
       { palette: "dark" },
