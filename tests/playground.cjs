@@ -430,7 +430,12 @@ test("family customization, navigation and monospace controls", async () => {
       element.open = true;
     });
     await page.waitForFunction(() => getComputedStyle(document.querySelector(".preview-appearance"), "::details-content").opacity === "1");
-    await page.locator("#preview-controls-font-0").focus();
+    // Firefox may defer focus until the newly opened disclosure has rendered.
+    await page.waitForFunction(() => {
+      const radio = document.getElementById("preview-controls-font-0");
+      radio.focus();
+      return document.activeElement === radio;
+    });
     await page.keyboard.press("ArrowRight");
     assert.equal(await page.locator("#preview-controls-font-1").isChecked(), true);
     assert.equal(JSON.parse(await page.locator("#options-json").inputValue()).controlsFont, "system-ui, sans-serif");
