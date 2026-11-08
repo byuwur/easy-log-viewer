@@ -998,3 +998,65 @@ test("appearance options override markup and preserve independent viewer state",
     await browser.close();
   }
 });
+
+// --- MOBILE, OFFLINE ASSETS, AND CSP ---
+test("local assets render with a strict CSP and touch controls at mobile width", async () => {
+  const browser = await launchBrowser();
+  try {
+    // Firefox supports the touch viewport, but Playwright does not support isMobile for that engine.
+    const page = await browser.newPage({
+      viewport: { width: 390, height: 844 },
+      hasTouch: true,
+      ...(browserEngine === "firefox" ? {} : { isMobile: true })
+    });
+    const externalRequests = [],
+      violations = [],
+      errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.exposeFunction("recordViolation", (directive) => violations.push(directive));
+    await page.addInitScript(() => document.addEventListener("securitypolicyviolation", (event) => window.recordViolation(event.effectiveDirective)));
+    // Reject external requests so a missing local dependency cannot silently fall back to a CDN.
+    await page.route("**/*", async (route) => {
+      const url = new URL(route.request().url());
+      if (url.origin !== "https://viewer.test") {
+        externalRequests.push(url.href);
+        return route.abort();
+      }
+      if (url.pathname === "/library.js" || url.pathname === "/library.css") {
+        const extension = url.pathname.endsWith(".js") ? "js" : "css";
+        return route.fulfill({ path: path.join(__dirname, `../log.${extension}`), contentType: extension === "js" ? "application/javascript" : "text/css" });
+      }
+      // An external initializer satisfies script-src 'self'; String.raw preserves the fixture's source escapes.
+      if (url.pathname === "/init.js")
+        return route.fulfill({
+          contentType: "application/javascript",
+          body: String.raw`
+        const target = document.getElementById("viewer");
+        const options = { theme: "light", animations: false, fontSize: 1.125 };
+        byLOGviewer(target, "2026-11-07T10:00:00Z INFO 日本語", options);
+      `
+        });
+      return route.fulfill({
+        contentType: "text/html",
+        headers: { "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self'" },
+        body: '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="library.css"><div id="viewer"></div><script src="library.js"></script><script src="init.js"></script>'
+      });
+    });
+    await page.goto("https://viewer.test/");
+    await page.waitForFunction(() => document.getElementById("viewer").textContent.includes("日本語"));
+    const theme = page.getByRole("button", { name: /Switch to (dark|light) theme/ });
+    // Check touch activation and native keyboard activation on the same named control.
+    await theme.tap();
+    assert.equal(await page.locator("#viewer").evaluate((element) => element.classList.contains("dark")), true);
+    await theme.focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await page.locator("#viewer").evaluate((element) => element.classList.contains("light")), true);
+    assert.equal(await page.locator("#viewer").evaluate((element) => getComputedStyle(element).fontSize), "18px");
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    assert.deepEqual(externalRequests, []);
+    assert.deepEqual(violations, []);
+    assert.deepEqual(errors, []);
+  } finally {
+    await browser.close();
+  }
+});
