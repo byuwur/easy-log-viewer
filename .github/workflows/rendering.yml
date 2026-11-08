@@ -34,6 +34,8 @@ jobs:
         run: npm install --prefix "$RUNNER_TEMP/viewer-tests" --no-package-lock --no-audit --no-fund playwright@1.63.0
       - name: Check source and ${{ matrix.suite }} tests
         env:
+          # Firefox requires HOME to belong to the root user running this container.
+          HOME: /root
           NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
         run: |
           node --check log.js
