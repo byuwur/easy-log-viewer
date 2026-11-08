@@ -713,6 +713,10 @@ test("document and content backgrounds stay independent through theme and toolba
     await page.waitForFunction(() => getComputedStyle(document.querySelector("#viewer .byVIEWcopy")).backgroundColor === "rgb(18, 52, 86)");
     for (const changeMode of [false, true]) {
       if (changeMode) await root.locator(".byVIEWthemeToggle").click();
+      // The document fade can finish after the independently styled copy control.
+      await root.evaluate(async (element) => {
+        await Promise.all(element.getAnimations().map((animation) => animation.finished));
+      });
       assert.match(await root.evaluate((element) => getComputedStyle(element).backgroundColor), /^rgba\([^)]*, 0\)$/);
       assert.equal(await root.locator(".byVIEWpanel").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(18, 52, 86)");
       assert.equal(
