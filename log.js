@@ -127,6 +127,7 @@
     warnMissingThemes(element, palette ?? element.dataset.theme);
     const size = typeof fontSize === "number" ? `${Math.max(0.5, Math.min(3, fontSize))}rem` : typeof fontSize === "string" ? `clamp(0.5rem, ${fontSize}, 3rem)` : "";
     if (fontSize != null && (typeof fontSize === "number" ? !Number.isFinite(fontSize) : typeof fontSize !== "string" || !CSS.supports("font-size", size))) throw new RangeError("Font size must be a finite multiplier or a CSS size.");
+    // Keep palette identity in data-theme while light/dark classes select its mode.
     if (theme != null || palette != null) {
       const mode = theme ?? (["light", "dark"].includes(element.dataset.theme) ? element.dataset.theme : element.classList.contains("dark") ? "dark" : "light");
       element.classList.toggle("light", mode === "light");
@@ -210,6 +211,7 @@
    * @return {HTMLElement} The text size button group.
    */
   const appendFontSizeControls = (element, controls) => {
+    // Remember the caller's initial size so Reset also works after this toolbar is recreated.
     element.dataset.byViewDefaultFontSize ??= element.style.fontSize;
     const sizes = document.createElement("div");
     sizes.className = "byVIEWfontSizes";
@@ -317,6 +319,7 @@
         function (key, entry) {
           if (typeof entry === "bigint") return entry.toString();
           if (!entry || typeof entry !== "object") return entry;
+          // Drop finished branches so reusing an object in a sibling does not falsely report a cycle.
           while (ancestors.length && ancestors.at(-1) !== this) ancestors.pop();
           if (ancestors.includes(entry)) return "[Circular]";
           ancestors.push(entry);
@@ -340,6 +343,7 @@
       }
       const timestamp = input.match(/^\[?(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?)\]?\s*/);
       const rest = timestamp ? input.slice(timestamp[0].length) : input;
+      // Only leading metadata changes severity; words such as ERROR inside the message remain ordinary text.
       const severity = rest.match(/^\s*\[?(TRACE|DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL)\]?(?=\s|:|$)[:\s]*/i);
       return { level: severity?.[1], timestamp: timestamp?.[1] ?? "", message: severity ? rest.slice(severity[0].length) : rest };
     }
@@ -362,6 +366,7 @@
       if (lines.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
       return lines;
     }
+    // Array entries are complete events, so embedded newlines must not split stack traces.
     if (Array.isArray(input)) {
       if (input.length > 100000) throw new RangeError("A batch exceeds 100,000 log entries.");
       return input;
@@ -375,6 +380,7 @@
   // Replace the previous owner and return its cancellable state. Only the current owner may clear the host.
   const mount = (element, options, getText) => {
     if (!(element instanceof HTMLElement)) throw new TypeError("byLOGviewer: element must be an HTMLElement.");
+    // Validate appearance before disposing the current instance, so invalid options leave it usable.
     applyAppearance(element, options);
     const painted = element.classList.contains("byVIEWready");
     instances.get(element)?.destroy();
@@ -383,6 +389,7 @@
       if (!state.active) return;
       state.active = false;
       cancelAnimationFrame(state.motionFrame);
+      // An old controller must not clear a replacement mounted on the same element.
       if (instances.get(element) === state) {
         instances.delete(element);
         element.replaceChildren();
@@ -561,6 +568,7 @@
             parsed = [];
           for (let i = 0; i < source.length; i++) {
             const value = (options.parser || defaultParse)(source[i], nextIndex + i);
+            // A parser may discard an entry with null, while its input position still counts toward later parser indices.
             if (value !== null) {
               if (!value || typeof value !== "object" || typeof value.then === "function") throw new TypeError("parser must return a record or null synchronously.");
               const raw = typeof source[i] === "string" ? source[i] : stringify(source[i]);
@@ -577,6 +585,7 @@
           }
           // Advance history and parser indices only after the complete batch parses successfully.
           nextIndex += source.length;
+          // Retain only the newest entries; the monotonic parser index remains independent of this window.
           entries = entries.concat(parsed).slice(-options.maxEntries);
           error.hidden = true;
           await refresh();
