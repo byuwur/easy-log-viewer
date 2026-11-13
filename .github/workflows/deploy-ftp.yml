@@ -1,0 +1,52 @@
+name: Deploy FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: Deploy to FTP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      # - name: Setup PHP
+      #   uses: "shivammathur/setup-php@v2"
+      #   with:
+      #     php-version: "8.3"
+
+      # - name: composer install
+      #   uses: "ramsey/composer-install@v4"
+
+      # - name: Generate .env
+      #   run: |
+      #     echo 'DB_HOST=""' >> .env
+      #     echo 'DB_USER=""' >> .env
+      #     echo 'DB_PASS=""' >> .env
+      #     echo 'DB_NAME=""' >> .env
+      #     echo 'DB_PORT=""' >> .env
+      #     echo 'APP_ENV="DEV"' >> .env
+      #     echo 'APP_VERSION="1.0"' >> .env
+      #     echo 'SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}"' >> .env
+      #     echo 'RECAPTCHA_KEY="${{ secrets.RECAPTCHA_KEY }}"' >> .env
+
+      - name: FTP Upload
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ${{ secrets.FTP_PROTOCOL }}
+          local-dir: ./
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/.nojekyll
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
