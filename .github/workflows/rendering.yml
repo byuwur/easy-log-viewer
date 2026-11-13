@@ -39,4 +39,4 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/viewer-tests/node_modules
         run: |
           node --check log.js
-          node --test tests/${{ matrix.suite }}.cjs
+          node --test __tests__/${{ matrix.suite }}.cjs
