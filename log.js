@@ -116,7 +116,8 @@
     const document = element.ownerDocument;
     if (document.defaultView.getComputedStyle(document.documentElement).getPropertyValue("--by-log-themes-loaded").trim() === "1") return;
     warnedPalettes.add(palette);
-    console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://byuwur.github.io/easy-log-viewer/`);
+    // console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://byuwur.github.io/easy-log-viewer/`);
+    console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://log.byuwur.co/`);
   };
 
   // Explicit appearance options override markup; omitted values preserve the container's state.

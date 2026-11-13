@@ -8,16 +8,20 @@
     <meta name="author" content="Andrés Trujillo [Mateus] byUwUr" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#141618" />
-    <link rel="canonical" href="https://byuwur.github.io/easy-log-viewer/" />
-    <link rel="icon" type="image/png" href="https://byuwur.github.io/easy-log-viewer/assets/favicon.png" />
+    <!-- <link rel="canonical" href="https://byuwur.github.io/easy-log-viewer/" /> -->
+    <link rel="canonical" href="https://log.byuwur.co/" />
+    <!-- <link rel="icon" type="image/png" href="https://byuwur.github.io/easy-log-viewer/assets/favicon.png" /> -->
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
     <!-- SEO -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="easy-log-viewer" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="easy-log-viewer | Logs, follow the story." />
     <meta property="og:description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
-    <meta property="og:url" content="https://byuwur.github.io/easy-log-viewer/" />
-    <meta property="og:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" />
+    <!-- <meta property="og:url" content="https://byuwur.github.io/easy-log-viewer/" /> -->
+    <meta property="og:url" content="https://log.byuwur.co/" />
+    <!-- <meta property="og:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" /> -->
+    <meta property="og:image" content="https://log.byuwur.co/prev.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1920" />
     <meta property="og:image:height" content="1076" />
@@ -26,7 +30,8 @@
     <meta name="twitter:creator" content="@byUwUr" />
     <meta name="twitter:title" content="easy-log-viewer | Logs, follow the story." />
     <meta name="twitter:description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
-    <meta name="twitter:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" />
+    <!-- <meta name="twitter:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" /> -->
+    <meta name="twitter:image" content="https://log.byuwur.co/prev.jpg" />
     <meta name="twitter:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/shards.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css" />
@@ -488,39 +493,48 @@
     <nav class="viewer-suite site-width py-4 container-fluid" aria-label="Viewer suite">
       <p class="small text-body-secondary mb-3">Need another format, maybe an editor?</p>
       <div class="d-flex flex-wrap align-items-center gap-3">
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://md.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #d8cdf5; --logo-dark: #c4b5fd" aria-hidden="true">md↓</span>
           <span class="text-decoration-underline">MD</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-editor/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-editor/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://mdedit.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #d8cdf5; --logo-dark: #c4b5fd" aria-hidden="true">md↑</span>
           <span class="text-decoration-underline">MD.edit</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-code-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-code-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://code.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #cad8f4; --logo-dark: #aec5ef" aria-hidden="true">{ }</span>
           <span class="text-decoration-underline">CODE</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-json-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-json-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://json.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f3e4b4; --logo-dark: #f2d98d" aria-hidden="true">{ }</span>
           <span class="text-decoration-underline">JSON</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-csv-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-csv-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://csv.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0dfca; --logo-dark: #a9d6b8" aria-hidden="true">csv</span>
           <span class="text-decoration-underline">CSV</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-diff-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-diff-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://diff.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f4c7cf; --logo-dark: #eeadb8" aria-hidden="true">±</span>
           <span class="text-decoration-underline">DIFF</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-log-viewer/" aria-current="page">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-log-viewer/" aria-current="page"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="./" aria-current="page">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f6d2bd; --logo-dark: #f3bfa0" aria-hidden="true">log</span>
           <span class="text-decoration-underline">LOG</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-xml-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-xml-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://xml.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0e2ee; --logo-dark: #a3d5e8" aria-hidden="true">&lt;/&gt;</span>
           <span class="text-decoration-underline">XML</span>
         </a>
-        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-yaml-viewer/">
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-yaml-viewer/"> -->
+        <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://yaml.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #e5cce3; --logo-dark: #dab6d7" aria-hidden="true">yml</span>
           <span class="text-decoration-underline">YAML</span>
         </a>
