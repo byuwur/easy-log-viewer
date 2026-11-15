@@ -33,15 +33,31 @@
     <!-- <meta name="twitter:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" /> -->
     <meta name="twitter:image" content="https://log.byuwur.co/prev.jpg" />
     <meta name="twitter:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/shards.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/pickr.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/fontawesome.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/animate.min.css" />
+    <script id="spa-loader" src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.10/_load.min.js"></script>
+    <script>
+      const SPA_VERSION = "v20.10";
+      const HOST = `https://cdn.jsdelivr.net/gh/byuwur/spa.js@${SPA_VERSION}`;
+      const SPA_STYLES = [
+        { path: "/css/shards.min.css", optional: false },
+        { path: "/css/bootstrap.min.css", optional: false },
+        { path: "/_fonts.min.css", optional: false },
+        { path: "/_transitions.min.css", optional: true },
+        { path: "/css/pickr.min.css", optional: false },
+        { path: "/css/fontawesome.min.css", optional: true },
+        { path: "/css/animate.min.css", optional: false }
+      ];
+      const SPA_SCRIPTS = [
+        { path: "/_transitions.min.js", optional: true },
+        { path: "/js/pickr.min.js", optional: false },
+        { path: "/js/popper.min.js", optional: false },
+        { path: "/js/bootstrap.min.js", optional: false }
+      ];
+      const spaReady = (async () => {
+        await byLoad(SPA_STYLES, { host: HOST, before: document.getElementById("spa-loader"), defer: false });
+        await byLoad(SPA_SCRIPTS, { host: HOST, before: document.getElementById("spa-loader") });
+      })().catch(console.error);
+    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.css" />
-    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/pickr.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/popper.min.js" defer=""></script>
-    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/js/bootstrap.min.js" defer=""></script>
     <script src="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.js" defer></script>
   </head>
 
@@ -555,11 +571,11 @@
     </footer>
     <noscript><p class="site-width container-fluid">Enable JavaScript to use the playground. Installation and API details are in the README.</p></noscript>
     <style>
-      @font-face {
-        font-family: Archivo;
-        src: url("https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/webfonts/archivo.ttf") format("truetype");
-        font-weight: 100 900;
-        font-display: swap;
+      .byCODEdocument,
+      .byCODEdocument *,
+      .byMDdocument,
+      .byMDdocument * {
+        transition: none !important;
       }
       :root {
         --accent: #f3bfa0;
@@ -842,7 +858,7 @@
         --by-view-motion-duration: 0s;
       }
       body.byVIEWmotion {
-        --by-view-motion-duration: 0.18s;
+        --by-view-motion-duration: 0.3s;
       }
       body :is(.btn, .form-control, .form-select, .form-check-input, .accordion-button, summary, a) {
         transition:
@@ -899,7 +915,9 @@
     </style>
     <script>
       "use strict";
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", async () => {
+        // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
+        await spaReady;
         const controlTooltips = [];
         if (window.bootstrap?.Tooltip && typeof window.Popper?.createPopper === "function") {
           document.querySelectorAll('#viewer-options label[data-bs-toggle="tooltip"]').forEach((label) => {
@@ -1008,9 +1026,9 @@
             const win = frame.contentWindow;
             const target = win.document.getElementById("viewer");
             const options = readOptions();
-            document.getElementById("statusBar").disabled = options.displayContainer === false;
-            for (const control of document.querySelectorAll('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]')) control.disabled = options.toolbar === false;
-            document.getElementById("appearAnimation").disabled = options.animations === false;
+            document.getElementById("statusBar").disabled = !options.displayContainer;
+            for (const control of document.querySelectorAll('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]')) control.disabled = !options.toolbar;
+            document.getElementById("appearAnimation").disabled = !options.animations;
             document.getElementById("options-json").value = settingsJSON(options);
             const result = await win.byLOGviewer(target, source.value, options).ready;
             if (version !== renderVersion) return;
@@ -1271,7 +1289,9 @@
 
     <script>
       (function initColorPickers() {
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
+          // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
+          await spaReady;
           const pickers = [];
           for (const button of document.querySelectorAll("[data-color-picker]")) {
             const field = document.getElementById(button.dataset.colorPicker);
@@ -1340,7 +1360,9 @@
       }
 
       (function appearance(name) {
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
+          // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
+          await spaReady;
           const frame = document.getElementById("preview-frame");
           const fields = [...document.querySelectorAll(".preview-appearance input:not([type=radio]), .preview-appearance select, #preview-controls-font")];
           const palette = document.getElementById("preview-palette");

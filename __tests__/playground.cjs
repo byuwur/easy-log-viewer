@@ -7,6 +7,10 @@
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const test = require("node:test");
+const spaVersion = require("node:fs")
+  .readFileSync(path.join(__dirname, "../index.html"), "utf8")
+  .match(/const SPA_VERSION = "([^"]+)"/)[1];
+const spaBase = `https://cdn.jsdelivr.net/gh/byuwur/spa.js@${spaVersion}/`;
 const { chromium, firefox, webkit } = require("playwright");
 const browserEngine = process.env.BROWSER_ENGINE || "chromium";
 assert.ok(["chromium", "firefox", "webkit"].includes(browserEngine), "Unsupported BROWSER_ENGINE");
@@ -42,12 +46,32 @@ let bootstrapCSS;
 const getBootstrapCSS = () =>
   (bootstrapCSS ??= (async () => {
     if (process.env.BOOTSTRAP_CSS_PATH) return require("node:fs/promises").readFile(process.env.BOOTSTRAP_CSS_PATH, "utf8");
-    const response = await fetch("https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css");
+    const response = await fetch(`${spaBase}css/bootstrap.min.css`);
     assert.ok(response.ok, "Unable to load pinned Bootstrap CSS");
     return response.text();
   })());
 
 // --- PLAYGROUND AND STARTER EXPORTS ---
+const spaAssets = new Map();
+/**
+ * Load and cache a pinned SPA asset.
+ * @param {string} url Asset URL.
+ * @returns {Promise<{body: string|Buffer, contentType: string}>} Asset content.
+ */
+async function getSPAAsset(url) {
+  if (url === `${spaBase}css/bootstrap.min.css`) return { body: await getBootstrapCSS(), contentType: "text/css" };
+  if (!spaAssets.has(url)) {
+    spaAssets.set(
+      url,
+      fetch(url).then(async (response) => {
+        assert.ok(response.ok, `Unable to load pinned SPA asset: ${url}`);
+        return { body: Buffer.from(await response.arrayBuffer()), contentType: response.headers.get("content-type") || "application/octet-stream" };
+      })
+    );
+  }
+  return spaAssets.get(url);
+}
+
 test("suite playground, exports, and stylesheet controls", async () => {
   const browser = await launchBrowser();
   try {
@@ -67,7 +91,7 @@ test("suite playground, exports, and stylesheet controls", async () => {
     });
     // Keep the pinned CODE companion real while serving this viewer from local authored assets.
     await page.route("**/*", async (route) => {
-      if (route.request().url() === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
+      if (route.request().url().startsWith(spaBase)) return route.fulfill(await getSPAAsset(route.request().url()));
       const url = new URL(route.request().url());
       if (["https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.css", "https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.7/code.min.js"].includes(url.href)) {
         const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
@@ -80,7 +104,37 @@ test("suite playground, exports, and stylesheet controls", async () => {
       if (/^log\.(light|dark)\.css$/.test(file)) return route.fulfill({ body: legacyThemeCSS(file.includes(".dark.css") ? "dark" : "light"), contentType: "text/css" });
       return route.fulfill({ path: path.join(__dirname, "..", file), contentType: file.endsWith(".html") ? "text/html" : file.endsWith(".js") ? "text/javascript" : "text/css" });
     });
-    await page.goto("https://viewer.test/index.html");
+    let resumeCSS;
+    const heldCSS = new Promise((resolve) => {
+      resumeCSS = resolve;
+    });
+    const cssRequested = page.waitForRequest(`${spaBase}css/shards.min.css`);
+    await page.route(`${spaBase}css/shards.min.css`, async (route) => {
+      await heldCSS;
+      await route.fallback();
+    });
+    let resumeJS;
+    const heldJS = new Promise((resolve) => {
+      resumeJS = resolve;
+    });
+    const jsRequested = page.waitForRequest(`${spaBase}js/pickr.min.js`);
+    await page.route(`${spaBase}js/pickr.min.js`, async (route) => {
+      await heldJS;
+      await route.fallback();
+    });
+    const pageNavigation = page.goto("https://viewer.test/index.html");
+    pageNavigation.catch(() => {});
+    await cssRequested;
+    await page.locator("body").waitFor({ state: "attached" });
+    const visibilityBeforeStyles = await page.locator("body").evaluate((body) => getComputedStyle(body).visibility);
+    const opacityBeforeStyles = await page.locator("html").evaluate((root) => getComputedStyle(root).opacity);
+    resumeCSS();
+    await jsRequested;
+    assert.equal(await page.locator("body").evaluate((body) => getComputedStyle(body).visibility), "visible", "Styled content is visible while JavaScript is still loading");
+    resumeJS();
+    await pageNavigation;
+    assert.equal(visibilityBeforeStyles, "visible", "Content stays visible while stylesheets load");
+    assert.equal(opacityBeforeStyles, "1", "Startup does not force page transparency");
     assert.equal(await page.locator(".playground-toolbar #open-file").count(), 1);
     assert.equal(await page.locator("#reset, #rerun-measurement, #playground > .discovery").count(), 0);
     await page.waitForFunction(() => document.getElementById("render-status").textContent.startsWith("Rendered"));
@@ -292,7 +346,7 @@ test("family customization, navigation and monospace controls", async () => {
       })
     );
     await page.route("**/*", async (route) => {
-      if (route.request().url() === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
+      if (route.request().url().startsWith(spaBase)) return route.fulfill(await getSPAAsset(route.request().url()));
       const url = new URL(route.request().url());
       if (url.origin !== "https://viewer.test") return route.abort();
       if (url.pathname.endsWith("/assets/favicon.png")) return route.fulfill({ path: path.join(__dirname, "../assets/favicon.png"), contentType: "image/png" });
@@ -354,6 +408,12 @@ test("family customization, navigation and monospace controls", async () => {
     await page.locator("#config-panel").evaluate((panel) => panel.classList.add("active"));
     for (const width of [360, 768, 1024, 1280]) {
       await page.setViewportSize({ width, height: 720 });
+      await page.locator("#config-panel").evaluate(async (panel) => {
+        let transitions;
+        while ((transitions = panel.getAnimations({ subtree: true }).filter((animation) => animation instanceof CSSTransition && (animation.playState === "running" || animation.pending))).length) {
+          for (const animation of transitions) await animation.finished.catch(() => {});
+        }
+      });
       assert.equal(
         await page.locator("#controlsSize").evaluate((size) => {
           const a = size.querySelector(".btn-group").getBoundingClientRect();
@@ -417,6 +477,7 @@ test("family customization, navigation and monospace controls", async () => {
     assert.equal(await page.locator('meta[name="theme-color"]').getAttribute("content"), "#141618");
     await page.locator("#site-theme").evaluate((button) => button.click());
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--bs-body-bg").trim()), "#fff");
+    await page.waitForFunction(() => getComputedStyle(document.body).backgroundColor === "rgb(255, 255, 255)");
     assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), "rgb(255, 255, 255)");
     assert.equal(await page.locator('meta[name="theme-color"]').getAttribute("content"), "#fff");
     const root = frame.locator(".byLOGdocument");
@@ -600,7 +661,7 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
     );
     await page.route("**/*", async (route) => {
       const url = new URL(route.request().url());
-      if (url.href === "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.7/css/bootstrap.min.css") return route.fulfill({ body: await getBootstrapCSS(), contentType: "text/css" });
+      if (url.href.startsWith(spaBase)) return route.fulfill(await getSPAAsset(url.href));
       if (url.origin !== "https://viewer.test") return route.abort();
       if (url.pathname.endsWith("/assets/favicon.png")) return route.fulfill({ path: path.join(__dirname, "../assets/favicon.png"), contentType: "image/png" });
       const file = path.basename(url.pathname).replace(/\.min(?=\.(?:css|js)$)/, "");
