@@ -81,8 +81,8 @@ logs.destroy(); // Call when the host panel is removed.
 | `parser` | built-in | Synchronous `(entry, index) => ({ message, level, timestamp, details })`; return null to skip. Index counts committed input entries, including skipped ones. A thrown error discards the batch; `append()` resolves `false`. |
 | `search` | `false` | Case-insensitive substring search over source and parsed fields. |
 | `autoScroll` | `false` | Show newest matching entries and scroll the internal log region to the bottom after changes. |
-| `batchSize` | `200` | Entries shown initially/per Load more, integer 1–1000; invalid values use 200. |
-| `maxEntries` | `10000` | Retained history size, integer 1–100000; invalid values use 10000. Oldest entries are discarded. |
+| `batchSize` | `200` | Entries shown initially/per Load more, integer 1-1000; invalid values use 200. |
+| `maxEntries` | `10000` | Retained history size, integer 1-100000; invalid values use 10000. Oldest entries are discarded. |
 
 Search and exact severity filtering combine with AND. Auto-scroll shows the newest display window; without it, Load more reveals older-to-newer entries.
 
@@ -107,7 +107,7 @@ Text batches are limited to 10 million characters and 100,000 entries. Parsing/f
 | `loadMore`          | `true`      | Load entries in batches; false displays every matching entry.                                                                                              |
 | `theme`             | Container   | Initial `"light"` or `"dark"` mode class.                                                                                                                  |
 | `palette`           | Container   | Initial `data-theme` palette, including custom CSS names.                                                                                                  |
-| `fontSize`          | Container   | Number in rem or a CSS size such as `"1.25em"` or `"20px"`; bounded to `0.5rem`–`3rem`.                                                                    |
+| `fontSize`          | Container   | Number in rem or a CSS size such as `"1.25em"` or `"20px"`; bounded to `0.5rem`-`3rem`.                                                                    |
 | `themeToggle`       | `true`      | Show the theme toggle.                                                                                                                                     |
 | `fontSizeControls`  | `true`      | Show text-size controls.                                                                                                                                   |
 | `copyButton`        | `true`      | Show full source copy button.                                                                                                                              |

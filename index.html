@@ -406,9 +406,9 @@
                           ><span class="form-check-label flex-grow-1 py-2">Auto-scroll</span
                           ><input class="form-check-input order-2 float-none flex-shrink-0 ms-0 my-0" type="checkbox" name="autoScroll" id="autoScroll" role="switch" /></label
                         ><label class="d-block form-label" for="batchSize">Display batch size</label><input class="form-control mb-3" id="batchSize" name="batchSize" type="number" min="1" value="200" aria-describedby="batchSize-help" />
-                        <p class="form-text" id="batchSize-help">Entries per display batch (1–1000).</p>
+                        <p class="form-text" id="batchSize-help">Entries per display batch (1-1000).</p>
                         <label class="d-block form-label" for="maxEntries">Retained entries</label><input class="form-control mb-3" id="maxEntries" name="maxEntries" type="number" min="1" value="10000" aria-describedby="maxEntries-help" />
-                        <p class="form-text" id="maxEntries-help">Retain the newest entries (1–100000).</p>
+                        <p class="form-text" id="maxEntries-help">Retain the newest entries (1-100000).</p>
                         <p class="form-text">Custom parsing is available through the <code>parser(entry, index)</code> callback. <a class="link-body-emphasis link-offset-2" href="README.md#log-options">See the API</a>.</p>
                       </div>
                     </div>
@@ -452,7 +452,7 @@
               <div class="panel-heading border-bottom px-3 px-xxl-4 py-3 d-flex align-items-center justify-content-between gap-2">
                 <h3 id="preview-heading" class="h6 m-0 fw-semibold"><span class="small font-monospace text-body-secondary me-2">03</span> Live preview</h3>
 
-                <div id="render-status" class="small font-monospace text-body-secondary" role="status">Loading viewer…</div>
+                <div id="render-status" class="small font-monospace text-body-secondary" role="status">Loading viewer...</div>
               </div>
               <div class="panel-body overflow-hidden flex-grow-1"><iframe id="preview-frame" title="Logs viewer preview" allow="clipboard-write" class="d-block w-100 h-100 border-0"></iframe></div>
             </section>
@@ -460,19 +460,19 @@
           <dl class="metric-strip bg-body-tertiary m-0 border-top row g-0" aria-label="Measurements for the current render">
             <div class="metric p-3 col-6 col-md-3">
               <dt class="small fw-normal font-monospace text-body-secondary mb-2">Source size</dt>
-              <dd id="metric-size" class="m-0 font-monospace">—</dd>
+              <dd id="metric-size" class="m-0 font-monospace">-</dd>
             </div>
             <div class="metric p-3 col-6 col-md-3">
               <dt class="small fw-normal font-monospace text-body-secondary mb-2">Lines</dt>
-              <dd id="metric-lines" class="m-0 font-monospace">—</dd>
+              <dd id="metric-lines" class="m-0 font-monospace">-</dd>
             </div>
             <div class="metric p-3 col-6 col-md-3">
               <dt class="small fw-normal font-monospace text-body-secondary mb-2">Render DOM</dt>
-              <dd id="metric-time" class="m-0 font-monospace">—</dd>
+              <dd id="metric-time" class="m-0 font-monospace">-</dd>
             </div>
             <div class="metric p-3 col-6 col-md-3">
               <dt class="small fw-normal font-monospace text-body-secondary mb-2">DOM elements</dt>
-              <dd id="metric-nodes" class="m-0 font-monospace">—</dd>
+              <dd id="metric-nodes" class="m-0 font-monospace">-</dd>
             </div>
           </dl>
         </div>
@@ -1019,8 +1019,8 @@
           const version = ++renderVersion;
           error.hidden = true;
           for (const editor of [source, second].filter(Boolean)) editor.removeAttribute("aria-invalid");
-          status.textContent = "Rendering…";
-          for (const metric of document.querySelectorAll(".metric dd")) metric.textContent = "—";
+          status.textContent = "Rendering...";
+          for (const metric of document.querySelectorAll(".metric dd")) metric.textContent = "-";
           try {
             const win = frame.contentWindow;
             const target = win.document.getElementById("viewer");

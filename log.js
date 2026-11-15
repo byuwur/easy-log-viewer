@@ -501,7 +501,7 @@
     follow.checked = autoScroll;
     followLabel.append(follow, " Auto-scroll");
     if (autoScrollControl) actions.appendChild(followLabel);
-    const status = node("p", "byVIEWstatus", "Loading\u2026");
+    const status = node("p", "byVIEWstatus", "Loading...");
     status.setAttribute("role", "status");
     const list = node("div", "byLOGentries");
     list.dataset.layout = options.layout === "stacked" ? "stacked" : "inline";
