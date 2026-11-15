@@ -775,3 +775,87 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
     await browser.close();
   }
 });
+
+// --- RENDER MEASUREMENT ---
+test("render timing excludes startup setup and metric updates", async () => {
+  const browser = await launchBrowser();
+  try {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.addInitScript(() => {
+      if (window !== window.top) return;
+      document.addEventListener("DOMContentLoaded", async () => {
+        // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
+        await spaReady;
+        const frame = document.getElementById("preview-frame");
+        window.renderSetupFinished = false;
+        window.renderStartupCalls = [];
+        frame.addEventListener("load", () => {
+          const viewer = frame.contentWindow.byLOGviewer;
+          frame.contentWindow.byLOGviewer = Object.assign((...args) => {
+            window.renderStartupCalls.push(window.renderSetupFinished);
+            return viewer(...args);
+          }, viewer);
+        });
+        // Register after the playground's other startup handlers.
+        queueMicrotask(() =>
+          frame.addEventListener("load", () => {
+            window.renderSetupFinished = true;
+          })
+        );
+      });
+    });
+    await page.route("**/*", async (route) => {
+      const url = new URL(route.request().url());
+      if (url.origin === "https://cdn.jsdelivr.net") return route.fulfill(await getSPAAsset(url.href));
+      if (url.origin !== "https://viewer.test") return route.abort();
+      const file = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
+      return route.fulfill({ path: path.join(__dirname, "..", file), contentType: file.endsWith(".js") ? "text/javascript" : file.endsWith(".css") ? "text/css" : file.endsWith(".png") ? "image/png" : "text/html" });
+    });
+    for (const navigate of [() => page.goto("https://viewer.test/index.html"), () => page.reload()]) {
+      await navigate();
+      await page.waitForFunction(() => document.getElementById("render-status").textContent.startsWith("Rendered"));
+      assert.deepEqual(await page.evaluate(() => window.renderStartupCalls), [true], "Initial rendering waits for every iframe setup handler, including after reload");
+    }
+    await page.evaluate(() => {
+      // Advance a controlled clock for setup, actual completion, and result UI independently.
+      let clock = 0;
+      let rendering = false;
+      const find = document.getElementById.bind(document);
+      const now = performance.now.bind(performance);
+      document.getElementById = (id) => {
+        if ((!rendering && id === "statusBar") || ["metric-size", "metric-nodes"].includes(id)) clock += 100;
+        return find(id);
+      };
+      performance.now = () => clock;
+      const win = find("preview-frame").contentWindow;
+      const viewer = win.byLOGviewer;
+      win.byLOGviewer = (...args) => {
+        rendering = true;
+        const controller = viewer(...args);
+        return {
+          ...controller,
+          ready: controller.ready.then((result) => {
+            clock += 17.25;
+            rendering = false;
+            return result;
+          })
+        };
+      };
+      window.restoreRenderClock = () => {
+        performance.now = now;
+        document.getElementById = find;
+        win.byLOGviewer = viewer;
+      };
+    });
+    await page.locator("#render").evaluate((button) => button.click());
+    await page.waitForFunction(() => document.getElementById("render-status").textContent.startsWith("Rendered"));
+    assert.equal(await page.locator("#metric-time").textContent(), "17.25 ms", "Only the viewer call through ready is measured");
+    assert.equal(await page.locator("#render-status").textContent(), "Rendered in 17 ms", "Status and metric use the same completed duration");
+    await page.evaluate(() => window.restoreRenderClock());
+    assert.deepEqual(errors, []);
+  } finally {
+    await browser.close();
+  }
+});

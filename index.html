@@ -1019,7 +1019,6 @@
           const version = ++renderVersion;
           error.hidden = true;
           for (const editor of [source, second].filter(Boolean)) editor.removeAttribute("aria-invalid");
-          const started = performance.now();
           status.textContent = "Rendering…";
           for (const metric of document.querySelectorAll(".metric dd")) metric.textContent = "—";
           try {
@@ -1030,15 +1029,17 @@
             for (const control of document.querySelectorAll('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]')) control.disabled = !options.toolbar;
             document.getElementById("appearAnimation").disabled = !options.animations;
             document.getElementById("options-json").value = settingsJSON(options);
+            const started = performance.now();
             const result = await win.byLOGviewer(target, source.value, options).ready;
+            const duration = performance.now() - started;
             if (version !== renderVersion) return;
             for (const editor of [source, second].filter(Boolean)) editor.setAttribute("aria-invalid", String(!result));
             const text = source.value + (second?.value || "");
             document.getElementById("metric-size").textContent = `${new TextEncoder().encode(text).length.toLocaleString()} B`;
             document.getElementById("metric-lines").textContent = text ? text.split(/\r\n?|\n/).length.toLocaleString() : "0";
-            document.getElementById("metric-time").textContent = `${(performance.now() - started).toFixed(2)} ms`;
+            document.getElementById("metric-time").textContent = `${duration.toFixed(2)} ms`;
             document.getElementById("metric-nodes").textContent = target.querySelectorAll("*").length.toLocaleString();
-            status.textContent = result ? `Rendered in ${Math.round(performance.now() - started)} ms` : "Check the input error in the preview.";
+            status.textContent = result ? `Rendered in ${Math.round(duration)} ms` : "Check the input error in the preview.";
             document.getElementById("source-status").textContent = `${source.value.length.toLocaleString()} characters`;
           } catch (exception) {
             if (version !== renderVersion) return;
@@ -1067,7 +1068,8 @@
               toggle.setAttribute("aria-label", toggle.title);
             }
           }).observe(viewer, { attributes: true, attributeFilter: ["data-theme", "class"] });
-          render();
+          // Finish the iframe's appearance setup before measuring the initial render.
+          debounce = setTimeout(render, 0);
         });
         frame.srcdoc =
           '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="log.css"><link rel="stylesheet" href="log.themes.css"><style>html,body{margin:0;min-height:100%;}body{background:#fafaf5;}#viewer{min-height:100vh;border:0;}</style><script src="log.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
@@ -1384,7 +1386,7 @@
           let customDraft = null;
           let themesWarned = false;
           let themeTimer;
-          const target = () => frame.contentDocument?.querySelector(selector);
+          const target = () => frame.contentDocument?.getElementById("viewer");
           // Read both modes on temporary containers so exporting CSS never changes the live viewer.
           const themeCSS = (selected) => {
             const document = frame.contentDocument;
