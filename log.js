@@ -383,6 +383,17 @@
     if (!(element instanceof HTMLElement)) throw new TypeError("byLOGviewer: element must be an HTMLElement.");
     // Validate appearance before disposing the current instance, so invalid options leave it usable.
     applyAppearance(element, options);
+    const {
+      animations = true,
+      appearAnimation = false,
+      displayContainer = true,
+      controlsCompact = true,
+      credits = true,
+      themeToggle = true,
+      fontSizeControls = true,
+      copyButton: showCopyButton = true,
+      toolbar: showToolbar = true
+    } = options;
     const painted = element.classList.contains("byVIEWready");
     instances.get(element)?.destroy();
     const state = { active: true };
@@ -401,8 +412,8 @@
     instances.set(element, state);
     element.replaceChildren();
     element.classList.add("byLOGdocument");
-    element.classList.toggle("byVIEWmotion", options.animations !== false);
-    const appear = options.animations !== false && options.appearAnimation === true;
+    element.classList.toggle("byVIEWmotion", animations);
+    const appear = animations && appearAnimation;
     element.classList.toggle("byVIEWappear", appear);
     if (painted && !appear) element.classList.add("byVIEWready");
     else {
@@ -414,8 +425,8 @@
         });
       });
     }
-    element.classList.toggle("byVIEWplain", options.displayContainer === false);
-    element.classList.toggle("byVIEWcompact", options.controlsCompact !== false);
+    element.classList.toggle("byVIEWplain", !displayContainer);
+    element.classList.toggle("byVIEWcompact", controlsCompact);
     element.classList.toggle("byVIEWbottom", options.controlsPosition === "bottom");
     const content = node("div", "byVIEWcontent");
     const toolbar = node("div", "byVIEWtoolbar");
@@ -432,15 +443,15 @@
       if (info.childNodes.length) info.append(` · v${byLOGviewer.VERSION} · `);
       info.appendChild(link);
     }
-    if (options.credits !== false) toolbar.appendChild(info);
+    if (credits) toolbar.appendChild(info);
     const controls = node("div", "byVIEWcontrols");
     controls.setAttribute("role", "group");
     controls.setAttribute("aria-label", "Viewer controls");
-    if (options.themeToggle !== false) appendThemeToggle(element, controls, "log");
-    if (options.fontSizeControls !== false) appendFontSizeControls(element, controls);
-    if (options.copyButton !== false) appendCopyButton(controls, getText, "Copy source");
+    if (themeToggle) appendThemeToggle(element, controls, "log");
+    if (fontSizeControls) appendFontSizeControls(element, controls);
+    if (showCopyButton) appendCopyButton(controls, getText, "Copy source");
     if (controls.childNodes.length) toolbar.appendChild(controls);
-    if (options.toolbar === false || !toolbar.childNodes.length) {
+    if (!showToolbar || !toolbar.childNodes.length) {
       element.classList.remove("byVIEWbottom");
       element.appendChild(content);
     } else element.append(...(options.controlsPosition === "bottom" ? [content, toolbar] : [toolbar, content]));
@@ -458,7 +469,8 @@
   // --- PUBLIC API ---
   // Render log text/records. append() queues batches in order; disposal cancels unfinished batches.
   function byLOGviewer(element, input, options = {}) {
-    options = { layout: "inline", batchSize: 200, maxEntries: 10000, autoScroll: false, search: false, ...options };
+    options = { layout: "inline", batchSize: 200, maxEntries: 10000, ...options };
+    const { search: showSearch = false, levelFilter = false, autoScrollControl = false, autoScroll = false, loadMore = true, copyEntries = false, details: showDetails = true, statusBar = true } = options;
     options.batchSize = positive(options.batchSize, 200, 1000);
     options.maxEntries = positive(options.maxEntries, 10000, 100000);
     if (options.parser !== undefined && typeof options.parser !== "function") throw new TypeError("parser must be a function.");
@@ -474,7 +486,7 @@
     search.type = "search";
     search.placeholder = "Search logs";
     search.setAttribute("aria-label", "Search logs");
-    if (options.search !== false) actions.appendChild(search);
+    if (showSearch) actions.appendChild(search);
     const severity = node("select");
     severity.setAttribute("aria-label", "Filter severity");
     for (const value of ["ALL", ...levels]) {
@@ -482,13 +494,13 @@
       option.value = value;
       severity.appendChild(option);
     }
-    if (options.levelFilter === true) actions.appendChild(severity);
+    if (levelFilter) actions.appendChild(severity);
     const followLabel = node("label");
     const follow = node("input");
     follow.type = "checkbox";
-    follow.checked = Boolean(options.autoScroll);
+    follow.checked = autoScroll;
     followLabel.append(follow, " Auto-scroll");
-    if (options.autoScrollControl === true) actions.appendChild(followLabel);
+    if (autoScrollControl) actions.appendChild(followLabel);
     const status = node("p", "byVIEWstatus", "Loading\u2026");
     status.setAttribute("role", "status");
     const list = node("div", "byLOGentries");
@@ -507,15 +519,15 @@
     const render = () => {
       if (!state.active) return;
       const fragment = document.createDocumentFragment();
-      const selected = options.loadMore === false ? filtered : follow.checked ? filtered.slice(-shown) : filtered.slice(0, shown);
+      const selected = !loadMore ? filtered : follow.checked ? filtered.slice(-shown) : filtered.slice(0, shown);
       for (const entry of selected) {
         const article = node("article", `byLOGentry byLOG${entry.level}`);
         const heading = node("div", "byLOGheading");
         if (entry.timestamp !== "") heading.appendChild(node("span", "byLOGtime", entry.timestamp));
         heading.appendChild(node("strong", "byLOGlevel", entry.level));
-        if (options.copyEntries === true) copyButton(heading, () => entry.raw, "Copy log entry");
+        if (copyEntries) copyButton(heading, () => entry.raw, "Copy log entry");
         article.append(heading, node("pre", "byLOGmessage", entry.message));
-        if (entry.details !== undefined && options.details !== false) {
+        if (entry.details !== undefined && showDetails) {
           const details = node("details");
           details.append(node("summary", "", "Details"), node("pre", "byLOGdetails", entry.details));
           article.appendChild(details);
@@ -523,8 +535,8 @@
         fragment.appendChild(article);
       }
       list.replaceChildren(fragment);
-      more.hidden = options.loadMore === false || shown >= filtered.length;
-      status.hidden = options.statusBar === false && filtered.length > 0;
+      more.hidden = !loadMore || shown >= filtered.length;
+      status.hidden = !statusBar && filtered.length > 0;
       status.textContent = !filtered.length ? "No matching entries." : `${selected.length} displayed · ${filtered.length} matching · ${entries.length} retained`;
       element.setAttribute("aria-busy", "false");
       if (follow.checked) list.scrollTop = list.scrollHeight;

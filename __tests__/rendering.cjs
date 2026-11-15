@@ -743,6 +743,69 @@ test("document and content backgrounds stay independent through theme and toolba
   }
 });
 
+// --- BOOLEAN DEFAULTS ---
+test("omitted and undefined boolean options share defaults", async () => {
+  const browser = await launchBrowser();
+  try {
+    const page = await browser.newPage();
+    await page.route("https://cdn.jsdelivr.net/**", (route) => route.fulfill({ body: "", contentType: "text/css" }));
+    await page.setContent('<div id="boolean-defaults" data-theme="monokai"></div>');
+    await page.addStyleTag({ path: path.join(__dirname, "../log.css") });
+    await page.addScriptTag({ path: path.join(__dirname, "../log.js") });
+    const snapshots = await page.evaluate(
+      async ({ api, inputs, flags }) => {
+        const host = document.getElementById("boolean-defaults");
+        const snapshots = [];
+        const missing = Object.fromEntries(flags.map((name) => [name, undefined]));
+        for (const values of [{}, missing, { animations: false, appearAnimation: true }]) {
+          const options = api === "byMDeditor" ? { syntax: "source", ...values } : values;
+          const controller = window[api](host, ...inputs, options);
+          await controller?.ready;
+          snapshots.push({
+            motion: host.classList.contains("byVIEWmotion"),
+            appear: host.classList.contains("byVIEWappear"),
+            compact: host.classList.contains("byVIEWcompact") || host.classList.contains("byEDcompact"),
+            plain: host.classList.contains("byVIEWplain"),
+            searches: host.querySelectorAll('input[type="search"]').length,
+            controls: [...host.querySelectorAll(".byVIEWtoolbar button, .byEDbar button")].map((button) => [button.getAttribute("aria-label"), button.hidden, button.disabled])
+          });
+        }
+        return snapshots;
+      },
+      {
+        api: "byLOGviewer",
+        inputs: ["INFO ready"],
+        flags: [
+          "toolbar",
+          "credits",
+          "themeToggle",
+          "fontSizeControls",
+          "copyButton",
+          "controlsCompact",
+          "animations",
+          "appearAnimation",
+          "displayContainer",
+          "statusBar",
+          "autoScroll",
+          "search",
+          "levelFilter",
+          "autoScrollControl",
+          "loadMore",
+          "copyEntries",
+          "details"
+        ]
+      }
+    );
+    assert.deepEqual(snapshots[1], snapshots[0], "Undefined flags use the same defaults as omitted flags");
+    assert.equal(snapshots[0].motion, true);
+    assert.equal(snapshots[0].appear, false);
+    assert.equal(snapshots[2].motion, false);
+    assert.equal(snapshots[2].appear, false, "Disabling motion takes precedence over appearing");
+  } finally {
+    await browser.close();
+  }
+});
+
 // --- INTERACTION MOTION ---
 test("animation options preserve initial visibility, replay entrance, and override system motion preferences", async () => {
   const browser = await launchBrowser();
