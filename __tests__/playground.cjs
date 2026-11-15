@@ -135,6 +135,48 @@ test("suite playground, exports, and stylesheet controls", async () => {
     await pageNavigation;
     assert.equal(visibilityBeforeStyles, "visible", "Content stays visible while stylesheets load");
     assert.equal(opacityBeforeStyles, "1", "Startup does not force page transparency");
+    assert.equal(await page.locator("body > style").count(), 1);
+    assert.equal(await page.locator("head script:not([src])").count(), 1);
+    assert.equal(await page.locator("body > script:not([src])").count(), 1);
+    assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--transition-duration").trim()), "0.3s");
+    // Exercise motion through the real playground, including its host stylesheets.
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const motionViewer = page.frameLocator("#preview-frame").locator(".byLOGdocument");
+    await motionViewer.locator(".byVIEWthemeToggle").waitFor();
+    await motionViewer.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(
+      await motionViewer.evaluate((element) => {
+        getComputedStyle(element).backgroundColor;
+        element.querySelector(".byVIEWthemeToggle").click();
+        const fading = element.getAnimations().some((animation) => animation.transitionProperty === "background-color");
+        for (const animation of element.getAnimations()) animation.finish();
+        element.querySelector(".byVIEWthemeToggle").click();
+        for (const animation of element.getAnimations()) animation.finish();
+        return fading;
+      }),
+      true,
+      "Enabled viewer motion survives the page styles and system motion preference"
+    );
+    const tooltipMotion = await page.evaluate(() =>
+      [...document.querySelectorAll('[data-bs-toggle="tooltip"]')].map((label) => {
+        const disclosure = label.closest("details");
+        const wasOpen = disclosure?.open;
+        if (disclosure) disclosure.open = true;
+        const tooltip = bootstrap.Tooltip.getInstance(label);
+        tooltip.show();
+        const tip = document.getElementById(label.getAttribute("aria-describedby"));
+        const result = { animation: tooltip._config.animation, durations: [tip, ...tip.querySelectorAll("*")].map((node) => getComputedStyle(node).transitionDuration) };
+        tooltip.hide();
+        if (disclosure) disclosure.open = wasOpen;
+        return result;
+      })
+    );
+    assert.ok(tooltipMotion.length > 0);
+    assert.ok(
+      tooltipMotion.every((tooltip) => tooltip.animation === false && tooltip.durations.every((duration) => duration === "0s")),
+      "Every tooltip, including its positioned contents, has zero motion"
+    );
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     assert.equal(await page.locator(".playground-toolbar #open-file").count(), 1);
     assert.equal(await page.locator("#reset, #rerun-measurement, #playground > .discovery").count(), 0);
     await page.waitForFunction(() => document.getElementById("render-status").textContent.startsWith("Rendered"));
@@ -394,16 +436,13 @@ test("family customization, navigation and monospace controls", async () => {
         }),
       { width: "44px", height: "24px" }
     );
-    assert.equal(
-      await page.locator(".form-switch .form-check-input").evaluateAll((inputs) =>
-        inputs.every((input) => {
-          const toggle = input.getBoundingClientRect();
-          const row = input.closest(".form-switch").getBoundingClientRect();
-          return Math.abs(toggle.right - row.right) < 1 && Math.abs(toggle.top + toggle.height / 2 - row.top - row.height / 2) < 1;
-        })
-      ),
-      true,
-      "Every switch lines up at the right edge and center of its row"
+    // The configured page motion may still be settling after the preview is ready.
+    await page.waitForFunction(() =>
+      [...document.querySelectorAll(".form-switch .form-check-input")].every((input) => {
+        const toggle = input.getBoundingClientRect();
+        const row = input.closest(".form-switch").getBoundingClientRect();
+        return Math.abs(toggle.right - row.right) < 1 && Math.abs(toggle.top + toggle.height / 2 - row.top - row.height / 2) < 1;
+      })
     );
     await page.locator("#config-panel").evaluate((panel) => panel.classList.add("active"));
     for (const width of [360, 768, 1024, 1280]) {
@@ -693,6 +732,22 @@ test("playground palettes and editable two-mode custom themes stay synchronized"
     assert.equal(await page.locator("#appearAnimation").isChecked(), false);
     await page.locator("#appearAnimation").check();
     await page.locator("#animations").uncheck();
+    assert.equal(
+      await page
+        .frameLocator("#preview-frame")
+        .locator(".byLOGdocument")
+        .evaluate((element) => getComputedStyle(element).transitionDuration),
+      "0s",
+      "Disabling animations cancels viewer motion"
+    );
+    assert.equal(
+      await page
+        .locator(".btn")
+        .first()
+        .evaluate((element) => getComputedStyle(element).transitionDuration),
+      "0s",
+      "Disabling animations also cancels page motion"
+    );
     await page.waitForFunction(() => document.getElementById("appearAnimation").disabled);
     assert.equal(await page.locator("#appearAnimation").isChecked(), true, "Disabling motion preserves the entrance preference");
     await page.locator("#animations").check();
