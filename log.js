@@ -402,10 +402,12 @@
     element.replaceChildren();
     element.classList.add("byLOGdocument");
     element.classList.toggle("byVIEWmotion", options.animations !== false);
-    element.classList.toggle("byVIEWappear", options.animations !== false && options.appearAnimation === true);
-    if (painted) element.classList.add("byVIEWready");
+    const appear = options.animations !== false && options.appearAnimation === true;
+    element.classList.toggle("byVIEWappear", appear);
+    if (painted && !appear) element.classList.add("byVIEWready");
     else {
-      // Enable background transitions after the first paint without forcing layout.
+      // Paint opacity 0 before starting each requested fade.
+      element.classList.remove("byVIEWready");
       state.motionFrame = requestAnimationFrame(() => {
         state.motionFrame = requestAnimationFrame(() => {
           if (state.active) element.classList.add("byVIEWready");

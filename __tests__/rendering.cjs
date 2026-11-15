@@ -744,7 +744,7 @@ test("document and content backgrounds stay independent through theme and toolba
 });
 
 // --- INTERACTION MOTION ---
-test("animation options preserve initial visibility and override system motion preferences", async () => {
+test("animation options preserve initial visibility, replay entrance, and override system motion preferences", async () => {
   const browser = await launchBrowser();
   try {
     const page = await browser.newPage({ reducedMotion: "reduce" });
@@ -768,7 +768,7 @@ test("animation options preserve initial visibility and override system motion p
         .locator("button")
         .first()
         .evaluate((element) => getComputedStyle(element).transitionDuration.split(",")[0]),
-      "0.18s"
+      "0.3s"
     );
     // Disclosure size/exit motion progressively enhances engines supporting intrinsic-size transitions.
     if (await page.evaluate(() => CSS.supports("interpolate-size", "allow-keywords"))) {
@@ -839,18 +839,28 @@ test("animation options preserve initial visibility and override system motion p
       element.dataset.theme = "high-contrast";
     });
     assert.equal(await root.evaluate((element) => element.getAnimations().filter((animation) => animation.transitionProperty === "background-color").length), 0);
-    const entrance = await page.evaluate(async () => {
-      await renderMotion(true, true);
-      const element = document.getElementById("motion-viewer");
-      const animation = element.getAnimations().find((animation) => animation.animationName === "byVIEWappear");
-      if (!animation) return { active: false };
-      animation.pause();
-      animation.currentTime = 90;
-      return { active: true, opacity: Number(getComputedStyle(element).opacity), content: element.textContent.length };
+    await root.evaluate((element) => {
+      element.dataset.theme = "github";
     });
-    assert.equal(entrance.active, true, "Entrance motion is explicit even when the system requests reduced motion");
-    assert.ok(entrance.opacity > 0 && entrance.opacity < 1);
-    assert.ok(entrance.content > 0, "Rendering completes without waiting for the animation");
+    // Reuse the visible host without resetting its classes in the test.
+    for (let render = 0; render < 2; render++) {
+      await page.evaluate(() => renderMotion(true, true));
+      await page.waitForFunction(() => document.getElementById("motion-viewer").classList.contains("byVIEWready"));
+      const entrance = await root.evaluate((element) => {
+        const animation = element.getAnimations().find((animation) => animation.transitionProperty === "opacity");
+        if (!animation) return { active: false };
+        animation.pause();
+        animation.currentTime = 90;
+        const frames = animation.effect.getKeyframes();
+        return { from: frames[0].opacity, to: frames.at(-1).opacity, active: true, opacity: Number(getComputedStyle(element).opacity), content: element.textContent.length, translate: getComputedStyle(element).translate };
+      });
+      assert.equal(entrance.active, true, "Entrance motion is explicit even when the system requests reduced motion");
+      assert.equal(entrance.from, "0");
+      assert.equal(entrance.to, "1");
+      assert.ok(entrance.opacity > 0 && entrance.opacity < 1);
+      assert.ok(entrance.content > 0, "Rendering completes without waiting for the animation");
+      assert.equal(entrance.translate, "none", "The entrance only fades, without keyframe movement");
+    }
     await page.evaluate(() => renderMotion(false, true));
     assert.equal(await root.evaluate((element) => element.getAnimations({ subtree: true }).length), 0, "Animations off overrides the requested entrance");
   } finally {

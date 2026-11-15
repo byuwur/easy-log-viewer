@@ -95,7 +95,7 @@ Text batches are limited to 10 million characters and 100,000 entries. Parsing/f
 | Option              | Default     | Behavior                                                                                                                                                   |
 | ------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `animations`        | `true`      | Brief control/disclosure motion and background fades; overrides the system motion preference.                                                              |
-| `appearAnimation`   | `false`     | Fade and gently move the viewer in when `animations` is enabled. Initial rendering remains immediate by default.                                           |
+| `appearAnimation`   | `false`     | Fade the viewer in on each render when `animations` is enabled. Initial rendering remains immediate by default.                                            |
 | `toolbar`           | `true`      | Show the viewer header; secondary tools are configured separately.                                                                                         |
 | `credits`           | `true`      | Show attribution in the header.                                                                                                                            |
 | `displayContainer`  | `true`      | Show the content panel frame and inner horizontal padding. `false` also hides status information.                                                          |

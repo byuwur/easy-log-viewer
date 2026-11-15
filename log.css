@@ -410,25 +410,19 @@
   --by-view-motion-duration: 0s;
 }
 .byLOGdocument.byVIEWmotion {
-  --by-view-motion-duration: 0.18s;
+  --by-view-motion-duration: 0.3s;
 }
 /* Background fades stay on shared surfaces, never individual rows or syntax tokens. */
-.byLOGdocument.byVIEWready,
+.byLOGdocument.byVIEWready {
+  transition:
+    background-color var(--by-view-motion-duration, 0s) ease,
+    opacity var(--by-view-motion-duration, 0s) ease;
+}
 .byLOGdocument :is(.byVIEWpanel, .byVIEWstatus) {
   transition: background-color var(--by-view-motion-duration, 0s) ease;
 }
-.byLOGdocument.byVIEWmotion.byVIEWappear {
-  animation: byVIEWappear var(--by-view-motion-duration) ease-out;
-}
-@keyframes byVIEWappear {
-  from {
-    opacity: 0;
-    translate: 0 0.25rem;
-  }
-  to {
-    opacity: 1;
-    translate: 0;
-  }
+.byLOGdocument.byVIEWmotion.byVIEWappear:not(.byVIEWready) {
+  opacity: 0;
 }
 .byLOGdocument :is(button, input, select, textarea, summary, a) {
   transition:
@@ -484,6 +478,9 @@
 }
 
 @media print {
+  .byLOGdocument {
+    opacity: 1 !important;
+  }
   .byLOGdocument,
   .byLOGdocument *,
   .byLOGdocument *::before,
