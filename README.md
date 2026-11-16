@@ -280,21 +280,18 @@ Legacy integrations can use `#byVIEWtheme` or a detected `log.light.css` / `log.
 
 ## Checks
 
-Theme tests cover both modes, container isolation, legacy links, custom CSS, and High Contrast. Clipboard tests use stubs; they do not verify real permissions.
-
-Playground tests fetch the pinned Bootstrap stylesheet unless `BOOTSTRAP_CSS_PATH` points to a cached copy.
+Routine CI runs the small library suite in each supported browser: parsing/rendering, safe input, and replacement/cleanup. It exercises the standalone library without playground imports or live CDN requests. New options and styling do not need individual CI tests unless they protect a core contract or a real regression.
 
 Install Playwright outside the repository and set `NODE_PATH` to its `node_modules` directory:
 
 ```sh
 node --check log.js
-node --test __tests__/rendering.cjs   # Library
-node --test __tests__/playground.cjs  # Playground
+node --test __tests__/rendering.cjs
 ```
 
-Tests default to Playwright Chromium. Set `BROWSER_ENGINE=firefox` or `BROWSER_ENGINE=webkit` for the other engines. Install matching engines with `npx playwright install chromium firefox webkit` from your external Playwright setup. `BROWSER_CHANNEL=chrome` uses installed Chrome; `CHROMIUM_EXECUTABLE_PATH` selects a Chromium executable. These overrides apply only to Chromium. [GitHub Actions](.github/workflows/rendering.yml) reports Library and Playground as independent jobs; a failed suite does not cancel the other.
+`BROWSER_CHANNEL=chrome` uses installed Chrome; `CHROMIUM_EXECUTABLE_PATH` selects a Chromium executable.
 
-CI runs library and playground suites independently in Chromium, Firefox, and WebKit. Touch/mobile-width checks cover Chromium and WebKit emulation, with a narrow touch viewport in Firefox. WebKit is not certification of shipping Safari or iOS devices. Synthetic editor composition checks do not reproduce an OS IME. Real mobile keyboards, VoiceOver/NVDA, clipboard permissions, and device-specific rendering still require manual testing; automated checks are not a complete WCAG audit.
+The library suite is the main automated contract: parsing/rendering, untrusted input, and replacement/cleanup. `node --test __tests__/playground.cjs` runs one smaller smoke check for page startup, preview editing, and a copied starter. It uses the real local SPA.js and CODE companions instead of live CDN requests; check out `spa.js` at `v20.12` and `easy-code-viewer` at `v1.8` beside this repository. The [Actions workflow](.github/workflows/rendering.yml) runs separate jobs in this exact order: library Chromium, Firefox, WebKit; then playground Chromium, Firefox, WebKit. Later jobs still report their result if an earlier job fails; cancellation stops the chain. One reusable browser job keeps setup identical. Each suite has a 30-second execution limit, the test step is capped at two minutes, and each job at three minutes. Browsers are preinstalled in the matching CI image. `BROWSER_ENGINE=firefox` / `webkit` selects a local engine; `BROWSER_CHANNEL=chrome` applies only to Chromium.
 
 ## The easy viewers
 
