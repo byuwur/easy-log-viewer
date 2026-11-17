@@ -2,6 +2,8 @@
 
 ![LOG.view preview](prev.jpg)
 
+Development version: **v2** (unreleased). The [latest release](https://github.com/byuwur/log.view/releases/latest) supplies the published files.
+
 **Logs, follow the story.**
 
 Browse plain-text or structured logs with severity colors, search, timestamps, and expandable details. Append new entries as they arrive.
