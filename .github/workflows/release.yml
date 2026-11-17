@@ -1,0 +1,82 @@
+name: Publish versioned releases
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source_checks:
+    uses: ./.github/workflows/rendering.yml
+
+  build:
+    needs: source_checks
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: easy-log-viewer
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_type == 'tag' && github.ref_name || 'v0.0.0-ci' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: easy-log-viewer
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm --prefix .github ci --ignore-scripts --no-audit --no-fund
+      - name: Validate exact tag, main ancestry, and release ownership
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release.mjs --check
+      - name: Build release preview or tagged distributions
+        run: node .github/scripts/build.mjs
+      - name: Test generated release
+        timeout-minutes: 5
+        run: npm --prefix .github run release:test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tested-release
+          path: easy-log-viewer/dist/assets/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: [source_checks, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: tested-release
+          path: dist/assets/
+      - name: Publish the verified draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release.mjs --publish
