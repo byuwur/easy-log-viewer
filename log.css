@@ -4,6 +4,13 @@
    data-theme="light" / "dark" remain mode aliases and override mode classes. */
 
 /* --- VIEWER --- */
+/* Keep host layout transitions out; component rules below opt in to motion. */
+.byLOGdocument,
+.byLOGdocument *,
+.byLOGdocument *::before,
+.byLOGdocument *::after {
+  transition: none !important;
+}
 .byLOGdocument {
   position: relative;
   display: flex;
@@ -338,7 +345,7 @@
   pointer-events: none;
   border-radius: 50%;
   background: currentColor;
-  transition: transform var(--by-view-motion-duration, 0s) ease-out;
+  transition: transform var(--by-view-motion-duration, 0s) ease-out !important;
 }
 
 .byLOGdocument .byVIEWactions {
@@ -360,7 +367,7 @@
   touch-action: manipulation;
   transition:
     background-color var(--by-view-motion-duration, 0s) ease,
-    box-shadow var(--by-view-motion-duration, 0s) ease-out;
+    box-shadow var(--by-view-motion-duration, 0s) ease-out !important;
 }
 .byLOGdocument button:not(:disabled):hover {
   background: color-mix(in srgb, currentColor 7%, var(--by-view-container-bg, var(--by-view-bg)));
@@ -420,10 +427,10 @@
 .byLOGdocument.byVIEWready {
   transition:
     background-color var(--by-view-motion-duration, 0s) ease,
-    opacity var(--by-view-motion-duration, 0s) ease;
+    opacity var(--by-view-motion-duration, 0s) ease !important;
 }
 .byLOGdocument :is(.byVIEWpanel, .byVIEWstatus) {
-  transition: background-color var(--by-view-motion-duration, 0s) ease;
+  transition: background-color var(--by-view-motion-duration, 0s) ease !important;
 }
 .byLOGdocument.byVIEWmotion.byVIEWappear:not(.byVIEWready) {
   opacity: 0;
@@ -435,7 +442,7 @@
     border-color var(--by-view-motion-duration) ease,
     box-shadow var(--by-view-motion-duration) ease,
     opacity var(--by-view-motion-duration) ease,
-    translate var(--by-view-motion-duration) ease-out;
+    translate var(--by-view-motion-duration) ease-out !important;
 }
 .byLOGdocument.byVIEWmotion :is(button, summary):not(:disabled):active {
   translate: 0 0.0625em;
@@ -448,7 +455,7 @@
   transition:
     block-size var(--by-view-motion-duration) ease,
     opacity var(--by-view-motion-duration) ease,
-    content-visibility var(--by-view-motion-duration) allow-discrete;
+    content-visibility var(--by-view-motion-duration) allow-discrete !important;
 }
 .byLOGdocument.byVIEWmotion details[open]::details-content {
   block-size: auto;
@@ -466,18 +473,18 @@
 /* High Contrast switches colors immediately so intermediate colors cannot lose contrast. */
 .byLOGdocument[data-theme="high-contrast"],
 .byLOGdocument[data-theme="high-contrast"] :is(.byVIEWpanel, .byVIEWstatus) {
-  transition: none;
+  transition: none !important;
 }
 .byLOGdocument[data-theme="high-contrast"] :is(button, input, select, textarea, summary, a) {
-  transition-property: opacity, translate;
+  transition-property: opacity, translate !important;
 }
 @media (forced-colors: active) {
   .byLOGdocument,
   .byLOGdocument :is(.byVIEWpanel, .byVIEWstatus) {
-    transition: none;
+    transition: none !important;
   }
   .byLOGdocument :is(button, input, select, textarea, summary, a) {
-    transition-property: opacity, translate;
+    transition-property: opacity, translate !important;
   }
 }
 
@@ -495,7 +502,7 @@
 }
 
 .byLOGdocument .byVIEWinfo {
-  transition: opacity var(--by-view-motion-duration) ease-out;
+  transition: opacity var(--by-view-motion-duration) ease-out !important;
 }
 
 /* --- THEMES --- */
