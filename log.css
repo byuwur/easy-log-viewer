@@ -410,7 +410,11 @@
   --by-view-motion-duration: 0s;
 }
 .byLOGdocument.byVIEWmotion {
-  --by-view-motion-duration: 0.3s;
+  --by-view-motion-duration: 0.2s;
+}
+/* Apply the initial palette immediately, including under host-page transitions. */
+.byLOGdocument:not(.byVIEWready) {
+  transition: none !important;
 }
 /* Background fades stay on shared surfaces, never individual rows or syntax tokens. */
 .byLOGdocument.byVIEWready {
