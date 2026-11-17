@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          path: easy-log-viewer
+          path: log.view
       - uses: actions/checkout@v4
         if: inputs.suite == 'playground'
         with:
@@ -38,9 +38,9 @@ jobs:
       - uses: actions/checkout@v4
         if: inputs.suite == 'playground'
         with:
-          repository: byuwur/easy-code-viewer
+          repository: byuwur/code.view
           ref: v1.9
-          path: easy-code-viewer
+          path: code.view
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -50,7 +50,7 @@ jobs:
       - name: Run focused checks
         env:
           NODE_PATH: ${{ runner.temp }}/browser-tests/node_modules
-        working-directory: easy-log-viewer
+        working-directory: log.view
         timeout-minutes: 2
         run: |
           node --check log.js

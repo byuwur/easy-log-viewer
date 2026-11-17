@@ -3,38 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>easy-log-viewer | Logs, follow the story.</title>
+    <title>LOG.view | Logs, follow the story.</title>
     <meta name="description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
     <meta name="author" content="Andrés Trujillo [Mateus] byUwUr" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#141618" />
-    <!-- <link rel="canonical" href="https://byuwur.github.io/easy-log-viewer/" /> -->
+    <!-- <link rel="canonical" href="https://byuwur.github.io/log.view/" /> -->
     <link rel="canonical" href="https://log.byuwur.co/" />
-    <!-- <link rel="icon" type="image/png" href="https://byuwur.github.io/easy-log-viewer/assets/favicon.png" /> -->
+    <!-- <link rel="icon" type="image/png" href="https://byuwur.github.io/log.view/assets/favicon.png" /> -->
     <link rel="icon" type="image/png" href="./assets/favicon.png" />
     <!-- SEO -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="easy-log-viewer" />
+    <meta property="og:site_name" content="LOG.view" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="easy-log-viewer | Logs, follow the story." />
+    <meta property="og:title" content="LOG.view | Logs, follow the story." />
     <meta property="og:description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
-    <!-- <meta property="og:url" content="https://byuwur.github.io/easy-log-viewer/" /> -->
+    <!-- <meta property="og:url" content="https://byuwur.github.io/log.view/" /> -->
     <meta property="og:url" content="https://log.byuwur.co/" />
-    <!-- <meta property="og:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" /> -->
+    <!-- <meta property="og:image" content="https://byuwur.github.io/log.view/prev.jpg" /> -->
     <meta property="og:image" content="https://log.byuwur.co/prev.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1920" />
     <meta property="og:image:height" content="1080" />
-    <meta property="og:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
+    <meta property="og:image:alt" content="LOG.view by BONYUR: Logs playground, options, source editor, and live preview." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@byUwUr" />
-    <meta name="twitter:title" content="easy-log-viewer | Logs, follow the story." />
+    <meta name="twitter:title" content="LOG.view | Logs, follow the story." />
     <meta name="twitter:description" content="Read structured or plain-text logs with severity filters, search, and inline or stacked layouts. A free JavaScript log viewer by BONYUR." />
-    <!-- <meta name="twitter:image" content="https://byuwur.github.io/easy-log-viewer/prev.jpg" /> -->
+    <!-- <meta name="twitter:image" content="https://byuwur.github.io/log.view/prev.jpg" /> -->
     <meta name="twitter:image" content="https://log.byuwur.co/prev.jpg" />
-    <meta name="twitter:image:alt" content="easy-log-viewer by BONYUR: Logs playground, options, source editor, and live preview." />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.9/code.min.css" />
-    <script src="https://cdn.jsdelivr.net/gh/byuwur/easy-code-viewer@v1.9/code.min.js" defer></script>
+    <meta name="twitter:image:alt" content="LOG.view by BONYUR: Logs playground, options, source editor, and live preview." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/code.view@v1.9/code.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/code.view@v1.9/code.min.js" defer></script>
     <script id="spa-loader" src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.13/_load.min.js"></script>
     <script>
       "use strict";
@@ -66,7 +66,7 @@
     <a class="visually-hidden-focusable position-absolute top-0 start-0 p-3 z-3 bg-body-tertiary link-body-emphasis" href="#playground">Skip to playground</a>
     <header class="border-bottom">
       <nav class="navbar navbar-expand-md site-width container-fluid" aria-label="Main navigation">
-        <a class="navbar-brand fs-6 fw-semibold" href="#"><span class="brand-mark d-inline-flex align-items-center justify-content-center me-2 font-monospace fs-6 fw-bold" aria-hidden="true">log</span>easy-log-viewer</a>
+        <a class="navbar-brand fs-6 fw-semibold" href="#"><span class="brand-mark d-inline-flex align-items-center justify-content-center me-2 font-monospace fs-6 fw-bold" aria-hidden="true">log</span>LOG.view</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#site-menu" aria-controls="site-menu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -74,8 +74,8 @@
           <div class="navbar-nav ms-auto align-items-md-center gap-md-2">
             <a class="nav-link" href="#playground">Playground</a>
             <a class="nav-link" href="#get-started">Get started</a>
-            <a class="nav-link" href="https://github.com/byuwur/easy-log-viewer#readme">Docs <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
-            <a class="btn px-3 btn-outline-secondary fw-semibold" href="https://github.com/byuwur/easy-log-viewer"><i class="fa-brands fa-github me-1" aria-hidden="true"></i> GitHub</a>
+            <a class="nav-link" href="https://github.com/byuwur/log.view#readme">Docs <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
+            <a class="btn px-3 btn-outline-secondary fw-semibold" href="https://github.com/byuwur/log.view"><i class="fa-brands fa-github me-1" aria-hidden="true"></i> GitHub</a>
             <button id="site-theme" class="btn px-3 btn-outline-secondary fw-semibold" type="button" aria-label="Switch website to light theme"><i class="fa-solid fa-sun me-1" aria-hidden="true"></i> <span>Light</span></button>
           </div>
         </div>
@@ -485,7 +485,7 @@
           <p class="text-body-secondary small">CDN starters require internet access. Local starters need the viewer files beside the HTML.</p>
           <p class="text-body-secondary small">Playground powered by <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/spa.js" target="_blank" rel="noopener">SPA.js</a>.</p>
           <p id="install-note" class="text-body-secondary small mb-2">CDN follows the latest release; updates may take time to reach caches.</p>
-          <a class="small link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer#readme" target="_blank" rel="noopener"
+          <a class="small link-body-emphasis link-offset-2" href="https://github.com/byuwur/log.view#readme" target="_blank" rel="noopener"
             >Read the full API <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i
           ></a>
         </div>
@@ -507,53 +507,53 @@
         </div>
       </section>
     </main>
-    <nav class="viewer-suite site-width py-4 container-fluid" aria-label="Viewer suite">
+    <nav class="viewer-suite site-width py-4 container-fluid" aria-label="Viewer/Editor family">
       <p class="small text-body-secondary mb-3">Need another format, maybe an editor?</p>
       <div class="d-flex flex-wrap align-items-center gap-3">
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/md.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://md.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #d8cdf5; --logo-dark: #c4b5fd" aria-hidden="true">md↓</span>
-          <span class="text-decoration-underline">MD</span>
+          <span class="text-decoration-underline">MD.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-md-editor/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/md.edit/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://mdedit.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #d8cdf5; --logo-dark: #c4b5fd" aria-hidden="true">md↑</span>
           <span class="text-decoration-underline">MD.edit</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-code-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/code.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://code.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #cad8f4; --logo-dark: #aec5ef" aria-hidden="true">{ }</span>
-          <span class="text-decoration-underline">CODE</span>
+          <span class="text-decoration-underline">CODE.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-json-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/json.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://json.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f3e4b4; --logo-dark: #f2d98d" aria-hidden="true">{ }</span>
-          <span class="text-decoration-underline">JSON</span>
+          <span class="text-decoration-underline">JSON.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-csv-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/csv.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://csv.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0dfca; --logo-dark: #a9d6b8" aria-hidden="true">csv</span>
-          <span class="text-decoration-underline">CSV</span>
+          <span class="text-decoration-underline">CSV.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-diff-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/diff.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://diff.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f4c7cf; --logo-dark: #eeadb8" aria-hidden="true">±</span>
-          <span class="text-decoration-underline">DIFF</span>
+          <span class="text-decoration-underline">DIFF.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-log-viewer/" aria-current="page"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/log.view/" aria-current="page"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="./" aria-current="page">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #f6d2bd; --logo-dark: #f3bfa0" aria-hidden="true">log</span>
-          <span class="text-decoration-underline">LOG</span>
+          <span class="text-decoration-underline">LOG.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-xml-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/xml.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://xml.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #c0e2ee; --logo-dark: #a3d5e8" aria-hidden="true">&lt;/&gt;</span>
-          <span class="text-decoration-underline">XML</span>
+          <span class="text-decoration-underline">XML.view</span>
         </a>
-        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/easy-yaml-viewer/"> -->
+        <!-- <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://byuwur.github.io/yaml.view/"> -->
         <a class="small font-monospace link-body-emphasis link-offset-2 text-decoration-none d-inline-flex align-items-center gap-2 py-1" href="https://yaml.byuwur.co/">
           <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold" style="--logo-light: #e5cce3; --logo-dark: #dab6d7" aria-hidden="true">yml</span>
-          <span class="text-decoration-underline">YAML</span>
+          <span class="text-decoration-underline">YAML.view</span>
         </a>
       </div>
     </nav>
@@ -564,8 +564,8 @@
           <a class="link-body-emphasis link-offset-2" href="https://byuwur.co" target="_blank" rel="noopener">BONYUR @byUwUr</a>
         </p>
         <div class="d-flex flex-wrap gap-3">
-          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer/blob/main/LICENSE">MIT license</a>
-          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/easy-log-viewer">Source &amp; contributions <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
+          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/log.view/blob/main/LICENSE">MIT license</a>
+          <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/log.view">Source &amp; contributions <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
           <a class="link-body-emphasis link-offset-2" href="https://ko-fi.com/byuwur">Buy me a Pandebono <i class="fa-brands fa-ko-fi ms-1" aria-hidden="true"></i></a>
         </div>
       </div>
@@ -1112,7 +1112,7 @@
         const integrationCode = document.getElementById("integration-code");
         const installButtons = [...document.querySelectorAll("[data-install]")];
         const updateIntegration = (mode = "cdn") => {
-          const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/easy-log-viewer@latest/" : "";
+          const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/log.view@latest/" : "";
           const min = mode === "cdn" ? ".min" : "";
           const endScript = "</" + "script>";
           // Explicit lines preserve export indentation when the page is formatted.
@@ -1122,7 +1122,7 @@
             "  <head>",
             '    <meta charset="UTF-8">',
             '    <meta name="viewport" content="width=device-width, initial-scale=1">',
-            "    <title>easy-log-viewer</title>",
+            "    <title>LOG.view</title>",
             `    <link rel="stylesheet" href="${base}log${min}.css">`,
             `    <script src="${base}log${min}.js" defer>${endScript}`,
             "  </head>",
@@ -1181,7 +1181,7 @@
           const url = URL.createObjectURL(new Blob([integrationHTML], { type: "text/html;charset=UTF-8" }));
           const link = document.createElement("a");
           link.href = url;
-          link.download = "easy-log-viewer.html";
+          link.download = "log.view.html";
           document.body.append(link);
           link.click();
           link.remove();
@@ -1407,7 +1407,7 @@
               frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue("--by-log-themes-loaded").trim() !== "1"
             ) {
               themesWarned = true;
-              console.warn(`easy-log-viewer: Import log.themes.css after log.css to use "${palette.value}".`);
+              console.warn(`LOG.view: Import log.themes.css after log.css to use "${palette.value}".`);
             }
             const css = palette.value === "custom" ? (customDraft ?? themeCSS("monokai")) : themeCSS(palette.value);
             if (editor.value !== css) editor.value = css;

@@ -1,9 +1,9 @@
 "use strict";
 /*
  * File: log.js
- * Desc: Standalone LOG viewer. No runtime dependencies.
+ * Desc: Standalone LOG.view. No runtime dependencies.
  * Copyright (c) 2026 Andres Trujillo [Mateus] byUwUr
- * https://github.com/byuwur/easy-log-viewer
+ * https://github.com/byuwur/log.view
  * MIT License (see LICENSE).
  */
 (function (global) {
@@ -116,8 +116,8 @@
     const document = element.ownerDocument;
     if (document.defaultView.getComputedStyle(document.documentElement).getPropertyValue("--by-log-themes-loaded").trim() === "1") return;
     warnedPalettes.add(palette);
-    // console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://byuwur.github.io/easy-log-viewer/`);
-    console.warn(`easy-log-viewer: Palette "${palette}" requires log.themes.css. Import it after log.css. https://log.byuwur.co/`);
+    // console.warn(`LOG.view: Palette "${palette}" requires log.themes.css. Import it after log.css. https://byuwur.github.io/log.view/`);
+    console.warn(`LOG.view: Palette "${palette}" requires log.themes.css. Import it after log.css. https://log.byuwur.co/`);
   };
 
   // Explicit appearance options override markup; omitted values preserve the container's state.
@@ -433,7 +433,7 @@
     toolbar.dataset.size = ["xs", "small", "regular", "large", "xl"].includes(options.controlsSize) ? options.controlsSize : "regular";
     const info = node("small", "byVIEWinfo");
     for (const [text, href] of [
-      ["easy-log-viewer", "https://github.com/byuwur/easy-log-viewer"],
+      ["LOG.view", "https://github.com/byuwur/log.view"],
       ["@byUwUr", "https://byuwur.co"]
     ]) {
       const link = node("a", "", text);

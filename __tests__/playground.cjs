@@ -19,14 +19,21 @@ test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, 
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.addInitScript(() => {
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (value) => { window.copiedHTML = value; } } });
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (value) => {
+          window.copiedHTML = value;
+        }
+      }
+    });
   });
   // Use real local companions behind the page's declared URLs, without contacting the CDN.
   const projects = {
     "spa.js": process.env.SPA_ASSETS_ROOT || path.join(root, "../spa.js"),
-    "easy-code-viewer": path.join(root, "../easy-code-viewer"),
-    "easy-md-viewer": path.join(root, "../easy-md-viewer"),
-    "easy-log-viewer": root
+    "code.view": path.join(root, "../code.view"),
+    "md.view": path.join(root, "../md.view"),
+    "log.view": root
   };
   await page.route("**/*", async (route) => {
     const url = new URL(route.request().url());
@@ -37,8 +44,9 @@ test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, 
     const target = path.resolve(directory, file);
     if (!target.startsWith(path.resolve(directory) + path.sep)) return route.abort();
     let body;
-    try { body = await fs.readFile(target); }
-    catch (error) {
+    try {
+      body = await fs.readFile(target);
+    } catch (error) {
       // Project distributions are generated; test their authored counterparts locally.
       if (error.code !== "ENOENT") throw error;
       body = await fs.readFile(target.replace(/\.min(?=\.(?:css|js)$)/, ""));

@@ -1,5 +1,5 @@
 {
-  "repository": "byuwur/easy-log-viewer",
+  "repository": "byuwur/log.view",
   "branch": "main",
   "kind": "easy",
   "runtime": ["log.js", "log.css", "log.themes.css"],

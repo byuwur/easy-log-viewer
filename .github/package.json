@@ -1,5 +1,5 @@
 {
-  "name": "easy-log-viewer-release",
+  "name": "log.view",
   "private": true,
   "engines": {
     "node": ">=22"
