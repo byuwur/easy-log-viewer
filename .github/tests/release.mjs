@@ -1,13 +1,13 @@
 /** @file Verify archive bytes and execute the existing runtime checks against each extracted distribution. */
+import { unzipSync } from "fflate";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import * as fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { unzipSync } from "fflate";
-import { config, dist, git, releaseNotes, root, sha256, validateTag } from "../scripts/release.mjs";
 import { minified } from "../scripts/build.mjs";
+import { config, dist, git, releaseNotes, root, sha256, validateTag } from "../scripts/release.mjs";
 
 const directory = path.join(dist, "assets");
 const manifest = JSON.parse(await fs.readFile(path.join(directory, "manifest.json"), "utf8"));
@@ -90,6 +90,6 @@ test("release notes link short hashes, escape subjects, and display the actual t
   const notes = releaseNotes({ ...manifest, changelog: { previousTag: "v1.0", ref: "v1.1", commits: [{ sha: "a".repeat(40), subject: "[Fix] Keep <markup> and *literal* text" }] } });
   assert.ok(notes.includes(`- ([aaaaaaa](https://github.com/${config.repository}/commit/${"a".repeat(40)})) \\[Fix\\] Keep \\<markup\\> and \\*literal\\* text`));
   assert.ok(notes.includes("/compare/v1.0...v1.1"));
-  for (const tag of ["v1.0", "v1.0.1", "v1.0.1-rc.1"]) assert.equal(validateTag(tag), tag);
-  for (const tag of ["main", "../v1.0", "v01.0", "v1.0-01"]) assert.throws(() => validateTag(tag));
+  for (const tag of ["v2", "v3", "v4", "v2-rc.1", "v1.0", "v1.0.1", "v1.0.1-rc.1"]) assert.equal(validateTag(tag), tag);
+  for (const tag of ["main", "../v1.0", "v01.0", "v1.0-01", "v02", "v2.", "v2.0.0.0"]) assert.throws(() => validateTag(tag));
 });

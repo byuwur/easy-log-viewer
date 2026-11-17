@@ -22,7 +22,7 @@ export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex"
 export const git = (...args) => execFileSync("git", args, { cwd: root, encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }).trim();
 
 /**
- * Accept the repositories' established two-part tags and three-part SemVer tags.
+ * Accept whole-major tags while retaining existing two-part and three-part release tags.
  * @param {string} tag Version beginning with v, with optional prerelease/build identifiers.
  * @returns {string} Validated tag, safe for artifact names and URLs.
  * @throws {Error} Rejects unsafe or malformed versions.
@@ -30,7 +30,7 @@ export const git = (...args) => execFileSync("git", args, { cwd: root, encoding:
 export function validateTag(tag) {
   const number = "(?:0|[1-9][0-9]*)";
   const identifier = "(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)";
-  assert.match(tag, new RegExp(`^v${number}\\.${number}(?:\\.${number})?(?:-${identifier}(?:\\.${identifier})*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$`), `Invalid release tag: ${tag}`);
+  assert.match(tag, new RegExp(`^v${number}(?:\\.${number}(?:\\.${number})?)?(?:-${identifier}(?:\\.${identifier})*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$`), `Invalid release tag: ${tag}`);
   return tag;
 }
 
