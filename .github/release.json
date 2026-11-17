@@ -5,7 +5,5 @@
   "runtime": ["log.js", "log.css", "log.themes.css"],
   "tests": ["rendering.cjs"],
   "companions": [],
-  "notes": [
-    "Load local library files in your own HTML. The playground is hosted separately; no Node runtime is needed to use either ZIP."
-  ]
+  "notes": []
 }
