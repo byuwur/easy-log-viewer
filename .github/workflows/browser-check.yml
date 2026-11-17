@@ -33,13 +33,13 @@ jobs:
         if: inputs.suite == 'playground'
         with:
           repository: byuwur/spa.js
-          ref: v20.12
+          ref: v20.13
           path: spa.js
       - uses: actions/checkout@v4
         if: inputs.suite == 'playground'
         with:
           repository: byuwur/easy-code-viewer
-          ref: v1.8
+          ref: v1.9
           path: easy-code-viewer
       - uses: actions/setup-node@v4
         with:
