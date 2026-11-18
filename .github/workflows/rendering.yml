@@ -2,9 +2,17 @@ name: Rendering checks
 
 on:
   workflow_call:
+  # The release workflow already calls these checks on main, version tags and pull requests.
   push:
-  pull_request:
+    branches-ignore: [main]
+    tags-ignore: ["v*"]
   workflow_dispatch:
+    inputs:
+      browser:
+        description: Browser for this run
+        type: choice
+        options: [chromium, firefox, webkit]
+        default: chromium
 
 permissions:
   contents: read
@@ -14,54 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rendering_chromium:
-    name: rendering (chromium)
+  browser:
     uses: ./.github/workflows/browser-check.yml
     with:
-      browser: chromium
-      suite: rendering
-
-  rendering_firefox:
-    name: rendering (firefox)
-    needs: rendering_chromium
-    if: ${{ !cancelled() }}
-    uses: ./.github/workflows/browser-check.yml
-    with:
-      browser: firefox
-      suite: rendering
-
-  rendering_webkit:
-    name: rendering (webkit)
-    needs: rendering_firefox
-    if: ${{ !cancelled() }}
-    uses: ./.github/workflows/browser-check.yml
-    with:
-      browser: webkit
-      suite: rendering
-
-  playground_chromium:
-    name: playground (chromium)
-    needs: rendering_webkit
-    if: ${{ !cancelled() }}
-    uses: ./.github/workflows/browser-check.yml
-    with:
-      browser: chromium
-      suite: playground
-
-  playground_firefox:
-    name: playground (firefox)
-    needs: playground_chromium
-    if: ${{ !cancelled() }}
-    uses: ./.github/workflows/browser-check.yml
-    with:
-      browser: firefox
-      suite: playground
-
-  playground_webkit:
-    name: playground (webkit)
-    needs: playground_firefox
-    if: ${{ !cancelled() }}
-    uses: ./.github/workflows/browser-check.yml
-    with:
-      browser: webkit
-      suite: playground
+      browser: ${{ inputs.browser || 'chromium' }}
