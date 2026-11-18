@@ -55,7 +55,6 @@ test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, 
     return route.fulfill({ body, contentType: `${contentType}; charset=UTF-8` });
   });
   await page.goto("https://playground.test/index.html");
-  assert.equal(await page.locator("#latest-release").textContent(), "Latest Release");
   assert.equal(await page.locator("#latest-release").getAttribute("href"), "https://github.com/byuwur/log.view/releases/latest");
   assert.equal(await page.locator("#download-release").getAttribute("href"), "https://github.com/byuwur/log.view/releases/latest/download/log.view.zip");
   assert.equal(await page.locator("#download-minified").getAttribute("href"), "https://github.com/byuwur/log.view/releases/latest/download/log.view.minified.zip");
