@@ -1,6 +1,6 @@
 # LOG.view · Privacy & Cookies
 
-**Unpublished draft.** Before publication, confirm who hosts the site, who can access its server logs and how long those logs are kept. Record the effective date when the notice is first published.
+**Unpublished draft.** The operator’s contact details are under review. The effective date will be recorded at first publication.
 
 ## Who operates this site
 
@@ -8,7 +8,7 @@ Andrés Trujillo Mateus operates this site as byUwUr, an individual creator in C
 
 ## Using LOG.view
 
-The playground parses and highlights log entries in the browser. Logs can contain private identifiers. Their text and local filenames are excluded from analytics. The site loads interface assets through jsDelivr. Copying uses the system clipboard. Exporting hands a file to the browser for saving. The distributed library contains no website analytics. The web host receives browser requests and network addresses to deliver the site. The privacy page loads MD.view through jsDelivr.
+The playground parses and highlights log entries in the browser. Logs can contain private identifiers. Their text and local filenames are excluded from analytics. The site loads interface assets through jsDelivr. Copying uses the system clipboard. Exporting hands a file to the browser for saving. The distributed library contains no website analytics. The web host receives browser requests and network addresses to deliver the site. I can’t view visitor access logs in the hosting dashboard, and I don’t know how long the host keeps them. The privacy page loads MD.view through jsDelivr.
 
 ## Optional Google Analytics
 
