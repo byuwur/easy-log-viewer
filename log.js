@@ -519,6 +519,7 @@
     const render = () => {
       if (!state.active) return;
       const fragment = document.createDocumentFragment();
+      const openDetails = new Set(Array.from(list.querySelectorAll("details[open]"), (details) => details.dataset.entry));
       const selected = !loadMore ? filtered : follow.checked ? filtered.slice(-shown) : filtered.slice(0, shown);
       for (const entry of selected) {
         const article = node("article", `byLOGentry byLOG${entry.level}`);
@@ -529,6 +530,8 @@
         article.append(heading, node("pre", "byLOGmessage", entry.message));
         if (entry.details !== undefined && showDetails) {
           const details = node("details");
+          details.dataset.entry = String(entry.index);
+          details.open = openDetails.has(details.dataset.entry);
           details.append(node("summary", "", "Details"), node("pre", "byLOGdetails", entry.details));
           article.appendChild(details);
         }
@@ -591,7 +594,7 @@
               const details = value.details === undefined ? undefined : typeof value.details === "string" ? value.details : stringify(value.details);
               const timestamp = String(value.timestamp ?? "");
               const level = normalizeLevel(value.level);
-              parsed.push({ raw, message, details, timestamp, level, search: `${raw}\n${message}\n${timestamp}\n${level}\n${details ?? ""}`.toLowerCase() });
+              parsed.push({ index: nextIndex + i, raw, message, details, timestamp, level, search: `${raw}\n${message}\n${timestamp}\n${level}\n${details ?? ""}`.toLowerCase() });
             }
             if (i % 500 === 0) {
               await pause();

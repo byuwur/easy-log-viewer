@@ -40,6 +40,24 @@ test("LOG library", { timeout: 30000 }, async (t) => {
     assert.deepEqual(result, { level: "WARN", message: "slow", entries: ["second", "third"] });
   });
 
+  await t.test("live appends retain disclosures only for their own entries", async () => {
+    const result = await page.evaluate(async () => {
+      const logs = byLOGviewer(
+        root,
+        [
+          { message: "old", extra: 1 },
+          { message: "keep", extra: 2 }
+        ],
+        { maxEntries: 2 }
+      );
+      await logs.ready;
+      root.querySelectorAll("details")[1].open = true;
+      await logs.append({ message: "new", extra: 3 });
+      return [...root.querySelectorAll("details")].map((details) => details.open);
+    });
+    assert.deepEqual(result, [true, false]);
+  });
+
   await t.test("rejects invalid input and keeps log markup inert", async () => {
     assert.equal(await page.evaluate(() => byLOGviewer(root, 42).ready), false);
     await page.evaluate(() => byLOGviewer(root, '<img src=x onerror="window.injected=1">').ready);
