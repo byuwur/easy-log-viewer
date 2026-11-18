@@ -311,6 +311,8 @@ MIT (c) 2026 Andres Trujillo [Mateus] byUwUr. See [LICENSE](LICENSE.md).
 
 ## Releases
 
+[ZIP](https://github.com/byuwur/log.view/releases/latest/download/log.view.zip) · [Minified ZIP](https://github.com/byuwur/log.view/releases/latest/download/log.view.minified.zip). Filenames stay the same across releases; `manifest.json` records the version and source commit.
+
 [Release workflow](.github/workflows/release.yml) builds a reviewable preview on pushes to `main`, pull requests, and manual runs. Only a pushed version tag publishes a GitHub release. Source/browser checks and the complete distribution build must succeed on both main and tag runs before publication. Failed builds remove their own temporary stage and retain the last completed output. Release tags use whole major versions such as `v2`. Existing two-part tags such as `v1.8` and three-part tags such as `v1.8.1` remain supported. Keep release tags consistent with the project's source version.
 
 **Regular ZIP:** original library JavaScript/CSS and optional theme CSS. **Minified ZIP:** the same runtime as `.min.js`/`.min.css`. Both include README and license.
