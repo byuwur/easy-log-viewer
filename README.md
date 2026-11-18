@@ -278,6 +278,8 @@ Text-size controls change only this viewer, in `0.125rem` steps from `0.5rem` to
 
 Legacy integrations can use `#byVIEWtheme` or a detected `log.light.css` / `log.dark.css` link. The toggle keeps its path, query, and hash and updates viewers sharing the link. Explicit container themes stay independent. Separate theme files are no longer shipped; retain your hosted legacy files to use this alternative.
 
+The playground accepts local files up to 30 MiB. The renderer also checks its format-specific limits after decoding.
+
 ## Checks
 
 Routine CI runs the small library suite in each supported browser: parsing/rendering, safe input, and replacement/cleanup. It exercises the standalone library without playground imports or live CDN requests. New options and styling do not need individual CI tests unless they protect a core contract or a real regression.
