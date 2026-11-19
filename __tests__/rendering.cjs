@@ -21,6 +21,9 @@ test("LOG library", { timeout: 30000 }, async (t) => {
   page.on("pageerror", (error) => errors.push(error.message));
   // Load authored files directly; CDN availability is not part of this contract.
   await page.route("**/*", (route) => route.abort());
+  // ===============
+  // BROWSER FIXTURE
+  // ===============
   await page.setContent('<!doctype html><meta charset="UTF-8"><div id="viewer"></div>');
   await page.addStyleTag({ path: path.join(__dirname, "../log.css") });
   await page.addScriptTag({ path: path.join(__dirname, "../log.js") });
@@ -28,6 +31,9 @@ test("LOG library", { timeout: 30000 }, async (t) => {
     window.root = document.getElementById("viewer");
   });
 
+  // ==================
+  // RENDERING BEHAVIOR
+  // ==================
   await t.test("parses severity and appends entries in order within its limit", async () => {
     const result = await page.evaluate(async () => {
       const parsed = byLOGviewer.parse("2026-10-30T08:00:00Z [WARNING] slow");
@@ -35,7 +41,11 @@ test("LOG library", { timeout: 30000 }, async (t) => {
       await logs.ready;
       await logs.append("WARN second");
       await logs.append("ERROR third");
-      return { level: parsed.level, message: parsed.message, entries: [...root.querySelectorAll(".byLOGmessage")].map((node) => node.textContent) };
+      return {
+        level: parsed.level,
+        message: parsed.message,
+        entries: [...root.querySelectorAll(".byLOGmessage")].map((node) => node.textContent)
+      };
     });
     assert.deepEqual(result, { level: "WARN", message: "slow", entries: ["second", "third"] });
   });

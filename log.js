@@ -7,18 +7,28 @@
  * MIT License (see LICENSE).
  */
 (function (global) {
-  // --- INITIALIZATION ---
+  // ==============
+  // INITIALIZATION
+  // ==============
   if (global.byLOGviewer?.initialized) return;
 
-  // --- METADATA ---
+  // ==========
+  // METADATA
+  // ==========
   byLOGviewer.VERSION = "2.1"; // 2026-11-18
 
-  // --- CONSTANTS ---
+  // ==========
+  // CONSTANTS
+  // ==========
   const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
 
-  // --- STATE ---
+  // ==========
+  // STATE
+  // ==========
   const instances = new WeakMap();
-  // --- HELPERS ---
+  // ==========
+  // HELPERS
+  // ==========
   const node = (tag, className = "", text) => {
     const element = document.createElement(tag);
     element.className = className;
@@ -63,7 +73,9 @@
   // Yield at a chunk boundary so input events and replacement renders can run.
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
-  // --- APPEARANCE ---
+  // ==========
+  // APPEARANCE
+  // ==========
   const extraPalettes = new Set([
     "dracula",
     "darcula",
@@ -142,7 +154,9 @@
     }
   };
 
-  // --- CONTROLS ---
+  // ==========
+  // CONTROLS
+  // ==========
   // Mirrored across the family so each viewer can run without a shared runtime.
   /**
    * Adds container light/dark controls, retaining legacy stylesheet links as a fallback.
@@ -303,7 +317,9 @@
     });
   };
 
-  // --- PARSING ---
+  // ==========
+  // PARSING
+  // ==========
   // Map recognized severity aliases; unknown formats remain explicitly UNKNOWN.
   const normalizeLevel = (value) => {
     const level = String(value ?? "").toUpperCase();
@@ -346,7 +362,11 @@
       const rest = timestamp ? input.slice(timestamp[0].length) : input;
       // Only leading metadata changes severity; words such as ERROR inside the message remain ordinary text.
       const severity = rest.match(/^\s*\[?(TRACE|DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL)\]?(?=\s|:|$)[:\s]*/i);
-      return { level: severity?.[1], timestamp: timestamp?.[1] ?? "", message: severity ? rest.slice(severity[0].length) : rest };
+      return {
+        level: severity?.[1],
+        timestamp: timestamp?.[1] ?? "",
+        message: severity ? rest.slice(severity[0].length) : rest
+      };
     }
     if (!input || typeof input !== "object" || Array.isArray(input)) throw new TypeError("Log entries must be strings or records.");
     const { level, severity, timestamp, time, message, msg, ...details } = input;
@@ -376,7 +396,9 @@
     throw new TypeError("Log input must be text, a record, or an array of entries.");
   };
 
-  // --- LIFECYCLE ---
+  // ==========
+  // LIFECYCLE
+  // ==========
   // One instance owns the container; replacement disposes its pending work first.
   // Replace the previous owner and return its cancellable state. Only the current owner may clear the host.
   const mount = (element, options, getText) => {
@@ -466,7 +488,9 @@
     return state;
   };
 
-  // --- PUBLIC API ---
+  // ==========
+  // PUBLIC API
+  // ==========
   // Render log text/records. append() queues batches in order; disposal cancels unfinished batches.
   function byLOGviewer(element, input, options = {}) {
     options = { layout: "inline", batchSize: 200, maxEntries: 10000, ...options };
@@ -515,7 +539,9 @@
     const panel = node("div", "byVIEWpanel");
     panel.append(status, list);
     state.content.replaceChildren(actions, panel, more);
-    // --- RENDERING ---
+    // ==========
+    // RENDERING
+    // ==========
     const render = () => {
       if (!state.active) return;
       const fragment = document.createDocumentFragment();
@@ -594,7 +620,15 @@
               const details = value.details === undefined ? undefined : typeof value.details === "string" ? value.details : stringify(value.details);
               const timestamp = String(value.timestamp ?? "");
               const level = normalizeLevel(value.level);
-              parsed.push({ index: nextIndex + i, raw, message, details, timestamp, level, search: `${raw}\n${message}\n${timestamp}\n${level}\n${details ?? ""}`.toLowerCase() });
+              parsed.push({
+                index: nextIndex + i,
+                raw,
+                message,
+                details,
+                timestamp,
+                level,
+                search: `${raw}\n${message}\n${timestamp}\n${level}\n${details ?? ""}`.toLowerCase()
+              });
             }
             if (i % 500 === 0) {
               await pause();
@@ -627,7 +661,9 @@
     const entry = defaultParse(input);
     return { ...entry, level: normalizeLevel(entry.level) };
   };
-  // --- EXPORT ---
+  // ==========
+  // EXPORT
+  // ==========
   global.byLOGviewer = byLOGviewer;
   byLOGviewer.initialized = true;
 })(typeof window !== "undefined" ? window : this);
