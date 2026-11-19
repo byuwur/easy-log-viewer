@@ -12,7 +12,15 @@ assert.ok(["chromium", "firefox", "webkit"].includes(engine), "Unsupported BROWS
 const root = path.join(__dirname, "..");
 
 test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, async (t) => {
-  const browser = await { chromium, firefox, webkit }[engine].launch({ timeout: 10000, ...(engine === "chromium" ? { channel: process.env.BROWSER_CHANNEL, executablePath: process.env.CHROMIUM_EXECUTABLE_PATH } : {}) });
+  const browser = await { chromium, firefox, webkit }[engine].launch({
+    timeout: 10000,
+    ...(engine === "chromium"
+      ? {
+          channel: process.env.BROWSER_CHANNEL,
+          executablePath: process.env.CHROMIUM_EXECUTABLE_PATH
+        }
+      : {})
+  });
   t.after(() => browser.close());
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
   page.setDefaultTimeout(5000);
@@ -28,6 +36,9 @@ test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, 
       }
     });
   });
+  // ==============
+  // PROJECT ASSETS
+  // ==============
   // Use real local companions behind the page's declared URLs, without contacting the CDN.
   const projects = {
     "spa.js": process.env.SPA_ASSETS_ROOT || path.join(root, "../spa.js"),
@@ -51,9 +62,19 @@ test("LOG playground loads, updates, and copies a starter", { timeout: 30000 }, 
       if (error.code !== "ENOENT") throw error;
       body = await fs.readFile(target.replace(/\.min(?=\.(?:css|js)$)/, ""));
     }
-    const contentType = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml" }[path.extname(file)] || "application/octet-stream";
+    const contentType =
+      {
+        ".html": "text/html",
+        ".css": "text/css",
+        ".js": "text/javascript",
+        ".json": "application/json",
+        ".svg": "image/svg+xml"
+      }[path.extname(file)] || "application/octet-stream";
     return route.fulfill({ body, contentType: `${contentType}; charset=UTF-8` });
   });
+  // ====================
+  // BROWSER INTERACTIONS
+  // ====================
   await page.goto("https://playground.test/index.html");
   assert.equal(await page.locator("#latest-release").getAttribute("href"), "https://github.com/byuwur/log.view/releases/latest");
   assert.equal(await page.locator("#download-release").getAttribute("href"), "https://github.com/byuwur/log.view/releases/latest/download/log.view.zip");

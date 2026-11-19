@@ -57,7 +57,11 @@
         { path: "/js/bootstrap.min.js", optional: false }
       ];
       const spaReady = (async () => {
-        await byLoad(SPA_STYLES, { host: HOST, before: document.getElementById("spa-loader"), defer: false });
+        await byLoad(SPA_STYLES, {
+          host: HOST,
+          before: document.getElementById("spa-loader"),
+          defer: false
+        });
         await byLoad(SPA_SCRIPTS, { host: HOST, before: document.getElementById("spa-loader") });
       })().catch(console.error);
     </script>
@@ -65,10 +69,12 @@
 
   <body>
     <template id="site-analytics-frame">
-      <meta name="referrer" content="no-referrer">
+      <meta name="referrer" content="no-referrer" />
       <script>
         window.dataLayer = [];
-        function gtag() { window.dataLayer.push(arguments); }
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
       </script>
     </template>
     <a class="visually-hidden-focusable position-absolute top-0 start-0 p-3 z-3 bg-body-tertiary link-body-emphasis" href="#playground">Skip to playground</a>
@@ -590,6 +596,9 @@
     </footer>
     <noscript><p class="site-width container-fluid">Enable JavaScript to use the playground. Installation and API details are in the README.</p></noscript>
     <style>
+      /* ===========================
+       * THEME COLORS AND TYPOGRAPHY
+       * =========================== */
       :root {
         --accent: #f3bfa0;
         --accent-text: var(--accent);
@@ -618,6 +627,9 @@
         outline: 0.125rem solid var(--accent-text);
         outline-offset: 0.1875rem;
       }
+      /* ==========================
+       * PAGE LAYOUT AND NAVIGATION
+       * ========================== */
       .site-width {
         max-width: 92.5rem;
         padding-inline: clamp(1rem, 3vw, 3rem);
@@ -651,6 +663,9 @@
       .intro h1 span {
         color: var(--accent-text);
       }
+      /* =========================
+       * BUTTONS AND FORM CONTROLS
+       * ========================= */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -714,6 +729,9 @@
         border-color: var(--accent-text);
         box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent-text) 20%, #0000);
       }
+      /* =================
+       * PLAYGROUND PANELS
+       * ================= */
       .mobile-tabs.nav.nav-pills {
         --bs-nav-link-color: var(--bs-secondary-color);
         --bs-nav-link-hover-color: var(--accent-text);
@@ -758,6 +776,9 @@
       .panel-body {
         min-height: 0;
       }
+      /* =====================================
+       * SOURCE EDITOR AND INTEGRATION PREVIEW
+       * ===================================== */
       .source-editor,
       .integration-code {
         resize: none;
@@ -785,6 +806,9 @@
       .integration-code .byCODElineNumber {
         background: #0000;
       }
+      /* =======================
+       * CONFIGURATION ACCORDION
+       * ======================= */
       .accordion {
         --bs-accordion-bg: var(--bs-tertiary-bg);
         --bs-accordion-active-bg: var(--bs-tertiary-bg);
@@ -856,7 +880,9 @@
         }
       }
 
-      /* --- COLOR PICKERS --- */
+      /* =============
+       * COLOR PICKERS
+       * ============= */
       .pcr-app {
         background: var(--bs-body-bg);
         border: 0.0625rem solid var(--bs-border-color);
@@ -866,7 +892,9 @@
         color: var(--bs-body-color);
       }
 
-      /* --- MOTION --- */
+      /* ==========
+       * MOTION
+       * ========== */
       :root:not(.no-motion) .animate__animated {
         animation-duration: var(--transition-duration) !important;
       }
@@ -907,7 +935,11 @@
         const controlTooltips = [];
         if (window.bootstrap?.Tooltip && typeof window.Popper?.createPopper === "function") {
           document.querySelectorAll('#viewer-options label[data-bs-toggle="tooltip"]').forEach((label) => {
-            const tooltip = bootstrap.Tooltip.getOrCreateInstance(label, { container: "body", trigger: "hover", animation: false });
+            const tooltip = bootstrap.Tooltip.getOrCreateInstance(label, {
+              container: "body",
+              trigger: "hover",
+              animation: false
+            });
             const input = document.getElementById(label.htmlFor);
             input.addEventListener("focus", () => tooltip.show());
             input.addEventListener("blur", () => tooltip.hide());
@@ -916,7 +948,9 @@
         }
         window.addEventListener("pagehide", () => controlTooltips.forEach((tooltip) => tooltip.hide()));
 
-        // --- STATE & CONFIGURATION ---
+        // =====================
+        // STATE & CONFIGURATION
+        // =====================
         const source = document.getElementById("source");
         const second = document.getElementById("second");
         const form = document.getElementById("config-form");
@@ -998,7 +1032,9 @@
               .filter((control) => control.name && control.name !== "previewTheme" && control.name !== "preview-controls-font" && (control.type !== "radio" || control.checked))
               .map((control) => [control.name, control.type === "checkbox" ? control.checked : control.type === "number" ? Number(control.value) : control.value === "false" ? false : control.value])
           );
-        // --- PREVIEW ---
+        // ==========
+        // PREVIEW
+        // ==========
         const render = async (completed) => {
           clearTimeout(debounce);
           if (!previewReady) return;
@@ -1102,7 +1138,9 @@
             error.hidden = false;
           }
         });
-        // --- SITE THEME ---
+        // ==========
+        // SITE THEME
+        // ==========
         const siteTheme = document.getElementById("site-theme");
         siteTheme.addEventListener("click", () => {
           const light = document.documentElement.dataset.bsTheme !== "light";
@@ -1113,7 +1151,9 @@
           document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.documentElement).getPropertyValue("--bs-body-bg").trim();
           document.getElementById("integration-code").dataset.theme = document.documentElement.dataset.bsTheme;
         });
-        // --- INTEGRATION ---
+        // ===========
+        // INTEGRATION
+        // ===========
         const jsString = (value) => JSON.stringify(value).replaceAll("<", "\\u003c");
         let integrationHTML = "";
         function renderIntegration(html) {
@@ -1168,7 +1208,9 @@
         };
         installButtons.forEach((button) => button.addEventListener("click", () => updateIntegration(button.dataset.install)));
         updateIntegration();
-        // --- CLIPBOARD ---
+        // ==========
+        // CLIPBOARD
+        // ==========
         async function copyText(text, selectable, button) {
           const caption = button.querySelector("span");
           try {
@@ -1213,7 +1255,9 @@
           document.getElementById("export-status").textContent = "Downloaded. The starter uses default viewer settings.";
         });
 
-        // --- PLAYGROUND CONTROLS ---
+        // ===================
+        // PLAYGROUND CONTROLS
+        // ===================
 
         const updateOptions = () => {
           document.documentElement.classList.toggle("no-motion", !document.getElementById("animations").checked);
@@ -1263,7 +1307,9 @@
         document.getElementById("open-file").addEventListener("click", () => document.getElementById("local-file").click());
         document.getElementById("year-txt").textContent = new Date().getFullYear();
 
-        // --- EXAMPLES ---
+        // ==========
+        // EXAMPLES
+        // ==========
 
         document.querySelectorAll("[data-example]").forEach((button) =>
           button.addEventListener("click", () => {
@@ -1304,7 +1350,9 @@
               components: { preview: true, opacity: true, hue: true, interaction: { hex: true, rgba: false, hsla: false, hsva: false, cmyk: false, input: true, save: true, clear: true } },
               i18n: { "btn:clear": "Theme default", "aria:btn:clear": "Use the theme background" }
             });
-            let syncing = false, openingColor, colorChanged;
+            let syncing = false,
+              openingColor,
+              colorChanged;
             const change = (value) => {
               field.value = value;
               validate();
