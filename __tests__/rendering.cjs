@@ -36,14 +36,16 @@ test("LOG library", { timeout: 30000 }, async (t) => {
       const logs = byLOGviewer(root, "INFO first", { maxEntries: 2, animations: false });
       await logs.ready;
       await logs.append("WARN second");
+      await logs.setOptions({ layout: "stacked", details: false, maxEntries: 2 });
       await logs.append("ERROR third");
       return {
+        layout: root.querySelector(".byLOGentries").dataset.layout,
         level: parsed.level,
         message: parsed.message,
         entries: [...root.querySelectorAll(".byLOGmessage")].map((node) => node.textContent)
       };
     });
-    assert.deepEqual(result, { level: "WARN", message: "slow", entries: ["second", "third"] });
+    assert.deepEqual(result, { layout: "stacked", level: "WARN", message: "slow", entries: ["second", "third"] });
   });
 
   await t.test("live appends retain disclosures only for their own entries", async () => {

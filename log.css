@@ -4,6 +4,17 @@
    data-theme="light" / "dark" remain mode aliases and override mode classes. */
 
 /* ===== VIEWER ===== */
+@property --_view-paper {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --_view-surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
 /* Keep host layout transitions out; component rules below opt in to motion. */
 .byLOGdocument,
 .byLOGdocument *,
@@ -12,6 +23,8 @@
   transition: none !important;
 }
 .byLOGdocument {
+  --_view-paper: var(--by-view-document-bg, var(--by-view-bg));
+  --_view-surface: var(--by-view-container-bg, var(--by-view-bg));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,7 +34,7 @@
   padding: 0 1rem 0.75rem;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.75rem);
-  background: var(--by-view-document-bg, var(--by-view-bg));
+  background: var(--_view-paper);
   color: var(--by-view-text);
   font:
     1rem/1.4 system-ui,
@@ -49,18 +62,15 @@
 .byLOGdocument select {
   max-width: 100%;
   margin: 0;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25em 0.5em;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.625rem);
-  background: var(--by-view-container-bg, var(--by-view-bg));
+  background: var(--_view-surface);
   color: inherit;
   font: inherit;
 }
 .byLOGdocument button {
   cursor: pointer;
-}
-.byLOGdocument button:hover {
-  background: var(--by-view-alt);
 }
 .byLOGdocument button:disabled {
   opacity: 0.5;
@@ -104,17 +114,17 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25rem 0.75rem;
+  gap: 0.25em 0.75em;
   border-left: 0.25rem solid var(--by-view-border);
   padding: 0.5rem 0.75rem;
-  margin: 0.25rem 0;
+  margin: 0.25em 0;
   border-radius: 0 0.375rem 0.375rem 0;
 }
 .byLOGdocument .byLOGheading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.75em;
   font-size: 75%;
   flex: 0 0 auto;
 }
@@ -122,13 +132,13 @@
   margin-left: auto;
 }
 .byLOGdocument :is(.byLOGmessage, .byLOGdetails) {
-  margin: 0.375rem 0;
+  margin: 0.375em 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font: 1rem/var(--by-view-line-height, 1.5) var(--by-view-content-font, ui-monospace, monospace);
+  font: 1em/var(--by-view-line-height, 1.5) var(--by-view-content-font, ui-monospace, monospace);
 }
 .byLOGdocument .byLOGmessage {
-  flex: 1 1 12rem;
+  flex: 1 1 12em;
   min-width: 0;
   margin: 0;
 }
@@ -141,6 +151,8 @@
 }
 .byLOGdocument .byLOGentry > details {
   width: 100%;
+}
+.byLOGdocument .byLOGentry > details > summary {
   font-size: 75%;
 }
 .byLOGdocument .byLOGtime {
@@ -164,7 +176,7 @@
   overflow: hidden;
   border: 0.0625rem solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.625rem);
-  background: var(--by-view-container-bg, var(--by-view-bg));
+  background: var(--_view-surface);
 }
 .byLOGdocument.byVIEWplain .byVIEWpanel {
   border: 0;
@@ -198,7 +210,7 @@
   gap: 0.125em;
   margin: 0;
   padding: 0.5em 0;
-  background: #0000;
+
   font: 0.875rem/1.25 var(--by-view-controls-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
   white-space: normal;
 }
@@ -274,7 +286,7 @@
   padding: 0.25em 0.5em;
   border: 0.0625em solid var(--by-view-border);
   border-radius: var(--by-view-radius, 0.625em);
-  background: var(--by-view-container-bg, var(--by-view-bg));
+  background: var(--_view-surface);
   color: inherit;
   font: inherit;
   line-height: 1;
@@ -282,7 +294,9 @@
   cursor: pointer;
 }
 .byLOGdocument > .byVIEWtoolbar button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
+  outline: 0.0625rem dashed currentColor;
+  outline-offset: -0.25em;
   cursor: not-allowed;
 }
 .byLOGdocument > .byVIEWtoolbar button:focus-visible {
@@ -365,15 +379,12 @@
 .byLOGdocument button {
   -webkit-tap-highlight-color: #0000;
   touch-action: manipulation;
-  transition:
-    background-color var(--by-view-motion-duration, 0s) ease,
-    box-shadow var(--by-view-motion-duration, 0s) ease-out !important;
 }
 .byLOGdocument button:not(:disabled):hover {
-  background: color-mix(in srgb, currentColor 7%, var(--by-view-container-bg, var(--by-view-bg)));
+  background: color-mix(in srgb, currentColor 7%, var(--_view-surface));
 }
 .byLOGdocument button:not(:disabled):active {
-  background: color-mix(in srgb, currentColor 13%, var(--by-view-container-bg, var(--by-view-bg)));
+  background: color-mix(in srgb, currentColor 13%, var(--_view-surface));
 }
 .byLOGdocument button:focus-visible {
   outline: 0.125rem solid var(--by-view-accent);
@@ -423,23 +434,24 @@
 .byLOGdocument:not(.byVIEWready) {
   transition: none !important;
 }
-/* Background fades stay on shared surfaces, never individual rows or syntax tokens. */
+/* Interpolate the shared surfaces once, including inside scrolling content. */
 .byLOGdocument.byVIEWready {
   transition:
-    background-color var(--by-view-motion-duration, 0s) ease,
-    opacity var(--by-view-motion-duration, 0s) ease !important;
+    --_view-paper var(--by-view-motion-duration) linear,
+    --_view-surface var(--by-view-motion-duration) linear,
+    color var(--by-view-motion-duration) steps(2, jump-none),
+    opacity var(--by-view-motion-duration) ease !important;
 }
-.byLOGdocument :is(.byVIEWpanel, .byVIEWstatus) {
-  transition: background-color var(--by-view-motion-duration, 0s) ease !important;
+.byLOGdocument.byVIEWready .byVIEWstatus {
+  transition:
+    background-color var(--by-view-motion-duration) linear,
+    color var(--by-view-motion-duration) steps(2, jump-none) !important;
 }
 .byLOGdocument.byVIEWmotion.byVIEWappear:not(.byVIEWready) {
   opacity: 0;
 }
 .byLOGdocument :is(button, input, select, textarea, summary, a) {
   transition:
-    background-color var(--by-view-motion-duration) ease,
-    color var(--by-view-motion-duration) ease,
-    border-color var(--by-view-motion-duration) ease,
     box-shadow var(--by-view-motion-duration) ease,
     opacity var(--by-view-motion-duration) ease,
     translate var(--by-view-motion-duration) ease-out !important;
@@ -479,8 +491,8 @@
   transition-property: opacity, translate !important;
 }
 @media (forced-colors: active) {
-  .byLOGdocument,
-  .byLOGdocument :is(.byVIEWpanel, .byVIEWstatus) {
+  .byLOGdocument.byVIEWready,
+  .byLOGdocument.byVIEWready :is(.byVIEWpanel, .byVIEWstatus) {
     transition: none !important;
   }
   .byLOGdocument :is(button, input, select, textarea, summary, a) {
