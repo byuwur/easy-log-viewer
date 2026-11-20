@@ -170,7 +170,7 @@ Legacy integrations can use `#byVIEWtheme` or a detected `log.light.css` / `log.
 
 ## Checks and releases
 
-Use Node.js 22+ and run these commands from the repository root. For playground checks, place sibling checkouts of `spa.js` at `v20.16`, `code.view` at `v2.3` next to this repository.
+Use Node.js 22+ and run these commands from the repository root. For playground checks, place sibling checkouts of `spa.js` at `@latest`, `code.view` at `@latest` next to this repository.
 
 ```sh
 npm --prefix .github ci --ignore-scripts --no-audit --no-fund
