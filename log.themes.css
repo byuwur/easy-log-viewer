@@ -945,37 +945,37 @@
 /* ===== BONYUR ===== */
 
 .byLOGdocument[data-theme="bonyur"]:not(.dark) {
-  --by-view-muted: #666;
-  --by-view-bg: #fee;
-  --by-view-text: #232;
-  --by-view-border: #888;
-  --by-view-secondary: #666;
-  --by-view-accent: #077;
-  --by-view-alt: #eed;
-  --by-view-string: #572;
-  --by-view-literal: #85a;
-  --by-view-error: #b35;
-  --by-log-warn: #860;
-  --by-log-error: #b35;
-  --by-log-info: #077;
-  --by-log-debug: #666;
+  --by-view-muted: #555;
+  --by-view-bg: #eee;
+  --by-view-text: #111;
+  --by-view-border: #76262b;
+  --by-view-secondary: #505050;
+  --by-view-accent: #900;
+  --by-view-alt: #d8d8d8;
+  --by-view-string: #404040;
+  --by-view-literal: #600;
+  --by-view-error: #a20d29;
+  --by-log-warn: #805400;
+  --by-log-error: #a20d29;
+  --by-log-info: #454545;
+  --by-log-debug: #777;
 }
 
 .byLOGdocument.dark[data-theme="bonyur"] {
-  --by-view-muted: #9ba;
-  --by-view-bg: #122;
+  --by-view-muted: #aaa;
+  --by-view-bg: #111;
   --by-view-text: #eee;
-  --by-view-border: #777;
-  --by-view-secondary: #9ba;
-  --by-view-accent: #7dd;
-  --by-view-alt: #233;
-  --by-view-string: #dd8;
-  --by-view-literal: #dae;
-  --by-view-error: #f89;
-  --by-log-warn: #ec7;
-  --by-log-error: #f89;
-  --by-log-info: #7dd;
-  --by-log-debug: #9ba;
+  --by-view-border: #b4585d;
+  --by-view-secondary: #bbb;
+  --by-view-accent: #f48288;
+  --by-view-alt: #282828;
+  --by-view-string: #ccc;
+  --by-view-literal: #f0b9bc;
+  --by-view-error: #ff8990;
+  --by-log-warn: #e7b65e;
+  --by-log-error: #ff8990;
+  --by-log-info: #ddd;
+  --by-log-debug: #888;
 }
 
 /* ===== SAKURA ===== */
