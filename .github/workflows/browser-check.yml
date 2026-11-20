@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: byuwur/spa.js
-          ref: v20.13
+          ref: v20.16
           path: spa.js
       - uses: actions/checkout@v4
         with:
