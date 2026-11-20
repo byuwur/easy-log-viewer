@@ -35,36 +35,17 @@
     <meta name="twitter:image" content="https://log.byuwur.co/prev.jpg" />
     <meta name="twitter:image:alt" content="LOG.view by BONYUR: Logs playground, options, source editor, and live preview." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/code.view@v2.3/code.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/css/shards.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/_fonts.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/_transitions.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/css/pickr.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/css/animate.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/byuwur/code.view@v2.3/code.min.js" defer></script>
-    <script id="spa-loader" src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/_load.min.js"></script>
-    <script>
-      "use strict";
-
-      const SPA_VERSION = "v20.17";
-      const HOST = `https://cdn.jsdelivr.net/gh/byuwur/spa.js@${SPA_VERSION}`;
-      const SPA_STYLES = [
-        { path: "/css/shards.min.css", optional: false },
-        { path: "/css/bootstrap.min.css", optional: false },
-        { path: "/_fonts.min.css", optional: false },
-        { path: "/_transitions.min.css", optional: true },
-        { path: "/css/pickr.min.css", optional: false },
-        { path: "/css/fontawesome.min.css", optional: true },
-        { path: "/css/animate.min.css", optional: false }
-      ];
-      const SPA_SCRIPTS = [
-        { path: "/js/pickr.min.js", optional: false },
-        { path: "/js/popper.min.js", optional: false },
-        { path: "/js/bootstrap.min.js", optional: false }
-      ];
-      const spaReady = (async () => {
-        await byLoad(SPA_STYLES, {
-          host: HOST,
-          before: document.getElementById("spa-loader"),
-          defer: false
-        });
-        await byLoad(SPA_SCRIPTS, { host: HOST, before: document.getElementById("spa-loader") });
-      })().catch(console.error);
-    </script>
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/js/pickr.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/js/popper.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.17/js/bootstrap.min.js" defer></script>
   </head>
 
   <body>
@@ -913,9 +894,7 @@
     <script>
       "use strict";
 
-      document.addEventListener("DOMContentLoaded", async () => {
-        // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
-        await spaReady;
+      document.addEventListener("DOMContentLoaded", () => {
         const controlTooltips = [];
         if (window.bootstrap?.Tooltip && typeof window.Popper?.createPopper === "function") {
           document.querySelectorAll('#viewer-options label[data-bs-toggle="tooltip"]').forEach((label) => {
@@ -1325,9 +1304,7 @@
       }
 
       (function initColorPickers() {
-        document.addEventListener("DOMContentLoaded", async () => {
-          // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
-          await spaReady;
+        document.addEventListener("DOMContentLoaded", () => {
           const pickers = [];
           for (const button of document.querySelectorAll("[data-color-picker]")) {
             const field = document.getElementById(button.dataset.colorPicker);
@@ -1400,9 +1377,7 @@
       }
 
       (function appearance(name, targetId = "viewer", contentSelector = "> .byVIEWcontent") {
-        document.addEventListener("DOMContentLoaded", async () => {
-          // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
-          await spaReady;
+        document.addEventListener("DOMContentLoaded", () => {
           const frame = document.getElementById("preview-frame");
           const fields = [...document.querySelectorAll(".preview-appearance input:not([type=radio]), .preview-appearance select, #preview-controls-font")];
           const palette = document.getElementById("preview-palette");
