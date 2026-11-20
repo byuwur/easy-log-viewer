@@ -587,7 +587,7 @@
           <a class="link-body-emphasis link-offset-2" href="https://byuwur.co" target="_blank" rel="noopener">BONYUR @byUwUr</a>
         </p>
         <div class="d-flex flex-wrap gap-3">
-          <a class="link-body-emphasis link-offset-2" href="https://byuwur.co/privacy/.view">Privacy</a> · <a class="link-body-emphasis link-offset-2" href="https://byuwur.co/cookies">Cookies</a>
+          <a class="link-body-emphasis link-offset-2" href="https://byuwur.co/privacy/dotview">Privacy</a> · <a class="link-body-emphasis link-offset-2" href="https://byuwur.co/cookies/dotview">Cookies</a> |
           <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/log.view/blob/main/LICENSE">MIT license</a>
           <a class="link-body-emphasis link-offset-2" href="https://github.com/byuwur/log.view">Source &amp; contributions <i class="fa-solid fa-arrow-up-right-from-square ms-1" aria-hidden="true"></i></a>
           <a class="link-body-emphasis link-offset-2" href="https://ko-fi.com/byuwur">Buy me a Pandebono <i class="fa-brands fa-ko-fi ms-1" aria-hidden="true"></i></a>
@@ -1584,8 +1584,8 @@
             }
             // A browser may supply a same-operator route. Retain only published path names.
             const path = url.pathname.replace(/\/$/, "") || "/";
-            if (["byuwur.co", "www.byuwur.co"].includes(url.host) && /^\/(?:en|es|ja|privacy(?:\/(?:\.view|stream\.html|stream\.fgc|spa\.php))?|cookies|v1(?:\/(?:en|es|ja))?)$/.test(path)) return url.origin + path;
-            if (url.host === "spa.byuwur.co" && /^\/demo(?:\/(?:privacy|es|en|ja|home|inicio|page|pagina|kit|md|json|video|ja\/(?:home|page)))?$/.test(path)) return url.origin + path;
+            if (["byuwur.co", "www.byuwur.co"].includes(url.host) && /^\/(?:en|es|ja|(?:privacy|cookies)(?:\/(?:dotview|stream\.html|stream\.fgc|files\.host))?|v1(?:\/(?:en|es|ja))?)$/.test(path)) return url.origin + path;
+            if (url.host === "spa.byuwur.co") return "";
             if (
               url.host === "stream.byuwur.co" &&
               /^\/(?:main|controller|keyboard|popup|clock|timer|webcam|ticker|watermark|lower-thirds|qr|reminder|badge|credits|schedule|sponsors|info|effects|hud|timeline|randomizer|quotes|shortcuts|chat|counter|now-playing)$/.test(path)
@@ -1648,7 +1648,8 @@
         // ===== USAGE COUNTS AND SYNCHRONIZATION =====
         let countedPath = "";
         function countUsage(action, resource = page?.resource) {
-          if (!production || !page || !controls || blockedChoice || choice() === "no") return;
+          if (!production || !page || !controls) return;
+          if (action !== "page_view" && (blockedChoice || choice() === "no")) return;
           fetch("https://byuwur.co/usage.php", {
             method: "POST",
             body: [action, page.surface, resource].join("|"),
@@ -1669,7 +1670,7 @@
           const saved = choice();
           controls.update(!!page, saved);
           if (!page) countedPath = "";
-          else if (!blockedChoice && saved !== "no" && page.path !== countedPath) {
+          else if (page.path !== countedPath) {
             countedPath = page.path;
             countUsage("page_view");
           }
@@ -1851,9 +1852,11 @@
             loadingControls = false;
             if (!page) return;
             controls = window.byCommon.initPrivacyControls({
-              policyURL: "https://byuwur.co/privacy/.view",
-              cookiesURL: "https://byuwur.co/cookies",
-              message: "We count page views and selected actions by project and, when available, country, without browser identifiers. Accept adds Google Analytics cookies across the listed sites. Reject stops both.",
+              policyURL: "https://byuwur.co/privacy/dotview",
+              cookiesURL: "https://byuwur.co/cookies/dotview",
+              message:
+                "The library contains no tracking. On this landing page and playground, we count visits and selected actions without browser identifiers, by country when available. Accept enables Google Analytics cookies across participating sites. Reject keeps only the basic page-view count.",
+              dismissalDomain: production ? "byuwur.co" : undefined,
               onChoice: production ? saveChoice : undefined
             });
             sync();
@@ -1865,7 +1868,7 @@
           loadingControls = true;
           const script = document.createElement("script");
           script.referrerPolicy = "no-referrer";
-          script.src = production ? "https://spa.byuwur.co/_privacy.js" : new URL("../spa.js/_privacy.js", siteRoot).href;
+          script.src = "https://cdn.jsdelivr.net/gh/byuwur/spa.js@v20.16/_privacy.min.js";
           script.onload = initialize;
           script.onerror = () => {
             loadingControls = false;
