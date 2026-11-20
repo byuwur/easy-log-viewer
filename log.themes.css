@@ -5,12 +5,8 @@
   --by-log-themes-loaded: 1;
 }
 
-/* ==========
- * THEMES
- * ========== */
-/* ==========
- * DRACULA
- * ========== */
+/* ===== THEMES ===== */
+/* ===== DRACULA ===== */
 
 .byLOGdocument[data-theme="dracula"]:not(.dark) {
   --by-view-muted: #635f70;
@@ -46,9 +42,7 @@
   --by-log-debug: #a8a3bf;
 }
 
-/* ==========
- * DARCULA
- * ========== */
+/* ===== DARCULA ===== */
 
 .byLOGdocument[data-theme="darcula"]:not(.dark) {
   --by-view-muted: #65615e;
@@ -84,9 +78,7 @@
   --by-log-debug: #a9a7a2;
 }
 
-/* ==========
- * NORD
- * ========== */
+/* ===== NORD ===== */
 
 .byLOGdocument[data-theme="nord"]:not(.dark) {
   --by-view-muted: #536174;
@@ -122,9 +114,7 @@
   --by-log-debug: #a7b1c2;
 }
 
-/* ==========
- * CATPPUCCIN
- * ========== */
+/* ===== CATPPUCCIN ===== */
 
 .byLOGdocument[data-theme="catppuccin"]:not(.dark) {
   --by-view-muted: #616478;
@@ -160,9 +150,7 @@
   --by-log-debug: #a6adc8;
 }
 
-/* =================
- * CATPPUCCIN FRAPPÉ
- * ================= */
+/* ===== CATPPUCCIN FRAPPÉ ===== */
 
 .byLOGdocument[data-theme="catppuccin-frappe"]:not(.dark) {
   --by-view-muted: #616478;
@@ -198,9 +186,7 @@
   --by-log-debug: #aab2d1;
 }
 
-/* ====================
- * CATPPUCCIN MACCHIATO
- * ==================== */
+/* ===== CATPPUCCIN MACCHIATO ===== */
 
 .byLOGdocument[data-theme="catppuccin-macchiato"]:not(.dark) {
   --by-view-muted: #616478;
@@ -236,9 +222,7 @@
   --by-log-debug: #a5adcb;
 }
 
-/* ==========
- * ROSÉ PINE
- * ========== */
+/* ===== ROSÉ PINE ===== */
 
 .byLOGdocument[data-theme="rose-pine"]:not(.dark) {
   --by-view-muted: #68657e;
@@ -274,9 +258,7 @@
   --by-log-debug: #9692ae;
 }
 
-/* ==============
- * ROSÉ PINE MOON
- * ============== */
+/* ===== ROSÉ PINE MOON ===== */
 
 .byLOGdocument[data-theme="rose-pine-moon"]:not(.dark) {
   --by-view-muted: #68657e;
@@ -312,9 +294,7 @@
   --by-log-debug: #a09cb6;
 }
 
-/* ==========
- * GRUVBOX
- * ========== */
+/* ===== GRUVBOX ===== */
 
 .byLOGdocument[data-theme="gruvbox"]:not(.dark) {
   --by-view-muted: #6b5f56;
@@ -350,9 +330,7 @@
   --by-log-debug: #b0a28f;
 }
 
-/* ================
- * GRUVBOX MATERIAL
- * ================ */
+/* ===== GRUVBOX MATERIAL ===== */
 
 .byLOGdocument[data-theme="gruvbox-material"]:not(.dark) {
   --by-view-muted: #665b52;
@@ -388,9 +366,7 @@
   --by-log-debug: #b1a390;
 }
 
-/* ===========
- * TOKYO NIGHT
- * =========== */
+/* ===== TOKYO NIGHT ===== */
 
 .byLOGdocument[data-theme="tokyo-night"]:not(.dark) {
   --by-view-muted: #545c75;
@@ -426,9 +402,7 @@
   --by-log-debug: #a9b1d6;
 }
 
-/* ===========
- * TOKYO STORM
- * =========== */
+/* ===== TOKYO STORM ===== */
 
 .byLOGdocument[data-theme="tokyo-storm"]:not(.dark) {
   --by-view-muted: #57607a;
@@ -464,9 +438,7 @@
   --by-log-debug: #a9b1d6;
 }
 
-/* ==========
- * TOKYO MOON
- * ========== */
+/* ===== TOKYO MOON ===== */
 
 .byLOGdocument[data-theme="tokyo-moon"]:not(.dark) {
   --by-view-muted: #605d7b;
@@ -502,9 +474,7 @@
   --by-log-debug: #a9b8e8;
 }
 
-/* ==========
- * ONE
- * ========== */
+/* ===== ONE ===== */
 
 .byLOGdocument[data-theme="one"]:not(.dark) {
   --by-view-muted: #676a75;
@@ -540,9 +510,7 @@
   --by-log-debug: #a2a8b2;
 }
 
-/* ==========
- * MATERIAL
- * ========== */
+/* ===== MATERIAL ===== */
 
 .byLOGdocument[data-theme="material"]:not(.dark) {
   --by-view-muted: #546e7a;
@@ -578,9 +546,7 @@
   --by-log-debug: #a6b8be;
 }
 
-/* ==============
- * MATERIAL OCEAN
- * ============== */
+/* ===== MATERIAL OCEAN ===== */
 
 .byLOGdocument[data-theme="material-ocean"]:not(.dark) {
   --by-view-muted: #5a687d;
@@ -616,9 +582,7 @@
   --by-log-debug: #8f9bbc;
 }
 
-/* ==========
- * NIGHT OWL
- * ========== */
+/* ===== NIGHT OWL ===== */
 
 .byLOGdocument[data-theme="night-owl"]:not(.dark) {
   --by-view-muted: #656575;
@@ -654,9 +618,7 @@
   --by-log-debug: #9baebf;
 }
 
-/* ==========
- * SYNTHWAVE
- * ========== */
+/* ===== SYNTHWAVE ===== */
 
 .byLOGdocument[data-theme="synthwave"]:not(.dark) {
   --by-view-muted: #7f4d80;
@@ -692,9 +654,7 @@
   --by-log-debug: #bca3d2;
 }
 
-/* ==========
- * AYU
- * ========== */
+/* ===== AYU ===== */
 
 .byLOGdocument[data-theme="ayu"]:not(.dark) {
   --by-view-muted: #686b6f;
@@ -730,9 +690,7 @@
   --by-log-debug: #9c9b96;
 }
 
-/* ==========
- * EVERFOREST
- * ========== */
+/* ===== EVERFOREST ===== */
 
 .byLOGdocument[data-theme="everforest"]:not(.dark) {
   --by-view-muted: #5d6a72;
@@ -768,9 +726,7 @@
   --by-log-debug: #aab4a8;
 }
 
-/* ==========
- * KANAGAWA
- * ========== */
+/* ===== KANAGAWA ===== */
 
 .byLOGdocument[data-theme="kanagawa"]:not(.dark) {
   --by-view-muted: #5f5f5c;
@@ -806,9 +762,7 @@
   --by-log-debug: #a5a397;
 }
 
-/* ==========
- * SELENIZED
- * ========== */
+/* ===== SELENIZED ===== */
 
 .byLOGdocument[data-theme="selenized"]:not(.dark) {
   --by-view-muted: #56696f;
@@ -844,9 +798,7 @@
   --by-log-debug: #a5b7bc;
 }
 
-/* ==========
- * VS CODE
- * ========== */
+/* ===== VS CODE ===== */
 
 .byLOGdocument[data-theme="vscode"]:not(.dark) {
   --by-view-muted: #686868;
@@ -882,9 +834,7 @@
   --by-log-debug: #a4a4a4;
 }
 
-/* ==============
- * MONOKAI DIMMED
- * ============== */
+/* ===== MONOKAI DIMMED ===== */
 
 .byLOGdocument[data-theme="monokai-dimmed"]:not(.dark) {
   --by-view-muted: #68685f;
@@ -920,9 +870,7 @@
   --by-log-debug: #9a9a91;
 }
 
-/* ==========
- * DISCORD
- * ========== */
+/* ===== DISCORD ===== */
 
 .byLOGdocument[data-theme="discord"]:not(.dark) {
   --by-view-muted: #606773;
@@ -958,9 +906,7 @@
   --by-log-debug: #b5bac1;
 }
 
-/* ==========
- * SLACK
- * ========== */
+/* ===== SLACK ===== */
 
 .byLOGdocument[data-theme="slack"]:not(.dark) {
   --by-view-muted: #765677;
@@ -996,9 +942,7 @@
   --by-log-debug: #c5a6c7;
 }
 
-/* ==========
- * BONYUR
- * ========== */
+/* ===== BONYUR ===== */
 
 .byLOGdocument[data-theme="bonyur"]:not(.dark) {
   --by-view-muted: #606b68;
@@ -1034,9 +978,7 @@
   --by-log-debug: #a1b5b1;
 }
 
-/* ==========
- * SAKURA
- * ========== */
+/* ===== SAKURA ===== */
 
 .byLOGdocument[data-theme="sakura"]:not(.dark) {
   --by-view-muted: #88586e;
@@ -1072,9 +1014,7 @@
   --by-log-debug: #c09aaf;
 }
 
-/* ==========
- * BUBBLEGUM
- * ========== */
+/* ===== BUBBLEGUM ===== */
 
 .byLOGdocument[data-theme="bubblegum"]:not(.dark) {
   --by-view-muted: #824c6e;
@@ -1110,9 +1050,7 @@
   --by-log-debug: #d1a1c0;
 }
 
-/* ==========
- * CANDY
- * ========== */
+/* ===== CANDY ===== */
 
 .byLOGdocument[data-theme="candy"]:not(.dark) {
   --by-view-muted: #7a5a80;
@@ -1148,9 +1086,7 @@
   --by-log-debug: #c8a3d8;
 }
 
-/* ==========
- * ROSE GOLD
- * ========== */
+/* ===== ROSE GOLD ===== */
 
 .byLOGdocument[data-theme="rose-gold"]:not(.dark) {
   --by-view-muted: #7c5e55;
@@ -1186,9 +1122,7 @@
   --by-log-debug: #c9a89d;
 }
 
-/* ==========
- * LAVENDER
- * ========== */
+/* ===== LAVENDER ===== */
 
 .byLOGdocument[data-theme="lavender"]:not(.dark) {
   --by-view-muted: #6e5d84;
@@ -1224,9 +1158,7 @@
   --by-log-debug: #baa5d0;
 }
 
-/* ==========
- * CYBERPUNK
- * ========== */
+/* ===== CYBERPUNK ===== */
 
 .byLOGdocument[data-theme="cyberpunk"]:not(.dark) {
   --by-view-muted: #6f6844;
@@ -1262,9 +1194,7 @@
   --by-log-debug: #bbb397;
 }
 
-/* ==========
- * SUNSET
- * ========== */
+/* ===== SUNSET ===== */
 
 .byLOGdocument[data-theme="sunset"]:not(.dark) {
   --by-view-muted: #825c46;
@@ -1300,9 +1230,7 @@
   --by-log-debug: #c7a28f;
 }
 
-/* ==========
- * VOLCANO
- * ========== */
+/* ===== VOLCANO ===== */
 
 .byLOGdocument[data-theme="volcano"]:not(.dark) {
   --by-view-muted: #7e5b54;
@@ -1338,9 +1266,7 @@
   --by-log-debug: #c8a297;
 }
 
-/* ==========
- * AMBER
- * ========== */
+/* ===== AMBER ===== */
 
 .byLOGdocument[data-theme="amber"]:not(.dark) {
   --by-view-muted: #74633f;
@@ -1376,9 +1302,7 @@
   --by-log-debug: #c9b17f;
 }
 
-/* ==========
- * TERMINAL
- * ========== */
+/* ===== TERMINAL ===== */
 
 .byLOGdocument[data-theme="terminal"]:not(.dark) {
   --by-view-muted: #497055;
@@ -1414,9 +1338,7 @@
   --by-log-debug: #8cbe96;
 }
 
-/* ==========
- * PAPER
- * ========== */
+/* ===== PAPER ===== */
 
 .byLOGdocument[data-theme="paper"]:not(.dark) {
   --by-view-muted: #766657;
@@ -1452,9 +1374,7 @@
   --by-log-debug: #b6a48f;
 }
 
-/* ==========
- * INK
- * ========== */
+/* ===== INK ===== */
 
 .byLOGdocument[data-theme="ink"]:not(.dark) {
   --by-view-muted: #686868;
@@ -1490,9 +1410,7 @@
   --by-log-debug: #a4a9b2;
 }
 
-/* ==========
- * OCEAN
- * ========== */
+/* ===== OCEAN ===== */
 
 .byLOGdocument[data-theme="ocean"]:not(.dark) {
   --by-view-muted: #506c7b;
@@ -1528,9 +1446,7 @@
   --by-log-debug: #9db8ca;
 }
 
-/* ==========
- * FOREST
- * ========== */
+/* ===== FOREST ===== */
 
 .byLOGdocument[data-theme="forest"]:not(.dark) {
   --by-view-muted: #5b6a58;
@@ -1566,9 +1482,7 @@
   --by-log-debug: #a3b8a1;
 }
 
-/* ==========
- * MINT
- * ========== */
+/* ===== MINT ===== */
 
 .byLOGdocument[data-theme="mint"]:not(.dark) {
   --by-view-muted: #516e64;
@@ -1604,9 +1518,7 @@
   --by-log-debug: #9fc4b7;
 }
 
-/* ==========
- * ICE
- * ========== */
+/* ===== ICE ===== */
 
 .byLOGdocument[data-theme="ice"]:not(.dark) {
   --by-view-muted: #546c78;
@@ -1642,9 +1554,7 @@
   --by-log-debug: #a1bdcf;
 }
 
-/* ==========
- * SEPIA
- * ========== */
+/* ===== SEPIA ===== */
 
 .byLOGdocument[data-theme="sepia"]:not(.dark) {
   --by-view-muted: #6d5b44;

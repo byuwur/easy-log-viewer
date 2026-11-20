@@ -7,28 +7,18 @@
  * MIT License (see LICENSE).
  */
 (function (global) {
-  // ==============
-  // INITIALIZATION
-  // ==============
+  // ===== INITIALIZATION =====
   if (global.byLOGviewer?.initialized) return;
 
-  // ==========
-  // METADATA
-  // ==========
+  // ===== METADATA =====
   byLOGviewer.VERSION = "2.1"; // 2026-11-18
 
-  // ==========
-  // CONSTANTS
-  // ==========
+  // ===== CONSTANTS =====
   const levels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "UNKNOWN"];
 
-  // ==========
-  // STATE
-  // ==========
+  // ===== STATE =====
   const instances = new WeakMap();
-  // ==========
-  // HELPERS
-  // ==========
+  // ===== HELPERS =====
   const node = (tag, className = "", text) => {
     const element = document.createElement(tag);
     element.className = className;
@@ -73,9 +63,7 @@
   // Yield at a chunk boundary so input events and replacement renders can run.
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
   const positive = (value, fallback, maximum) => (Number.isInteger(value) && value > 0 ? Math.min(value, maximum) : fallback);
-  // ==========
-  // APPEARANCE
-  // ==========
+  // ===== APPEARANCE =====
   const extraPalettes = new Set([
     "dracula",
     "darcula",
@@ -154,9 +142,7 @@
     }
   };
 
-  // ==========
-  // CONTROLS
-  // ==========
+  // ===== CONTROLS =====
   // Mirrored across the family so each viewer can run without a shared runtime.
   /**
    * Adds container light/dark controls, retaining legacy stylesheet links as a fallback.
@@ -317,9 +303,7 @@
     });
   };
 
-  // ==========
-  // PARSING
-  // ==========
+  // ===== PARSING =====
   // Map recognized severity aliases; unknown formats remain explicitly UNKNOWN.
   const normalizeLevel = (value) => {
     const level = String(value ?? "").toUpperCase();
@@ -396,9 +380,7 @@
     throw new TypeError("Log input must be text, a record, or an array of entries.");
   };
 
-  // ==========
-  // LIFECYCLE
-  // ==========
+  // ===== LIFECYCLE =====
   // One instance owns the container; replacement disposes its pending work first.
   // Replace the previous owner and return its cancellable state. Only the current owner may clear the host.
   const mount = (element, options, getText) => {
@@ -488,9 +470,7 @@
     return state;
   };
 
-  // ==========
-  // PUBLIC API
-  // ==========
+  // ===== PUBLIC API =====
   // Render log text/records. append() queues batches in order; disposal cancels unfinished batches.
   function byLOGviewer(element, input, options = {}) {
     options = { layout: "inline", batchSize: 200, maxEntries: 10000, ...options };
@@ -539,9 +519,7 @@
     const panel = node("div", "byVIEWpanel");
     panel.append(status, list);
     state.content.replaceChildren(actions, panel, more);
-    // ==========
-    // RENDERING
-    // ==========
+    // ===== RENDERING =====
     const render = () => {
       if (!state.active) return;
       const fragment = document.createDocumentFragment();
@@ -661,9 +639,7 @@
     const entry = defaultParse(input);
     return { ...entry, level: normalizeLevel(entry.level) };
   };
-  // ==========
-  // EXPORT
-  // ==========
+  // ===== EXPORT =====
   global.byLOGviewer = byLOGviewer;
   byLOGviewer.initialized = true;
 })(typeof window !== "undefined" ? window : this);

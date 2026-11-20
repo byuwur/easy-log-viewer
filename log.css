@@ -3,9 +3,7 @@
 /* Monokai is the default. Classes select mode; named data-theme values select a palette.
    data-theme="light" / "dark" remain mode aliases and override mode classes. */
 
-/* ==========
- * VIEWER
- * ========== */
+/* ===== VIEWER ===== */
 /* Keep host layout transitions out; component rules below opt in to motion. */
 .byLOGdocument,
 .byLOGdocument *,
@@ -33,9 +31,7 @@
   box-sizing: border-box;
 }
 
-/* ==========
- * CONTENT
- * ========== */
+/* ===== CONTENT ===== */
 .byLOGdocument *,
 .byLOGdocument *::before,
 .byLOGdocument *::after {
@@ -190,9 +186,7 @@
   outline-offset: -0.125rem;
 }
 
-/* ==========
- * CONTROLS
- * ========== */
+/* ===== CONTROLS ===== */
 .byLOGdocument > .byVIEWtoolbar {
   position: sticky;
   flex-shrink: 0;
@@ -367,9 +361,7 @@
   font-family: var(--by-view-controls-font, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace);
 }
 
-/* ===========
- * INTERACTION
- * =========== */
+/* ===== INTERACTION ===== */
 .byLOGdocument button {
   -webkit-tap-highlight-color: #0000;
   touch-action: manipulation;
@@ -419,9 +411,7 @@
   min-height: 0;
 }
 
-/* ==========
- * MOTION
- * ========== */
+/* ===== MOTION ===== */
 /* Initial content is immediate unless the entrance animation is explicitly enabled. */
 .byLOGdocument {
   --by-view-motion-duration: 0s;
@@ -515,12 +505,8 @@
   transition: opacity var(--by-view-motion-duration) ease-out !important;
 }
 
-/* ==========
- * THEMES
- * ========== */
-/* ==========
- * LIGHT
- * ========== */
+/* ===== THEMES ===== */
+/* ===== LIGHT ===== */
 .byLOGdocument,
 .byLOGdocument.light:not([data-theme="dark"]),
 .byLOGdocument[data-theme="light"] {
@@ -542,9 +528,7 @@
   --by-log-debug: #686856;
 }
 
-/* ==========
- * DARK
- * ========== */
+/* ===== DARK ===== */
 .byLOGdocument.dark:not([data-theme="light"]),
 .byLOGdocument[data-theme="dark"] {
   color-scheme: dark;
@@ -565,9 +549,7 @@
   --by-log-debug: #a6a28c;
 }
 
-/* ==========
- * GITHUB
- * ========== */
+/* ===== GITHUB ===== */
 /* Light */
 .byLOGdocument[data-theme="github"]:not(.dark) {
   --by-view-muted: #59636e;
@@ -603,9 +585,7 @@
   --by-log-debug: #9198a1;
 }
 
-/* ==========
- * SOLARIZED
- * ========== */
+/* ===== SOLARIZED ===== */
 /* Light */
 .byLOGdocument[data-theme="solarized"]:not(.dark) {
   --by-view-muted: #657b83;
@@ -641,9 +621,7 @@
   --by-log-debug: #839496;
 }
 
-/* =============
- * HIGH CONTRAST
- * ============= */
+/* ===== HIGH CONTRAST ===== */
 /* Light */
 .byLOGdocument[data-theme="high-contrast"]:not(.dark) {
   --by-view-muted: #333333;

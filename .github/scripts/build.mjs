@@ -14,9 +14,7 @@ import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { config, dist, finishBuild, git, releaseChangelog, root, sha256, validateTag } from "./release.mjs";
 
-// ==================
-// ASSET MINIFICATION
-// ==================
+// ===== ASSET MINIFICATION =====
 /**
  * Prefer jsDelivr's generated minification of the exact committed source; edited files stay local.
  * @param {string} file Repository-relative authored JS/CSS filename.
@@ -68,9 +66,7 @@ export async function minified(file, source, commit, { offline = false, request 
   return { bytes: Buffer.from(result.code), provider: "esbuild", url: null };
 }
 
-// =============
-// RELEASE BUILD
-// =============
+// ===== RELEASE BUILD =====
 /**
  * Build regular/minified runtime ZIPs from explicit tracked paths.
  * @param {string} tag Valid release or preview version.
@@ -121,9 +117,7 @@ export async function buildRelease(tag, options = {}) {
   await fs.mkdir(dist, { recursive: true });
   const staging = await fs.mkdtemp(path.join(dist, ".release-"));
   try {
-    // =================
-    // ARCHIVE PACKAGING
-    // =================
+    // ===== ARCHIVE PACKAGING =====
     /** @param {string} variant Package name. @param {Object} entries Relative filenames and bytes. @param {string} description Download explanation. @returns {Promise<void>} */
     async function archive(variant, entries, description) {
       const file = `${config.repository.split("/")[1]}${variant === "regular" ? "" : `.${variant}`}.zip`;
@@ -149,9 +143,7 @@ export async function buildRelease(tag, options = {}) {
   }
 }
 
-// ============
-// COMMAND LINE
-// ============
+// ===== COMMAND LINE =====
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const { values } = parseArgs({ options: { tag: { type: "string" }, offline: { type: "boolean" } } });
   await buildRelease(values.tag || process.env.RELEASE_TAG || "v0.0.0-local", values);

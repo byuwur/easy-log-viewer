@@ -596,9 +596,7 @@
     </footer>
     <noscript><p class="site-width container-fluid">Enable JavaScript to use the playground. Installation and API details are in the README.</p></noscript>
     <style>
-      /* ===========================
-       * THEME COLORS AND TYPOGRAPHY
-       * =========================== */
+      /* ===== THEME COLORS AND TYPOGRAPHY ===== */
       :root {
         --accent: #f3bfa0;
         --accent-text: var(--accent);
@@ -627,9 +625,7 @@
         outline: 0.125rem solid var(--accent-text);
         outline-offset: 0.1875rem;
       }
-      /* ==========================
-       * PAGE LAYOUT AND NAVIGATION
-       * ========================== */
+      /* ===== PAGE LAYOUT AND NAVIGATION ===== */
       .site-width {
         max-width: 92.5rem;
         padding-inline: clamp(1rem, 3vw, 3rem);
@@ -663,9 +659,7 @@
       .intro h1 span {
         color: var(--accent-text);
       }
-      /* =========================
-       * BUTTONS AND FORM CONTROLS
-       * ========================= */
+      /* ===== BUTTONS AND FORM CONTROLS ===== */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -729,9 +723,7 @@
         border-color: var(--accent-text);
         box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--accent-text) 20%, #0000);
       }
-      /* =================
-       * PLAYGROUND PANELS
-       * ================= */
+      /* ===== PLAYGROUND PANELS ===== */
       .mobile-tabs.nav.nav-pills {
         --bs-nav-link-color: var(--bs-secondary-color);
         --bs-nav-link-hover-color: var(--accent-text);
@@ -776,9 +768,7 @@
       .panel-body {
         min-height: 0;
       }
-      /* =====================================
-       * SOURCE EDITOR AND INTEGRATION PREVIEW
-       * ===================================== */
+      /* ===== SOURCE EDITOR AND INTEGRATION PREVIEW ===== */
       .source-editor,
       .integration-code {
         resize: none;
@@ -806,9 +796,7 @@
       .integration-code .byCODElineNumber {
         background: #0000;
       }
-      /* =======================
-       * CONFIGURATION ACCORDION
-       * ======================= */
+      /* ===== CONFIGURATION ACCORDION ===== */
       .accordion {
         --bs-accordion-bg: var(--bs-tertiary-bg);
         --bs-accordion-active-bg: var(--bs-tertiary-bg);
@@ -880,9 +868,7 @@
         }
       }
 
-      /* =============
-       * COLOR PICKERS
-       * ============= */
+      /* ===== COLOR PICKERS ===== */
       .pcr-app {
         background: var(--bs-body-bg);
         border: 0.0625rem solid var(--bs-border-color);
@@ -892,9 +878,7 @@
         color: var(--bs-body-color);
       }
 
-      /* ==========
-       * MOTION
-       * ========== */
+      /* ===== MOTION ===== */
       :root:not(.no-motion) .animate__animated {
         animation-duration: var(--transition-duration) !important;
       }
@@ -948,9 +932,7 @@
         }
         window.addEventListener("pagehide", () => controlTooltips.forEach((tooltip) => tooltip.hide()));
 
-        // =====================
-        // STATE & CONFIGURATION
-        // =====================
+        // ===== STATE & CONFIGURATION =====
         const source = document.getElementById("source");
         const second = document.getElementById("second");
         const form = document.getElementById("config-form");
@@ -1032,9 +1014,7 @@
               .filter((control) => control.name && control.name !== "previewTheme" && control.name !== "preview-controls-font" && (control.type !== "radio" || control.checked))
               .map((control) => [control.name, control.type === "checkbox" ? control.checked : control.type === "number" ? Number(control.value) : control.value === "false" ? false : control.value])
           );
-        // ==========
-        // PREVIEW
-        // ==========
+        // ===== PREVIEW =====
         const render = async (completed) => {
           clearTimeout(debounce);
           if (!previewReady) return;
@@ -1138,9 +1118,7 @@
             error.hidden = false;
           }
         });
-        // ==========
-        // SITE THEME
-        // ==========
+        // ===== SITE THEME =====
         const siteTheme = document.getElementById("site-theme");
         siteTheme.addEventListener("click", () => {
           const light = document.documentElement.dataset.bsTheme !== "light";
@@ -1151,9 +1129,7 @@
           document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.documentElement).getPropertyValue("--bs-body-bg").trim();
           document.getElementById("integration-code").dataset.theme = document.documentElement.dataset.bsTheme;
         });
-        // ===========
-        // INTEGRATION
-        // ===========
+        // ===== INTEGRATION =====
         const jsString = (value) => JSON.stringify(value).replaceAll("<", "\\u003c");
         let integrationHTML = "";
         function renderIntegration(html) {
@@ -1208,9 +1184,7 @@
         };
         installButtons.forEach((button) => button.addEventListener("click", () => updateIntegration(button.dataset.install)));
         updateIntegration();
-        // ==========
-        // CLIPBOARD
-        // ==========
+        // ===== CLIPBOARD =====
         async function copyText(text, selectable, button) {
           const caption = button.querySelector("span");
           try {
@@ -1255,9 +1229,7 @@
           document.getElementById("export-status").textContent = "Downloaded. The starter uses default viewer settings.";
         });
 
-        // ===================
-        // PLAYGROUND CONTROLS
-        // ===================
+        // ===== PLAYGROUND CONTROLS =====
 
         const updateOptions = () => {
           document.documentElement.classList.toggle("no-motion", !document.getElementById("animations").checked);
@@ -1307,9 +1279,7 @@
         document.getElementById("open-file").addEventListener("click", () => document.getElementById("local-file").click());
         document.getElementById("year-txt").textContent = new Date().getFullYear();
 
-        // ==========
-        // EXAMPLES
-        // ==========
+        // ===== EXAMPLES =====
 
         document.querySelectorAll("[data-example]").forEach((button) =>
           button.addEventListener("click", () => {
@@ -1573,9 +1543,7 @@
       /* Optional analytics for this project's public website. */
       (() => {
         "use strict";
-        // ===========================
-        // WEBSITE AND ELIGIBLE ROUTES
-        // ===========================
+        // ===== WEBSITE AND ELIGIBLE ROUTES =====
         const project = "log_view";
         const site = "LOG.view";
         const hosts = ["log.byuwur.co"];
@@ -1596,9 +1564,7 @@
           if (path === "/") return { path: "/", surface: "landing", resource: project };
         }
 
-        // =====================
-        // CONSENT AND REFERRERS
-        // =====================
+        // ===== CONSENT AND REFERRERS =====
         function choice() {
           const values = document.cookie.split("; ").filter((part) => part.startsWith(preference + "="));
           if (values.length !== 1) return "";
@@ -1630,9 +1596,7 @@
           }
         }
 
-        // ====================
-        // GOOGLE TAG LIFECYCLE
-        // ====================
+        // ===== GOOGLE TAG LIFECYCLE =====
         const denied = { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" };
         // Own the tag's browsing context so withdrawal can cancel Google's pending batch
         // without navigating away from unsaved work or changing the application's network policy.
@@ -1680,9 +1644,7 @@
           }
         }
 
-        // ================================
-        // USAGE COUNTS AND SYNCHRONIZATION
-        // ================================
+        // ===== USAGE COUNTS AND SYNCHRONIZATION =====
         let countedPath = "";
         function countUsage(action, resource = page?.resource) {
           if (!production || !page || !controls || blockedChoice || choice() === "no") return;
@@ -1802,9 +1764,7 @@
           expiryTimer = setTimeout(sync, Math.min(86400000, Math.max(100, (savedAt + lifetime) * 1000 - Date.now())));
         }
 
-        // ============
-        // TOOL ACTIONS
-        // ============
+        // ===== TOOL ACTIONS =====
         function begin(action, field) {
           if (!production || !page || !controls || blockedChoice || choice() === "no") return;
           if (!actions.includes(action) || (field && (action !== "configuration_changed" || !validField(field)))) return;
@@ -1876,9 +1836,7 @@
         }
         if (production) window.bySiteAnalytics = { begin, settings: () => controls?.open() };
 
-        // ================
-        // PRIVACY CONTROLS
-        // ================
+        // ===== PRIVACY CONTROLS =====
         function saveChoice(value) {
           blockedChoice = value === "no";
           if (blockedChoice) stop(true);
@@ -1913,9 +1871,7 @@
           };
           document.head.append(script);
         }
-        // ==========================
-        // NAVIGATION AND LINK CLICKS
-        // ==========================
+        // ===== NAVIGATION AND LINK CLICKS =====
         function navigate() {
           const url = new URL(location.href);
           if (!production) {
