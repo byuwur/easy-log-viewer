@@ -934,7 +934,7 @@
 
         // ===== STATE & CONFIGURATION =====
         const source = document.getElementById("source");
-        const second = document.getElementById("second");
+        const sources = [source];
         const form = document.getElementById("config-form");
         const frame = document.getElementById("preview-frame");
         const themeInputs = [...document.querySelectorAll('[name="previewTheme"]')];
@@ -949,7 +949,6 @@
         };
         source.value = samples.default.source;
         const initialSource = source.value;
-        const initialSecond = second?.value;
         const defaults = {
           layout: "inline",
           toolbar: true,
@@ -971,18 +970,24 @@
           maxEntries: 10000
         };
         let previewReady = false;
+        let viewer;
         let renderVersion = 0;
         let sourceVersion = 0;
         let debounce;
+        function optionValue(control) {
+          if (control.type === "checkbox") return control.checked;
+          if (control.type === "number") return Number(control.value);
+          if ((control.type === "radio" || control.tagName === "SELECT") && control.value === "false") return false;
+          return control.value;
+        }
+
         function settingsJSON(options) {
           const field = (id) => (id === "preview-controls-font" ? document.querySelector('[name="preview-controls-font"]:checked')?.value : document.getElementById(id)?.value) || null;
           const { forceMonospace, toolbar, credits, themeToggle, fontSizeControls, copyButton, controlsCompact, animations, appearAnimation, controlsSize, controlsPosition, ...rendering } = options;
           return JSON.stringify(
             {
-              theme: document.querySelector('[name="previewTheme"]:checked').value,
-              palette: field("preview-palette") || "monokai",
+              ...previewAppearance(),
               fontFamily: field("preview-font"),
-              fontSize: field("preview-size") === null ? null : Number(field("preview-size")),
               lineHeight: field("preview-leading") === null ? null : Number(field("preview-leading")),
               controlsFont: field("preview-controls-font") || "ui-monospace, monospace",
               backgroundColor: field("preview-bg"),
@@ -1008,42 +1013,54 @@
           );
         }
 
+        function syncOptions(options) {
+          document.documentElement.classList.toggle("no-motion", !options.animations);
+          for (const control of document.querySelectorAll('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]')) control.disabled = !options.toolbar;
+          const statusBar = document.getElementById("statusBar");
+          if (statusBar) statusBar.disabled = !options.displayContainer;
+          document.getElementById("appearAnimation").disabled = !options.animations;
+          document.getElementById("options-json").value = settingsJSON(options);
+        }
+
         const readOptions = () =>
           Object.fromEntries(
             [...form.elements]
               .filter((control) => control.name && control.name !== "previewTheme" && control.name !== "preview-controls-font" && (control.type !== "radio" || control.checked))
-              .map((control) => [control.name, control.type === "checkbox" ? control.checked : control.type === "number" ? Number(control.value) : control.value === "false" ? false : control.value])
+              .map((control) => [control.name, optionValue(control)])
           );
         // ===== PREVIEW =====
-        const render = async (completed) => {
+        const reportRender = (result, started, completed) => {
+          const duration = performance.now() - started;
+          error.hidden = true;
+          for (const editor of sources) editor.setAttribute("aria-invalid", String(!result));
+          const texts = sources.map((editor) => editor.value);
+          document.getElementById("metric-size").textContent = `${new Blob(texts).size.toLocaleString()} B`;
+          const lines = texts.reduce((count, text) => count + (text ? text.split(/\r\n?|\n/).length : 0), 0);
+          document.getElementById("metric-lines").textContent = lines.toLocaleString();
+          document.getElementById("metric-time").textContent = `${duration.toFixed(2)} ms`;
+          document.getElementById("metric-nodes").textContent = frame.contentDocument.getElementById("viewer").querySelectorAll("*").length.toLocaleString();
+          if (result) completed?.();
+          status.textContent = result ? `Rendered in ${Math.round(duration)} ms` : "Check the input error in the preview.";
+          document.getElementById("source-status").textContent = `${source.value.length.toLocaleString()} characters`;
+        };
+        const render = async (completed, appearance) => {
           clearTimeout(debounce);
           if (!previewReady) return;
           const version = ++renderVersion;
           error.hidden = true;
-          for (const editor of [source, second].filter(Boolean)) editor.removeAttribute("aria-invalid");
+          for (const editor of sources) editor.removeAttribute("aria-invalid");
           status.textContent = "Rendering...";
           for (const metric of document.querySelectorAll(".metric dd")) metric.textContent = "-";
           try {
             const win = frame.contentWindow;
             const target = win.document.getElementById("viewer");
             const options = readOptions();
-            document.getElementById("statusBar").disabled = !options.displayContainer;
-            for (const control of document.querySelectorAll('#credits, #themeToggle, #fontSizeControls, #copyButton, #controlsCompact, [name="controlsSize"], [name="controlsPosition"]')) control.disabled = !options.toolbar;
-            document.getElementById("appearAnimation").disabled = !options.animations;
-            document.getElementById("options-json").value = settingsJSON(options);
             const started = performance.now();
-            const result = await win.byLOGviewer(target, source.value, options).ready;
-            const duration = performance.now() - started;
-            if (version !== renderVersion) return;
-            for (const editor of [source, second].filter(Boolean)) editor.setAttribute("aria-invalid", String(!result));
-            const text = source.value + (second?.value || "");
-            document.getElementById("metric-size").textContent = `${new TextEncoder().encode(text).length.toLocaleString()} B`;
-            document.getElementById("metric-lines").textContent = text ? text.split(/\r\n?|\n/).length.toLocaleString() : "0";
-            document.getElementById("metric-time").textContent = `${duration.toFixed(2)} ms`;
-            document.getElementById("metric-nodes").textContent = target.querySelectorAll("*").length.toLocaleString();
-            if (result) completed?.();
-            status.textContent = result ? `Rendered in ${Math.round(duration)} ms` : "Check the input error in the preview.";
-            document.getElementById("source-status").textContent = `${source.value.length.toLocaleString()} characters`;
+            viewer = win.byLOGviewer(target, source.value, { ...options, ...appearance });
+            const ready = viewer.ready;
+            const result = await ready;
+            if (version !== renderVersion || ready !== viewer.ready) return;
+            reportRender(result, started, completed);
           } catch (exception) {
             if (version !== renderVersion) return;
             error.textContent = exception.message;
@@ -1063,41 +1080,44 @@
             themeInputs.forEach((input) => {
               input.checked = input.value === mode;
             });
-            setPreviewMode(viewer, mode);
-            updateOptions();
-            const toggle = frame.contentDocument.querySelector(".byVIEWthemeToggle");
-            if (toggle) {
-              toggle.title = mode === "dark" ? "Switch to light theme" : "Switch to dark theme";
-              toggle.setAttribute("aria-label", toggle.title);
-            }
+            syncOptions(readOptions());
           }).observe(viewer, { attributes: true, attributeFilter: ["data-theme", "class"] });
           // Finish the iframe's appearance setup before measuring the initial render.
-          debounce = setTimeout(render, 0);
+          debounce = setTimeout(render, 0, null, previewAppearance());
         });
         frame.srcdoc =
-          '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="log.css"><link rel="stylesheet" href="log.themes.css"><style>html,body{margin:0;min-height:100%;}body{background:#ffe;}#viewer{min-height:100vh;border:0;}</style><script src="log.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
+          '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="log.css"><link rel="stylesheet" href="log.themes.css"><style>html,body{margin:0;min-height:100%;}#viewer{min-height:100vh;border:0;}</style><script src="log.js"><\/script></head><body><div id="viewer" data-theme="light"></div></body></html>';
         source.addEventListener("input", () => {
           ++sourceVersion;
           clearTimeout(debounce);
           debounce = setTimeout(render, 180, window.bySiteAnalytics?.begin("content_processed"));
         });
-        second?.addEventListener("input", () => {
-          clearTimeout(debounce);
-          debounce = setTimeout(render, 180, window.bySiteAnalytics?.begin("content_processed"));
-        });
+        const configure = async (changes) => {
+          try {
+            const current = viewer;
+            const started = performance.now();
+            const ready = current?.setOptions(changes);
+            if (!ready) return;
+            const result = await ready;
+            if (current === viewer && ready === current.ready) reportRender(result, started);
+          } catch (exception) {
+            error.textContent = exception.message;
+            error.hidden = false;
+          }
+        };
         form.addEventListener("change", (event) => {
-          if (event.target.name === "previewTheme") return;
-          if (["preview-palette", "custom-theme-css"].includes(event.target.id)) return updateOptions();
-          if (event.target.name) render();
+          syncOptions(readOptions());
+          const field = event.target;
+          if (!field.checkValidity()) return;
+          if (field.name === "previewTheme") return configure({ theme: field.value });
+          if (field.id === "preview-palette") return configure({ palette: field.value });
+          if (field.id === "preview-size") return configure({ fontSize: previewAppearance("1em").fontSize });
+          if (field.name && !field.closest(".preview-appearance")) {
+            configure({ [field.name]: optionValue(field) });
+          }
         });
         form.addEventListener("submit", (event) => event.preventDefault());
         document.getElementById("render").addEventListener("click", () => render(window.bySiteAnalytics?.begin("content_processed")));
-        themeInputs.forEach((input) =>
-          input.addEventListener("change", () => {
-            updateOptions();
-            if (previewReady) setPreviewMode(frame.contentDocument.getElementById("viewer"), input.value);
-          })
-        );
         document.getElementById("local-file").addEventListener("change", async (event) => {
           const file = event.target.files[0];
           if (!file) return;
@@ -1132,74 +1152,94 @@
         });
         // ===== INTEGRATION =====
         const jsString = (value) => JSON.stringify(value).replaceAll("<", "\\u003c");
-        let integrationHTML = "";
-        function renderIntegration(html) {
-          if (html === integrationHTML) return;
-          integrationHTML = html;
-          const code = document.getElementById("integration-code");
-          if (typeof window.byCODEviewer === "function") {
-            byCODEviewer(code, html, {
-              language: "html",
-              theme: document.documentElement.dataset.bsTheme,
-              fontSize: 1,
-              toolbar: false,
-              displayContainer: false
-            });
-          } else code.textContent = html;
-        }
         const integrationCode = document.getElementById("integration-code");
-        const installButtons = [...document.querySelectorAll("[data-install]")];
-        const updateIntegration = (mode = "cdn") => {
-          const base = mode === "cdn" ? "https://cdn.jsdelivr.net/gh/byuwur/log.view@latest/" : "";
-          const min = mode === "cdn" ? ".min" : "";
-          const endScript = "</" + "script>";
-          // Explicit lines preserve export indentation when the page is formatted.
+        let integrationHTML = "";
+        function downloadText(text, filename, type) {
+          const url = URL.createObjectURL(new Blob([text], { type }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          document.body.append(link);
+          link.click();
+          window.bySiteAnalytics?.begin("resource_exported")?.();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function renderIntegration(title, assets, body) {
           const html = [
             "<!doctype html>",
             '<html lang="en">',
             "  <head>",
             '    <meta charset="UTF-8">',
             '    <meta name="viewport" content="width=device-width, initial-scale=1">',
-            "    <title>LOG.view</title>",
-            `    <link rel="stylesheet" href="${base}log${min}.css">`,
-            `    <script src="${base}log${min}.js" defer>${endScript}`,
+            `    <title>${title}</title>`,
+            ...assets,
             "  </head>",
             "  <body>",
-            '    <div id="viewer" data-theme="light"></div>',
-            "    <script>",
-            '      document.addEventListener("DOMContentLoaded", () => {',
-            "        byLOGviewer(",
-            '          document.getElementById("viewer"),',
-            `          ${jsString(initialSource)},`,
-            `          ${JSON.stringify(defaults, null, 2).replaceAll("\n", "\n          ")}`,
-            "        );",
-            "      });",
-            `    ${endScript}`,
+            ...body,
             "  </body>",
             "</html>"
           ].join("\n");
-          renderIntegration(html);
-          document.getElementById("install-note").textContent = mode === "cdn" ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside log.js and log.css.";
+          if (html === integrationHTML) return;
+          integrationHTML = html;
+          if (typeof window.byCODEviewer === "function") {
+            byCODEviewer(integrationCode, html, {
+              language: "html",
+              theme: document.documentElement.dataset.bsTheme,
+              fontSize: 1,
+              toolbar: false,
+              displayContainer: false
+            });
+          } else integrationCode.textContent = html;
+        }
+        const installButtons = document.querySelectorAll("[data-install]");
+        function updateIntegration(mode = "cdn") {
+          const cdn = mode === "cdn";
+          const base = cdn ? "https://cdn.jsdelivr.net/gh/byuwur/log.view@latest/" : "";
+          const min = cdn ? ".min" : "";
+          const endScript = "</" + "script>";
+          renderIntegration(
+            "LOG.view",
+            [`    <link rel="stylesheet" href="${base}log${min}.css">`, `    <script src="${base}log${min}.js" defer>${endScript}`],
+            [
+              '    <div id="viewer" data-theme="light"></div>',
+              "    <script>",
+              '      document.addEventListener("DOMContentLoaded", () => {',
+              "        byLOGviewer(",
+              '          document.getElementById("viewer"),',
+              `          ${jsString(initialSource)},`,
+              `          ${JSON.stringify(defaults, null, 2).replaceAll("\n", "\n          ")}`,
+              "        );",
+              "      });",
+              `    ${endScript}`
+            ]
+          );
+          document.getElementById("install-note").textContent = cdn ? "CDN follows the latest release; updates may take time to reach caches." : "Place the HTML beside log.js and log.css.";
           installButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.install === mode)));
           document.getElementById("export-status").textContent = "";
-        };
+        }
         installButtons.forEach((button) => button.addEventListener("click", () => updateIntegration(button.dataset.install)));
         updateIntegration();
         // ===== CLIPBOARD =====
         async function copyText(text, selectable, button) {
           const caption = button.querySelector("span");
+          const starter = selectable.id === "integration-code";
+          if (starter) button.disabled = true;
           try {
-            const copied = window.bySiteAnalytics?.begin("resource_copied");
-            await navigator.clipboard.writeText(text);
-            copied?.();
+            await writeClipboard(text);
+            if (starter && text !== integrationHTML) return;
             caption.textContent = "Copied!";
             button.removeAttribute("title");
           } catch {
+            if (starter && text !== integrationHTML) return;
             selectable.focus();
             if (typeof selectable.select === "function") selectable.select();
             else document.getSelection()?.selectAllChildren(selectable);
             caption.textContent = "Failed";
             button.title = "Clipboard unavailable. Press Ctrl+C or ⌘C to copy the selected text.";
+          } finally {
+            if (starter) button.disabled = false;
           }
         }
 
@@ -1218,38 +1258,22 @@
 
         document.getElementById("copy-html").addEventListener("click", (event) => copyText(integrationHTML, integrationCode, event.currentTarget));
         document.getElementById("download-html").addEventListener("click", () => {
-          const url = URL.createObjectURL(new Blob([integrationHTML], { type: "text/html;charset=UTF-8" }));
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "log.view.html";
-          document.body.append(link);
-          link.click();
-          window.bySiteAnalytics?.begin("resource_exported")?.();
-          link.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          downloadText(integrationHTML, "log.view.html", "text/html;charset=UTF-8");
           document.getElementById("export-status").textContent = "Downloaded. The starter uses default viewer settings.";
         });
 
         // ===== PLAYGROUND CONTROLS =====
 
-        const updateOptions = () => {
-          document.documentElement.classList.toggle("no-motion", !document.getElementById("animations").checked);
-          try {
-            document.getElementById("options-json").value = settingsJSON(readOptions());
-          } catch {
-            document.getElementById("options-json").value = "Enter a valid JSON array for visibleColumns.";
-          }
-        };
-        form.addEventListener("change", updateOptions);
-        updateOptions();
-        document.querySelectorAll("[data-options-view]").forEach((button) =>
+        syncOptions(readOptions());
+        const optionsTabs = document.querySelectorAll("[data-options-view]");
+        optionsTabs.forEach((button) =>
           button.addEventListener("click", () => {
+            syncOptions(readOptions());
             const json = button.dataset.optionsView === "json";
             form.hidden = json;
             document.getElementById("options-json-panel").hidden = !json;
-            document.querySelectorAll("[data-options-view]").forEach((choice) => choice.setAttribute("aria-pressed", String(choice === button)));
             document.getElementById("copy-options").hidden = !json;
-            updateOptions();
+            optionsTabs.forEach((choice) => choice.setAttribute("aria-pressed", String(choice === button)));
           })
         );
         document.getElementById("copy-options").addEventListener("click", (event) => {
@@ -1260,17 +1284,15 @@
         document.getElementById("restore-source").addEventListener("click", () => {
           ++sourceVersion;
           source.value = initialSource;
-          if (second) second.value = initialSecond;
           render();
         });
         document.getElementById("reset-settings").addEventListener("click", () => {
           form.reset();
-          document.querySelector('[name="previewTheme"]:checked').dispatchEvent(new Event("change"));
-          updateOptions();
-          render();
+          syncOptions(readOptions());
+          configure({ ...readOptions(), ...previewAppearance("1em") });
         });
 
-        for (const editor of [source, second].filter(Boolean))
+        for (const editor of sources)
           editor.addEventListener("keydown", (event) => {
             if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
               event.preventDefault();
@@ -1287,15 +1309,20 @@
             const example = samples[button.dataset.example];
             ++sourceVersion;
             source.value = example.source;
-            if (second) second.value = example.second;
 
-            updateOptions();
+            syncOptions(readOptions());
             render(window.bySiteAnalytics?.begin("resource_selected"));
             document.querySelectorAll("[data-example]").forEach((choice) => choice.setAttribute("aria-pressed", String(choice === button)));
           })
         );
         source.addEventListener("input", () => document.querySelectorAll("[data-example]").forEach((button) => button.setAttribute("aria-pressed", "false")));
       });
+
+      async function writeClipboard(text) {
+        const copied = window.bySiteAnalytics?.begin("resource_copied");
+        await navigator.clipboard.writeText(text);
+        copied?.();
+      }
 
       (function initColorPickers() {
         document.addEventListener("DOMContentLoaded", async () => {
@@ -1363,25 +1390,23 @@
         return ["light", "dark"].includes(target.dataset.theme) ? target.dataset.theme : target.classList.contains("dark") ? "dark" : "light";
       }
 
-      function setPreviewMode(target, mode) {
-        const palette = document.getElementById("preview-palette").value;
-        // Only write changes: the preview observer watches these same attributes.
-        for (const value of ["light", "dark"]) {
-          if (target.classList.contains(value) !== (value === mode)) target.classList.toggle(value, value === mode);
-        }
-        const theme = palette === "monokai" ? mode : palette;
-        if (target.dataset.theme !== theme) target.dataset.theme = theme;
-        target.ownerDocument.documentElement.style.colorScheme = mode;
-        target.ownerDocument.body.style.background = target.ownerDocument.defaultView.getComputedStyle(target).backgroundColor;
+      function previewAppearance(defaultSize = null) {
+        const size = document.getElementById("preview-size");
+        return {
+          theme: document.querySelector('[name="previewTheme"]:checked').value,
+          palette: document.getElementById("preview-palette").value,
+          fontSize: size.value && size.checkValidity() ? size.valueAsNumber : defaultSize
+        };
       }
 
-      (function appearance(name) {
+      (function appearance(name, targetId = "viewer", contentSelector = "> .byVIEWcontent") {
         document.addEventListener("DOMContentLoaded", async () => {
           // DOMContentLoaded does not wait for dynamically loaded SPA styles and scripts.
           await spaReady;
           const frame = document.getElementById("preview-frame");
           const fields = [...document.querySelectorAll(".preview-appearance input:not([type=radio]), .preview-appearance select, #preview-controls-font")];
           const palette = document.getElementById("preview-palette");
+          const defaultPalette = [...palette.options].find((option) => option.defaultSelected)?.value || palette.options[0].value;
           const editor = document.getElementById("custom-theme-css");
           const themeStatus = document.getElementById("theme-status");
           const selector = `.by${name.toUpperCase()}document`;
@@ -1391,16 +1416,15 @@
           const declarations = () => {
             const rules = fields.map((field, index) => {
               const value = field.id === "preview-controls-font" ? field.querySelector("input:checked").value : field.value;
-              return [properties[index], field.checkValidity() ? value + (field.id === "preview-size" && value ? "rem" : "") : ""];
+              return [properties[index], field.checkValidity() ? value : ""];
             });
             if (!["md", "json"].includes(name)) rules.push(["--by-view-content-font", rules[0][1]], ["--by-view-line-height", rules[2][1]]);
-            return rules;
+            return rules.filter(([property, value]) => property !== "font-size" && value);
           };
-          const initialStyles = new Map();
           let customDraft = null;
           let themesWarned = false;
           let themeTimer;
-          const target = () => frame.contentDocument?.getElementById("viewer");
+          const target = () => frame.contentDocument?.getElementById(targetId);
           // Read both modes on temporary containers so exporting CSS never changes the live viewer.
           const themeCSS = (selected) => {
             const document = frame.contentDocument;
@@ -1431,19 +1455,11 @@
               style.id = "custom-theme-style";
               frame.contentDocument.head.appendChild(style);
             }
-            const css = palette.value === "custom" ? editor.value : "";
+            const rules = declarations()
+              .map(([property, value]) => `${property}: ${value};`)
+              .join("\n");
+            const css = `${palette.value === "custom" ? editor.value : ""}\n#${viewer.id} {\n${rules}\n}`;
             if (style.textContent !== css) style.textContent = css;
-            for (const [property, value] of declarations()) {
-              if (value) {
-                if (!initialStyles.has(property)) initialStyles.set(property, viewer.style.getPropertyValue(property));
-                viewer.style.setProperty(property, value);
-              } else if (initialStyles.has(property)) {
-                viewer.style.setProperty(property, initialStyles.get(property));
-                initialStyles.delete(property);
-              }
-            }
-            viewer.dataset.byViewDefaultFontSize = viewer.style.fontSize;
-            setPreviewMode(viewer, getPreviewMode(viewer));
             const invalid = fields.some((field) => !field.checkValidity());
             document.getElementById("appearance-status").textContent = invalid ? "Use valid number ranges and CSS background colors; text color uses six-digit hex." : "";
           };
@@ -1453,12 +1469,12 @@
             if (
               !["monokai", "github", "solarized", "high-contrast", "custom"].includes(palette.value) &&
               !themesWarned &&
-              frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue("--by-log-themes-loaded").trim() !== "1"
+              frame.contentWindow.getComputedStyle(frame.contentDocument.documentElement).getPropertyValue(`--by-${name}-themes-loaded`).trim() !== "1"
             ) {
               themesWarned = true;
-              console.warn(`LOG.view: Import log.themes.css after log.css to use "${palette.value}".`);
+              console.warn(`${name.toUpperCase()}.view: Import ${name}.themes.css after ${name}.css to use "${palette.value}".`);
             }
-            const css = palette.value === "custom" ? (customDraft ?? themeCSS("monokai")) : themeCSS(palette.value);
+            const css = palette.value === "custom" ? (customDraft ?? themeCSS(defaultPalette)) : themeCSS(palette.value);
             if (editor.value !== css) editor.value = css;
             apply();
             themeStatus.textContent = "";
@@ -1478,10 +1494,7 @@
             themeTimer = setTimeout(editTheme, 180);
           });
           editor.addEventListener("change", editTheme);
-          frame.addEventListener("load", () => {
-            initialStyles.clear();
-            loadPalette();
-          });
+          frame.addEventListener("load", loadPalette);
           document.querySelectorAll("#reset-settings, #reset-options, #reset").forEach((button) =>
             button.addEventListener("click", () => {
               clearTimeout(themeTimer);
@@ -1493,15 +1506,13 @@
                   field.setCustomValidity("");
                 }
               });
-              palette.value = "monokai";
-              palette.dispatchEvent(new Event("change", { bubbles: true }));
+              palette.value = defaultPalette;
+              loadPalette();
             })
           );
           document.getElementById("copy-theme").addEventListener("click", async () => {
             try {
-              const copied = window.bySiteAnalytics?.begin("resource_copied");
-              await navigator.clipboard.writeText(editor.value);
-              copied?.();
+              await writeClipboard(editor.value);
               themeStatus.textContent = 'Theme CSS copied. Use data-theme="custom" with a light/dark class.';
             } catch {
               themeStatus.textContent = "Copy failed. Check clipboard access.";
@@ -1510,13 +1521,12 @@
           document.getElementById("copy-appearance").addEventListener("click", async () => {
             if (fields.some((field) => !field.checkValidity())) return apply();
             const rules = declarations()
-              .filter(([, value]) => value)
               .map(([property, value]) => `  ${property}: ${value};`)
               .join("\n");
             try {
-              const copied = window.bySiteAnalytics?.begin("resource_copied");
-              await navigator.clipboard.writeText(`${selector} {\n${rules}\n}`);
-              copied?.();
+              const size = document.getElementById("preview-size");
+              const contentRule = size.value ? `\n${selector} ${contentSelector} { font-size: ${size.valueAsNumber}rem; }` : "";
+              await writeClipboard(`${selector} {\n${rules}\n}${contentRule}`);
               document.getElementById("appearance-status").textContent = "CSS copied. Place it after the viewer stylesheet.";
             } catch {
               document.getElementById("appearance-status").textContent = "Copy failed. Check clipboard access.";
